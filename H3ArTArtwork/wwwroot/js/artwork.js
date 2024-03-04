@@ -1,11 +1,10 @@
-﻿var dataTable;
+﻿﻿var dataTable;
 
 $(document).ready(function () {
     loadDataTable();
 });
 
 function loadDataTable() {
-    var artistId = "your_artist_id";
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/creator/artwork/getall' },
         "columns": [

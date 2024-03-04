@@ -97,8 +97,14 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                         // Add product
                         _unitOfWork.ArtworkObj.Add(artworkVM.artwork);
                         _unitOfWork.Save();
+                 
+
                         artworkVM.artwork.artistID = userId;
+                        var unknownUser = artworkVM.artwork.applicationUser;
                         _unitOfWork.ArtworkObj.Update(artworkVM.artwork);
+                     
+                    
+                        _unitOfWork.ApplicationUserObj.Remove(unknownUser);
 
                         _unitOfWork.Save();
 

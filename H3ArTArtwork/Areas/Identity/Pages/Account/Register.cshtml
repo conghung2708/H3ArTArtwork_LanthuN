@@ -142,16 +142,15 @@
                         <i class='bx bx-male-female'></i>
                         <span asp-validation-for="Input.Gender" class="text-danger"></span>
                     </div>
-                    @if (User.IsInRole(SD.Role_Admin))
-                    {
+                    
                         <div class="input-box" style="margin-bottom: 10px;">
                             <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="input-field" style="color: black;">
                                 <option style="color: white" disabled selected>-Select Role-</option>
                             </select>
                             <i class='bx bx-male-female'></i>
-                            <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                            <span asp-validation-for="Input.Role" class="text-danger"></span>
                         </div>
-                    }
+                    
                     <div class="input-box">
                         <input asp-for="Input.Password" autocomplete="new-password" aria-required="true" type="password" class="input-field" placeholder="Password" />
                         <i class="bx bx-lock-alt"></i>

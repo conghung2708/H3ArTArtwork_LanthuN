@@ -1,13 +1,9 @@
-﻿﻿@using H3ArT.Models.Models
+﻿@using H3ArT.Models.Models
 @model IEnumerable<Artwork>
 
 
 @{
-    ViewData["Title"] = "Home Page";
-}
-
-@{
-    var distinctCategories = Model.Select(a => a.category?.categoryName).Distinct().ToList();
+   
 }
 
 <!DOCTYPE html>
@@ -26,11 +22,9 @@
 
 
 <body>
-
     <main role="main">
-
-
         <section class="mt-4 mb-5">
+            <!-- Navigation Bar for Artwork -->
             <div class="container mb-4">
                 <h1 class="font-weight-bold title">Explore</h1>
                 <div class="row">
@@ -38,62 +32,53 @@
                         <button class="navbar-light navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExplore" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse" id="navbarsExplore">
-                            <ul class="navbar-nav">
+                        <div class="collapse navbar-collapse " id="navbarsExplore">
+                            <!-- Filter by Category -->
+                            @await Component.InvokeAsync("CategoryList")
 
-                                @foreach (var category in distinctCategories.Take(4))
-                                {
-
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">@category</a>
-                                    </li>
-                                }
-                                @if (distinctCategories.Count() > 4)
-                                {
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
-                                        <div class="dropdown-menu shadow-lg" aria-labelledby="dropdown01">
-                                            @foreach (var category in distinctCategories.Skip(4))
-                                            {
-                                                <a class="dropdown-item" href="#">@category</a>
-                                            }
-                                        </div>
-                                    </li>
-                                }
-                            </ul>
+                            <!-- Search Bar -->
+                            <form method="get" class="position-absolute bottom-0 end-0">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search...">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary">Search</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </nav>
                 </div>
             </div>
+            <!-- End of Navigation Bar for Artwork -->
+            <!-- Section for Product-->
             <div class="container-fluid">
                 <div class="row">
                     <div class="card-columns">
                         @foreach (var artwork in Model)
                         {
-                            @if (!artwork.isBought)
-                            {
-                                <div class="card card-pin">
-                                    <img class="card-img" src="@artwork.imageUrl" alt="Card image">
-                                    <div class="overlay">
-                                        <h2 class="card-title title">@artwork.title</h2>
-                                        <div class="more">
-                                            <a asp-action="Details" asp-route-artworkId="@artwork.artworkId">
-                                                <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
-                                            </a>
-                                        </div>
+                            <div class="card card-pin">
+                                <img class="card-img" src="@artwork.imageUrl" alt="Card image">
+                                <div class="overlay">
+                                    <h2 class="card-title title">@artwork.title</h2>
+                                    <div class="more">
+                                        <a asp-action="Details" asp-route-artworkId="@artwork.artworkId">
+                                            <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
+                                        </a>
                                     </div>
                                 </div>
-                            }
+                            </div>
                         }
                     </div>
                 </div>
             </div>
+            <!-- End of Section for Product-->
         </section>
 
     </main>
 
     <script src="~/js/app.js"></script>
     <script src="~/js/theme.js"></script>
+    <!-- Footer -->
     <footer class="footer pt-5 pb-5 text-center">
 
         <div class="container">

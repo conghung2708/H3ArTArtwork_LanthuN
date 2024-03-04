@@ -15,6 +15,7 @@ namespace H3ArT.Models.ViewModels
 
         [ValidateNever]
         public IEnumerable<SelectListItem> categoryList { get; set; }
+
       
     }
 }

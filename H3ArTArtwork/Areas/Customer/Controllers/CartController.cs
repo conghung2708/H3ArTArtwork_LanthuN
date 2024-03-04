@@ -175,6 +175,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 }
 
             }
+
             //stripe logic
             var domain = "https://localhost:7034/";
             var options = new SessionCreateOptions

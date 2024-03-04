@@ -22,9 +22,20 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? categoryId, string search)
         {
-            IEnumerable<Artwork> artworkList = _unitOfWork.ArtworkObj.GetAll(includeProperties: "category");
+            IEnumerable<Artwork> artworkList;
+
+            if (categoryId.HasValue)
+            {
+                artworkList = _unitOfWork.ArtworkObj.
+                    GetAll(a => a.categoryID == categoryId && (search == null || a.title.Contains(search)));
+            }
+            else
+            {
+                artworkList = _unitOfWork.ArtworkObj.GetAll(a => search == null || a.title.Contains(search), includeProperties: "category");
+            }
+
             return View(artworkList);
         }
 

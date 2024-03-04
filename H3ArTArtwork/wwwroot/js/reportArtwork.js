@@ -6,20 +6,24 @@ $(document).ready(function () {
 
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
-        "ajax": { url: '/moderator/report/getallreportartwork' },
+        "ajax": { url: '/Moderator/report/GetAllReportArtwork' },
         "columns": [
-            { data: 'title', "width": "25%" },
-            { data: 'description', "width": "25%" },
-            { data: 'applicationUser.fullName', "width": "10%" },
-            { data: 'price', "width": "10%" },
-            { data: 'category.categoryName', "width": "10%" }, // Accessing displayOrder within the category object //need to fix here
-            // Corrected here
+            { data: 'reportArtworkID', "width": "25%" },
+            { data: 'artworkID', "width": "25%" },
+            { data: 'artwork.title', "width": "10%" },
             {
-                data: 'artworkId',
+                data: 'artwork.imageUrl',
+                "render": function (data) {
+                    return `<img src="${data}" width="100px" height="auto">`;
+                },
+                width: "10%"
+            },
+            { data: 'applicationUser.fullName', "width": "10%" }, // Accessing displayOrder within the category object
+            {
+                data: 'artworkID',
                 "render": function (data) {
                     return `<div class="w-75 btn-group" role="group">
-                     <a href="/creator/artwork/upsert?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                     <a onClick=Delete('/creator/artwork/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                      <a onClick=Delete('/creator/artwork/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                     </div>`
                 },
                 "width": "25%"
