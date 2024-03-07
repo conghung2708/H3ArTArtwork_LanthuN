@@ -6,20 +6,18 @@ $(document).ready(function () {
 
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
-        "ajax": { url: '/creator/artwork/getall' },
+        "ajax": { url: '/creator/blog/getall' },
         "columns": [
             { data: 'title', "width": "25%" },
             { data: 'description', "width": "25%" },
             { data: 'applicationUser.fullName', "width": "10%" },
-            { data: 'price', "width": "10%" },
-            { data: 'category.categoryName', "width": "10%" }, // Accessing displayOrder within the category object //need to fix here
             // Corrected here
             {
-                data: 'artworkId',
+                data: 'blogID',
                 "render": function (data) {
                     return `<div class="w-75 btn-group" role="group">
-                     <a href="/creator/artwork/upsert?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                     <a onClick=Delete('/creator/artwork/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                     <a href="/creator/blog/upsert?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
+                     <a onClick=Delete('/creator/blog/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                     </div>`
                 },
                 "width": "25%"
@@ -45,15 +43,7 @@ function Delete(url) {
                 type: 'DELETE',
                 success: function (data) {
                     dataTable.ajax.reload();
-                    if (data.success) {
-                        toastr.success(data.message);
-                    } else {
-                        toastr.error(data.message);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    dataTable.ajax.reload();
-                    toastr.error(xhr.responseJSON.message);
+                    toastr.success(data.message);
                 }
             })
         }
