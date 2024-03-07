@@ -27,5 +27,8 @@ namespace H3ArT.DataAccess.Data
         public DbSet<OrderDetail> TblOrderDetail { get; set; }
         public DbSet<ReportArtist> TblReportArtist { get; set; }
         public DbSet<ReportArtwork> TblReportArtwork { get; set; }
+        public DbSet<Blog> TblBlog { get; set; }
+        public DbSet<ReportBlog> TblReportBlog { get; set;}
+
     }
 }

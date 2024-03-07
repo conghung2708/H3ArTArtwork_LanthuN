@@ -30,9 +30,13 @@ namespace H3ArT.Models.Models
         public string? sessionId { get; set; }
         public string? paymentIntentId { get; set; }
 
-        [Required]
+        [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters.")]
+        [RegularExpression(@"^[^\d]+$", ErrorMessage = "Name cannot contain numbers.")]
         public string name { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Phone number is required.")]
+        [RegularExpression(@"^0\d{9}$", ErrorMessage = "Phone number must start with 0 and have exactly 10 digits.")]
+        [MaxLength(10, ErrorMessage = "Phone number cannot exceed 10 characters.")]
         public string phoneNumber { get; set; }
     }
 }
