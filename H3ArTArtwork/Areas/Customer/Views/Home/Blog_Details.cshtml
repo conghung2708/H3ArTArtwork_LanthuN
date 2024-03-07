@@ -1,0 +1,119 @@
+﻿@using H3ArT.Models.Models
+@model Blog
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Blog Post - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* Style for the back button */
+        .go-back {
+            text-decoration: none;
+            color: black;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Open Sans', sans-serif;
+            /**
+                   * If you set it to a value higher than the 'font-size',
+                   * you will have to take account of the difference
+                   * between the 'line-height' and the 'font-size'
+                   * to vertically centre the arrow
+                   * and align it with the text.
+                   **/
+            line-height: 1;
+            /* Makes some place for the arrow */
+            padding-left: 15px;
+            /* The arrow will be absolutely positioned */
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <a href="#" class="go-back" onclick="goBack()"> <i class="bi bi-skip-backward-circle"></i> Go Back</a>
+
+    <!-- Page content-->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Post content-->
+                <article>
+                    <!-- Post header-->
+                    <header class="mb-4">
+                        <!-- Post title-->
+                        <h1 class="fw-bolder mb-1">@Model.title</h1>
+                        <!-- Post meta content-->
+                        <div class="text-muted fst-italic mb-2">Posted on @Model.createAt</div>
+                        <div class="text-muted fst-italic mb-2">
+                            <a asp-action="ArtistProfile" asp-route-artistId="@Model.creatorID" style="text-decoration: none; color: #6c757d !important;">Creator: @Model.applicationUser.FullName</a>
+                        </div>
+                        <!-- Post categories-->
+                       
+                    </header>
+                    <!-- Preview image figure-->
+                    <figure class="mb-4"><img class="img-fluid rounded" src="@Model.imageUrl" alt="..." /></figure>
+                    <!-- Post content-->
+                    <section class="mb-5 pb-2">
+                        <div class="position-relative">
+                            <p class="fs-5 mb-4">@Html.Raw(@Model.description)</p>
+                            <div class="position-absolute end-0 pe-2">
+                                <a asp-action="ReportBlog" asp-route-blogID="@Model.blogID" style="text-decoration: none; color: red">
+                                    <i class="bi bi-flag-fill"></i> Report
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    
+                </article>
+                <!-- Comments section-->
+                <section class="mb-5">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <!-- Comment form-->
+                            <div id="comments" class="mt-4">
+                                <div id="disqus_thread">
+                                </div>
+                                <script type="text/javascript">
+                                    var disqus_shortname = 'demowebsite';
+                                    var disqus_developer = 0;
+                                    (function () {
+                                        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                                        dsq.src = window.location.protocol + '//' + disqus_shortname + '.disqus.com/embed.js';
+                                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                                    })();
+                                </script>
+                                <noscript>
+                                    Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+                                </noscript>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+           
+        </div>
+    </div>
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

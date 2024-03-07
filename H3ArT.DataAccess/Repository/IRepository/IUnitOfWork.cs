@@ -18,6 +18,8 @@ namespace H3ArT.DataAccess.Repository.IRepository
         IOrderDetailRepository OrderDetailObj { get; }
         IReportArtistRepository ReportArtistObj { get; }
         IReportArtworkRepository ReportArtworkObj { get; }
+        IBlogRepository BlogObj { get; }
+        IReportBlogRepository ReportBlogObj { get; } 
         void Save();
     }
 }
