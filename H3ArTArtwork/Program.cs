@@ -44,6 +44,11 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+});
 builder.Services.AddRazorPages();
 //adding UnitOfWork
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
