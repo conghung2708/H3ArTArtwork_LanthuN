@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\image\artwork\" />
+    <Folder Include="wwwroot\image\avatar\" />
   </ItemGroup>
 
   <ItemGroup>
