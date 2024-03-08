@@ -31,7 +31,7 @@
             <!-- left column -->
             <div class="col-md-3">
                 <div class="text-center">
-                    <img src="@Url.Content(Model.Input.AvatarImage)" class="avatar img-circle img-thumbnail" alt="avatar">
+                    <img src="@Url.Content(string.IsNullOrEmpty(Model.Input.AvatarImage) ? "~/image/defaultava/default.jpg" : Model.Input.AvatarImage)" class="avatar img-circle img-thumbnail" alt="avatar">
 
                     <h6>Upload a different photo...</h6>
                     <input type="file" name="file" class="form-control" onchange="previewAvatar(this)">
