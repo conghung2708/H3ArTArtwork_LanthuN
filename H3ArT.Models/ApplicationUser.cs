@@ -25,6 +25,7 @@ namespace H3ArT.Models
         [MaxLength(10, ErrorMessage = "Phone number cannot exceed 10 characters.")]
         public string PhoneNumber { get; set; }
 
+        public string AvatarImage { get; set; }
         [NotMapped]
         public string Role { get; set; }
     }
