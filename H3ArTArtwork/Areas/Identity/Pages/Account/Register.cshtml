@@ -89,6 +89,11 @@
             display: flex;
             justify-content: center;
         }
+
+        option {
+            color: black;
+        }
+
     </style>
 
 </head>
@@ -99,14 +104,15 @@
                 <a href="/" class=""><img src="~/image/login/whitelogo.png" alt="logo" /></a>
             </div>
             <div class="nav-button">
-                <button class="btn" id="registerBtn" onclick="register()">Sign Up</button>
+                <a id="login" asp-area="Identity" asp-page="/Account/Login"><button class="btn white-bt" id="registerBtn" onclick="register()">Sign In</button></a>
             </div>
         </nav>
 
         <!----------------------------- Form box ----------------------------------->
-        <div class="form-box" style="height: 100%;">
+        <div class="form-box" style="height: 70%; margin-top:60px">
             <!------------------- registration form -------------------------->
-            <div id="register">
+
+            <div id="register" style="width: 100%; margin-top:30px">
                 <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
 
                     <div class="top">
@@ -134,7 +140,7 @@
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
 
                     </div>
-                    <div class="input-box" style="margin-bottom: 10px;">
+                    <div class="input-box" style="">
                         <select asp-for="Input.Gender" id="genderSelect" class="input-field">
                             <option value="true" style="color: black;">Male</option>
                             <option value="false" style="color: black;">Female</option>
@@ -142,15 +148,16 @@
                         <i class='bx bx-male-female'></i>
                         <span asp-validation-for="Input.Gender" class="text-danger"></span>
                     </div>
-                    
-                        <div class="input-box" style="margin-bottom: 10px;">
-                            <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="input-field" style="color: black;">
-                                <option style="color: white" disabled selected>-Select Role-</option>
-                            </select>
-                            <i class='bx bx-male-female'></i>
-                            <span asp-validation-for="Input.Role" class="text-danger"></span>
-                        </div>
-                    
+
+                    <div class="input-box" style="">
+
+                        <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" id="genderSelect" class="input-field">
+                            <option style="color: black" disabled selected>-Select Role-</option>
+                        </select>
+                        <i class='bx bx-male-female'></i>
+                        <span asp-validation-for="Input.Role" class="text-danger"></span>
+                    </div>
+
                     <div class="input-box">
                         <input asp-for="Input.Password" autocomplete="new-password" aria-required="true" type="password" class="input-field" placeholder="Password" />
                         <i class="bx bx-lock-alt"></i>
@@ -176,7 +183,7 @@
                     </div>
                 </form>
                 <div class="container">
-                    <div class="text-center">
+                    <div class="text-center icon-bar">
                         <section>
 
                             @{
@@ -198,7 +205,7 @@
                                             <p>
                                                 @foreach (var provider in Model.ExternalLogins!)
                                                 {
-                                                    <button type="submit" class="button-86" role="button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                                    <button style="margin: 10px" type="submit" class="button-86" role="button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
                                                 }
                                             </p>
                                         </div>

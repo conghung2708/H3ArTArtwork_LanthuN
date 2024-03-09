@@ -30,26 +30,61 @@
                         </li>
                         @if (User.IsInRole(SD.Role_Creator))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Creator" asp-controller="Artwork" asp-action="Index">Artwork</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;">
+                                    Content Management
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Creator" asp-controller="Artwork" asp-action="Index">Artwork</a>
+                                    </li>
+
+                                     <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Creator" asp-controller="Blog" asp-action="Index">Blog</a>
+                                    </li>
+                                
+                                  
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
                             </li>
+
+                           
                         }
                         @if (!User.IsInRole(SD.Role_Moderator))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Order" asp-action="Index">Manage Order</a>
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Order" asp-action="Index">Order</a>
                             </li>
                         }
                         @if (User.IsInRole(SD.Role_Moderator))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Moderator" asp-controller="Report" asp-action="Index_Creator">Report Creator</a>
-                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;">
+                                    Report
+                                </a>
 
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Moderator" asp-controller="Report" asp-action="Index_Artwork">Report Artwork</a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Moderator" asp-controller="Report" asp-action="Index_Creator">Creator</a>
+                                    </li>
+
+                                     <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Moderator" asp-controller="Report" asp-action="Index_Blog">Blog</a>
+                                    </li>
+                                
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Moderator" asp-controller="Report" asp-action="Index_Artwork">Artwork</a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
                             </li>
+                           
                         }
+                      
+
                         @if (User.IsInRole(SD.Role_Admin))
                         {
                             <li class="nav-item dropdown">
@@ -73,13 +108,17 @@
                                 </ul>
                             </li>
                         }
-                        @if (!User.IsInRole(SD.Role_Admin) || !User.IsInRole(SD.Role_Moderator))
+                        @if (!User.IsInRole(SD.Role_Admin) && !User.IsInRole(SD.Role_Moderator))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
+                                <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Blog">Blog</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index" style="color: black;">
                                     @await Component.InvokeAsync("ShoppingCart")
                                 </a>
                             </li>
+                            
                         }
                     </ul>
 
@@ -87,6 +126,8 @@
                 </div>
             </div>
         </nav>
+
+        
     </header>
 
     <partial name="_Notification" />
@@ -98,7 +139,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js" asp-append-version="true"></script>
-    <script src="https://cdn.tiny.cloud/1/g28lhnxtlihu4l4a381gw7tz47voznshwbi10lmsvlekrfme/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/k8u7g6xo882rqvrqy150cuio2mdchpli6vqjaf8nxjadticy/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -27,6 +27,8 @@ namespace H3ArT.DataAccess.Repository
                 artworkFromDb.description = artwork.description;
                 artworkFromDb.isPremium = artwork.isPremium;
                 artworkFromDb.categoryID = artwork.categoryID;
+                artworkFromDb.isBought = artwork.isBought;
+                artworkFromDb.reportedConfirm = artwork.reportedConfirm;
                 if(artwork.imageUrl != null )
                 {
                     artworkFromDb.imageUrl = artwork.imageUrl;

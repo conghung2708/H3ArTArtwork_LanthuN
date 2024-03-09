@@ -18,13 +18,20 @@ function loadDataTable() {
                 },
                 width: "10%"
             },
-            { data: 'applicationUser.fullName', "width": "10%" }, // Accessing displayOrder within the category object
+            { data: 'applicationUser.fullName', "width": "10%" },
             {
-                data: 'artworkID',
-                "render": function (data) {
-                    return `<div class="w-75 btn-group" role="group">
-                      <a onClick=Delete('/creator/artwork/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
-                    </div>`
+                data: 'artwork.reportedConfirm',
+                "render": function (data, type, row) {
+                    if (data == 0 || data == null) {
+                        return `<div class="w-75 btn-group" role="group">
+                            <a onClick=Hide('${row.artworkID}') class="btn btn-success text-white" style="cursor:pointer; width:100px;">
+                                    <i class="bi bi-unlock-fill"></i>Unhidden</a>
+                        </div>`;
+                    } else {
+                        return `<div class="w-75 btn-group" role="group">
+                            <a onClick=Hide('${row.artworkID}')  class="btn btn-danger text-white" style="cursor:pointer; width:100px;"> <i class="bi bi-lock-fill"></i>Hidden</a>
+                        </div>`;
+                    }
                 },
                 "width": "25%"
             }
@@ -32,26 +39,22 @@ function loadDataTable() {
     });
 }
 
-
-function Delete(url) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                success: function (data) {
-                    dataTable.ajax.reload();
-                    toastr.success(data.message);
-                }
-            })
+function Hide(id) {
+    $.ajax({
+        type: "POST",
+        url: '/Moderator/Report/Hide',
+        data: JSON.stringify(id),
+        contentType: "application/json",
+        success: function (data) {
+            if (data.success) {
+                toastr.success(data.message);
+                dataTable.ajax.reload();
+            } else {
+                toastr.error(data.message);
+            }
+        },
+        error: function () {
+            toastr.error('An error occurred while processing your request.');
         }
-    })
+    });
 }

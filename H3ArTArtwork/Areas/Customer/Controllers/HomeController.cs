@@ -43,6 +43,14 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
         {
 
             Artwork artworkFromDb = _unitOfWork.ArtworkObj.Get(u => u.artworkId == artworkId, includeProperties: "applicationUser");
+
+            if (artworkFromDb.reportedConfirm == true || artworkFromDb.isBought == true)
+            {
+        
+                TempData["error"] = "This artwork is bought or reported";
+
+                return RedirectToAction(nameof(Index));
+            }
             ShoppingCart shoppingCart = new()
             {
                 artwork = artworkFromDb,
@@ -116,6 +124,12 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return View(userVM);
         }
 
+        public IActionResult ViewBlog(string artistID)
+        {
+            IEnumerable<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.creatorID == artistID, includeProperties:"applicationUser");
+            return View(blogList);
+        }
+
         [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer)]
         public IActionResult ReportArtwork(int artworkID)
         {
@@ -140,6 +154,30 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
         }
 
         [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer)]
+        public IActionResult ReportBlog(int blogID)
+        {
+            //get the id
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            Blog blog = _unitOfWork.BlogObj.Get(u => u.blogID == blogID);
+
+            if (blog.creatorID.Equals(userId))
+            {
+                TempData["error"] = "Cannot report your blog";
+                return RedirectToAction(nameof(Blog_Details), new { blogID = blogID });
+            }
+            ReportBlog reportBlog = new ReportBlog();
+            reportBlog.blogID = blogID;
+            reportBlog.reporterUserID = userId;
+            _unitOfWork.ReportBlogObj.Add(reportBlog);
+            _unitOfWork.Save();
+            TempData["success"] = "Report blog successfully";
+            return RedirectToAction(nameof(Blog_Details), new { blogID = blogID });
+        }
+
+
+        [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer)]
         public IActionResult ReportArtist(string artistID)
         {
             //get the id
@@ -161,6 +199,18 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
 
             return RedirectToAction(nameof(ArtistProfile), new { artistID = artistID });
         }
+
+        public IActionResult Blog()
+        {
+            IEnumerable<Blog> blogList = _unitOfWork.BlogObj.GetAll(includeProperties: "applicationUser");
+            return View(blogList);
+        }
+
+        public IActionResult Blog_Details(int blogID)
+        {
+            Blog blog = _unitOfWork.BlogObj.Get(u=>u.blogID == blogID, includeProperties:"applicationUser");
+            return View(blog);
+        } 
 
 
         public IActionResult Privacy()

@@ -4,11 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using H3ArT.Models.ViewModels;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using H3ArT.Utility;
 
 
 namespace H3ArTArtwork.Areas.Creator.Controllers
 {
     [Area("Creator")]
+    [Authorize(Roles = SD.Role_Creator)]
     public class ArtworkController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -95,6 +98,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                     {
 
                         // Add product
+                        artworkVM.artwork.reportedConfirm = false;
                         _unitOfWork.ArtworkObj.Add(artworkVM.artwork);
                         _unitOfWork.Save();
                  
@@ -152,31 +156,54 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             List<Artwork> artworkList = _unitOfWork.ArtworkObj.GetAll(u => u.artistID == userId, includeProperties: "category,applicationUser").ToList();
             return Json(new { data = artworkList });
         }
-
-        [HttpDelete]
         public IActionResult Delete(int? id)
         {
-            var productToBeDeleted = _unitOfWork.ArtworkObj.Get(u => u.artworkId == id);
-            if (productToBeDeleted == null)
+            try
             {
-                return Json(new { success = false, message = "Error during deleting" });
-            }
-
-            if (!string.IsNullOrEmpty(productToBeDeleted.imageUrl))
-            {
-                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.imageUrl.TrimStart('\\'));
-                if (System.IO.File.Exists(oldImagePath))
+                var productToBeDeleted = _unitOfWork.ArtworkObj.Get(u => u.artworkId == id);
+                if (productToBeDeleted == null)
                 {
-                    System.IO.File.Delete(oldImagePath);
+                    return Json(new { success = false, message = "Error: Artwork not found" });
                 }
+
+                // Check if there are any order details associated with this artwork
+                bool hasOrderDetails = _unitOfWork.OrderDetailObj.GetAll(od => od.artworkId == id).Any();
+                if (hasOrderDetails)
+                {
+                    // Set error message in TempData
+                    TempData["error"] = "Cannot delete artwork with associated orders";
+                    return Json(new { success = false, message = "Cannot delete artwork with associated orders" });
+                }
+
+                if (!string.IsNullOrEmpty(productToBeDeleted.imageUrl))
+                {
+                    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.imageUrl.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                _unitOfWork.ArtworkObj.Remove(productToBeDeleted);
+                _unitOfWork.Save();
+
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                List<Artwork> listArtwork = _unitOfWork.ArtworkObj.GetAll(u => u.artistID == userId, includeProperties: "category,applicationUser").ToList();
+
+                // Set success message in TempData
+                TempData["success"] = "Delete Successful";
+
+                return Json(new { success = true, message = "Delete Successful" });
             }
-
-            _unitOfWork.ArtworkObj.Remove(productToBeDeleted);
-            _unitOfWork.Save();
-
-            List<Artwork> listProduct = _unitOfWork.ArtworkObj.GetAll(includeProperties: "category,applicationUser").ToList();
-            return Json(new { success = true, message = "Delete Successful" });
+            catch (Exception ex)
+            {
+                // Log the exception for debugging purposes
+                Console.WriteLine(ex.Message);
+                return Json(new { success = false, message = "An error occurred while deleting the artwork" });
+            }
         }
+
         #endregion
 
     }

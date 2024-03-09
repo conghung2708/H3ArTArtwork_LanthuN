@@ -56,6 +56,9 @@
                     <div class="card-columns">
                         @foreach (var artwork in Model)
                         {
+
+               @if(!artwork.reportedConfirm && !artwork.isBought)
+                            {
                             <div class="card card-pin">
                                 <div class="position-relative">
                                     <img class="card-img" src="@artwork.imageUrl" alt="Card image">
@@ -78,7 +81,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                           
                         }
                     </div>
                 </div>
