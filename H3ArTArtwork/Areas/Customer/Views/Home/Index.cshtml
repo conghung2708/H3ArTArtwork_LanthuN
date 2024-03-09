@@ -3,7 +3,7 @@
 
 
 @{
-   
+
 }
 
 <!DOCTYPE html>
@@ -57,7 +57,18 @@
                         @foreach (var artwork in Model)
                         {
                             <div class="card card-pin">
-                                <img class="card-img" src="@artwork.imageUrl" alt="Card image">
+                                <div class="position-relative">
+                                    <img class="card-img" src="@artwork.imageUrl" alt="Card image">
+                                    @if (artwork.isBought == true)
+                                    {
+                                        <span class="badge badge-pill badge-warning position-absolute top-0 start-50 translate-middle-x">Bought</span>
+                                    }
+                                    @if (artwork.isPremium == true)
+                                    {
+                                        <span class="badge badge-pill badge-success position-absolute top-0 start-0">Premium</span>
+                                    }
+                                </div>
+
                                 <div class="overlay">
                                     <h2 class="card-title title">@artwork.title</h2>
                                     <div class="more">
@@ -67,6 +78,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         }
                     </div>
                 </div>
