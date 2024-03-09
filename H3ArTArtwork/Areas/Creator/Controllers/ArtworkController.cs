@@ -150,6 +150,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
+
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
