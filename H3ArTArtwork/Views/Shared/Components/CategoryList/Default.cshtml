@@ -8,12 +8,12 @@
             <!-- Check if the current category is the active category -->
             @{
                 string activeClass = "";
-                if (ViewContext.RouteData.Values["categoryId"] != null && (int)ViewContext.RouteData.Values["categoryId"] == category.categoryId)
+                if (ViewContext.RouteData.Values["categoryId"] != null && (int)ViewContext.RouteData.Values["categoryId"] == category.CategoryId)
                 {
                     activeClass = "active";
                 }
             }
-            <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@category.categoryId" class="dropdown-item @activeClass">@category.categoryName</a>
+            <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@category.CategoryId" class="dropdown-item @activeClass">@category.CategoryName</a>
         </li>
     }
     @if (Model.Count() > 4)
@@ -23,7 +23,7 @@
             <div class="dropdown-menu shadow-lg" aria-labelledby="dropdown01">
                 @foreach (var category in Model.Skip(4))
                 {
-                    <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@category.categoryId" class="dropdown-item">@category.categoryName</a>
+                    <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@category.CategoryId" class="dropdown-item">@category.CategoryName</a>
                 }
             </div>
         </li>

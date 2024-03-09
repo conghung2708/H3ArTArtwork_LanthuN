@@ -56,14 +56,14 @@
                     <div class="card-columns">
                         @foreach (var artwork in Model)
                         {
-                            @if(!artwork.reportedConfirm && !artwork.isBought)
+                            @if(!artwork.ReportedConfirm && !artwork.IsBought)
                             {
                                 <div class="card card-pin">
-                                    <img class="card-img" src="@artwork.imageUrl" alt="Card image">
+                                    <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
                                     <div class="overlay">
-                                        <h2 class="card-title title">@artwork.title</h2>
+                                        <h2 class="card-title title">@artwork.Title</h2>
                                         <div class="more">
-                                            <a asp-action="Details" asp-route-artworkId="@artwork.artworkId">
+                                            <a asp-action="Details" asp-route-artworkId="@artwork.ArtworkId">
                                                 <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
                                             </a>
                                         </div>

@@ -8,8 +8,8 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/Moderator/report/GetAllReportArtwork' },
         "columns": [
-            { data: 'reportArtworkID', "width": "25%" },
-            { data: 'artworkID', "width": "25%" },
+            { data: 'reportArtworkId', "width": "25%" },
+            { data: 'artworkId', "width": "25%" },
             { data: 'artwork.title', "width": "10%" },
             {
                 data: 'artwork.imageUrl',
@@ -24,12 +24,12 @@ function loadDataTable() {
                 "render": function (data, type, row) {
                     if (data == 0 || data == null) {
                         return `<div class="w-75 btn-group" role="group">
-                            <a onClick=Hide('${row.artworkID}') class="btn btn-success text-white" style="cursor:pointer; width:100px;">
+                            <a onClick=Hide('${row.artworkId}') class="btn btn-success text-white" style="cursor:pointer; width:100px;">
                                     <i class="bi bi-unlock-fill"></i>Unhidden</a>
                         </div>`;
                     } else {
                         return `<div class="w-75 btn-group" role="group">
-                            <a onClick=Hide('${row.artworkID}')  class="btn btn-danger text-white" style="cursor:pointer; width:100px;"> <i class="bi bi-lock-fill"></i>Hidden</a>
+                            <a onClick=Hide('${row.artworkId}')  class="btn btn-danger text-white" style="cursor:pointer; width:100px;"> <i class="bi bi-lock-fill"></i>Hidden</a>
                         </div>`;
                     }
                 },

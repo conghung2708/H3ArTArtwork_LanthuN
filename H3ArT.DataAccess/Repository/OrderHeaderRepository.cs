@@ -26,10 +26,10 @@ namespace H3ArT.DataAccess.Repository
             var orderFromDb = _db.TblOrderHeader.FirstOrDefault(u => u.Id == id);
             if (orderFromDb != null)
             {
-                orderFromDb.orderStatus = orderStatus;
+                orderFromDb.OrderStatus = orderStatus;
                 if (!string.IsNullOrEmpty(paymentStatus))
                 {
-                    orderFromDb.paymentStatus = paymentStatus;
+                    orderFromDb.PaymentStatus = paymentStatus;
                 }
             }
         }
@@ -39,13 +39,13 @@ namespace H3ArT.DataAccess.Repository
             var orderFromDb = _db.TblOrderHeader.FirstOrDefault(u => u.Id == id);
             if (!string.IsNullOrEmpty(sessionId))
             {
-                orderFromDb.sessionId = sessionId;
+                orderFromDb.SessionId = sessionId;
             }
             if (!string.IsNullOrEmpty(paymentIntentId))
             {
                 //payment success
-                orderFromDb.paymentIntentId = paymentIntentId;
-                orderFromDb.paymentDate = DateTime.Now;
+                orderFromDb.PaymentIntentId = paymentIntentId;
+                orderFromDb.PaymentDate = DateTime.Now;
             }
         }
     }

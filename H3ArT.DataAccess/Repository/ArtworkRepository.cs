@@ -18,21 +18,21 @@ namespace H3ArT.DataAccess.Repository
         }
         public void Update(Artwork artwork)
         {
-            var artworkFromDb = _db.TblArtwork.FirstOrDefault(u => u.artworkId == artwork.artworkId);
+            var artworkFromDb = _db.TblArtwork.FirstOrDefault(u => u.ArtworkId == artwork.ArtworkId);
             if (artworkFromDb != null )
             {
-                artworkFromDb.title = artwork.title;
-                artworkFromDb.artistID = artwork.artistID;
-                artworkFromDb.price = artwork.price;
-                artworkFromDb.description = artwork.description;
-                artworkFromDb.isPremium = artwork.isPremium;
-                artworkFromDb.categoryID = artwork.categoryID;
-                artworkFromDb.isBought = artwork.isBought;
-                artworkFromDb.reportedConfirm = artwork.reportedConfirm;
-                if(artwork.imageUrl != null )
+                artworkFromDb.Title = artwork.Title;
+                artworkFromDb.ArtistId = artwork.ArtistId;
+                artworkFromDb.Price = artwork.Price;
+                artworkFromDb.Description = artwork.Description;
+                artworkFromDb.IsPremium = artwork.IsPremium;
+                artworkFromDb.CategoryId = artwork.CategoryId;
+                artworkFromDb.IsBought = artwork.IsBought;
+                artworkFromDb.ReportedConfirm = artwork.ReportedConfirm;
+                if(artwork.ImageUrl != null )
                 {
-                    artworkFromDb.imageUrl = artwork.imageUrl;
-
+                    artworkFromDb.ImageUrl = artwork.ImageUrl;
+                    
                 }
             }
         }
