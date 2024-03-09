@@ -86,7 +86,7 @@
     <div class="wrapper">
         <nav class="nav">
             <div class="nav-logo">
-                <a href="#" class=""><img src="~/image/login/whitelogo.png" alt="logo"/></a>
+                <a href="/" class=""><img src="~/image/login/whitelogo.png" alt="logo"/></a>
                 
             </div>
             <div class="nav-button">
@@ -150,7 +150,7 @@
                                             <p>
                                                 @foreach (var provider in Model.ExternalLogins!)
                                                 {
-                                                    <button type="submit" class="button-86" role="button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                                    <button style="margin: 10px;" type="submit" class="button-86" role="button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
                                                 }
                                             </p>
                                         </div>
