@@ -98,6 +98,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                     {
 
                         // Add product
+                        artworkVM.Artwork.CreateAt = DateTime.Now;
                         artworkVM.Artwork.ReportedConfirm = false;
                         _unitOfWork.ArtworkObj.Add(artworkVM.Artwork);
                         _unitOfWork.Save();
@@ -150,7 +151,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-
+            
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 

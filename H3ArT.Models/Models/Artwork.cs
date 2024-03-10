@@ -15,6 +15,7 @@ namespace H3ArT.Models.Models
 
         [Required(ErrorMessage = "Description is required.")]
         [MinLength(70, ErrorMessage = "Description must be at least 70 characters.")]
+        [ValidateNever]
         public string Description { get; set; }
 
         public string ArtistId { get; set; }
@@ -39,5 +40,7 @@ namespace H3ArT.Models.Models
         public bool IsBought { get; set; }
 
         public bool ReportedConfirm { get; set; }
+
+        public DateTime? CreateAt { get; set; }
     }
 }
