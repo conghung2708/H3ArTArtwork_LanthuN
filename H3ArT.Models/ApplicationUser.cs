@@ -11,8 +11,6 @@ namespace H3ArT.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        
-
         [MaxLength(50)]
         [RegularExpression(@"^[^\d]+$", ErrorMessage = "Full name cannot contain numbers.")]
         public string? FullName { get; set; }
@@ -28,5 +26,7 @@ namespace H3ArT.Models
         public string AvatarImage { get; set; }
         [NotMapped]
         public string Role { get; set; }
+
+        public int? AvaiblePost { get; set; }
     }
 }

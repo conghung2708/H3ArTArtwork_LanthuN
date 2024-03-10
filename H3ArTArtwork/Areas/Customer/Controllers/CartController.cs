@@ -42,7 +42,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
 
         public IActionResult Remove(int cartId)
         {
-            var cartFromDb = _unitOfWork.ShoppingCartObj.Get(u => u.shoppingCartId == cartId, tracked: true);
+            var cartFromDb = _unitOfWork.ShoppingCartObj.Get(u => u.shoppingCartId == cartId);
 
             // Fetch the associated orderHeaderId using userId or any other relevant information
             var userId = cartFromDb.buyerID;
@@ -51,7 +51,8 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             if (orderHeader != null)
             {
                 // Remove associated OrderDetail record
-                var orderDetail = _unitOfWork.OrderDetailObj.Get(od => od.artworkId == cartFromDb.artworkID && od.orderHeaderId == orderHeader.Id);
+                var orderDetail = _unitOfWork.OrderDetailObj.Get(od => od.artworkId == cartFromDb.artworkID
+                                                                                  && od.orderHeaderId == orderHeader.Id);
                 if (orderDetail != null)
                 {
                     _unitOfWork.OrderDetailObj.Remove(orderDetail);
@@ -59,8 +60,6 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             }
 
             _unitOfWork.ShoppingCartObj.Remove(cartFromDb);
-            //Remove from session
-            HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCartObj.GetAll(u => u.buyerID == cartFromDb.buyerID).Count() - 1);
 
             _unitOfWork.Save();
 
@@ -99,41 +98,41 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             //ShoppingCartVM will automatically be populated
-
-
             ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCartObj.GetAll(u => u.buyerID == userId, includeProperties: "artwork");
-
 
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 
+            // set ngay thang va userID cho orderHeader
             ShoppingCartVM.orderHeader.orderDate = System.DateTime.Now;
             ShoppingCartVM.orderHeader.applicationUserId = userId;
 
-
+            // set tong tien cho orderHeader
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
-
                 cart.price = cart.artwork.price;
                 ShoppingCartVM.orderHeader.orderTotal += cart.price;
-                if (cart.artwork.isBought)
-                {
-                    // Add model error if artwork is already bought
-                    ModelState.AddModelError("", $"The artwork '{cart.artwork.title}' has already been purchased.");
-                    return View(ShoppingCartVM); // or any other suitable action result
-                }
             }
             if (!ModelState.IsValid)
             {
                 // If model state is not valid, return the view with validation errors
                 return View(ShoppingCartVM); // or any other suitable action result
             }
+
+            // bam place order ma khong thanh toan => pending
+            // lay ra nhung cai nay de tranh update 2 lan vao doan code o ben duoi
             var existingOrder = _unitOfWork.OrderHeaderObj.Get(o => o.applicationUserId == userId && o.paymentStatus == SD.PaymentStatusPending);
 
+            // neu ma no ton tai (!=null) => cap nhat lai nhung gia tri nhu la`
+            //[orderDate],[orderTotal],[orderStatus],[paymentStatus],[paymentDate],[paymentIntentId],[name],[phoneNumber],[sessionId]
+            // để mấy cái này không bị trùng lặp
             if (existingOrder != null)
             {
+                // đây là cái đoạn cập nhật nè
                 ShoppingCartVM.orderHeader = existingOrder;
                 _unitOfWork.OrderHeaderObj.Update(existingOrder);
                 _unitOfWork.Save();
+
+                // lấy ra cái new => nghĩa là cái mới thêm vào sau quá trình không thanh toán
                 var newShoppingCartItems = ShoppingCartVM.ShoppingCartList.Where(cart => cart.isNew);
 
                 foreach (var cart in newShoppingCartItems)
@@ -154,6 +153,9 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             else
             {
                 //it is a regular customer account
+
+                // đây là trường hợp tất cả sản phẩm trong giỏ hàng đều là mới và không có cái orderStatus là pending
+                // => chạy như bình thường
                 ShoppingCartVM.orderHeader.paymentStatus = SD.PaymentStatusPending;
                 ShoppingCartVM.orderHeader.orderStatus = SD.StatusPending;
 
@@ -175,9 +177,8 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 }
 
             }
-
             //stripe logic
-            var domain = "https://localhost:44358/";
+            var domain = "https://localhost:7034/";
             var options = new SessionCreateOptions
             {
                 SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.orderHeader.Id}",
@@ -214,7 +215,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
         public IActionResult OrderConfirmation(int id)
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id, includeProperties: "applicationUser");
-            List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.buyerID == orderHeader.applicationUserId, includeProperties: "artwork").ToList();
+
             //this is an order by customer
             var service = new SessionService();
             Session session = service.Get(orderHeader.sessionId);
@@ -224,17 +225,10 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
                 _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                 _unitOfWork.Save();
-
-                foreach (var cartItem in shoppingCarts)
-                {
-                    cartItem.artwork.isBought = true;
-                    _unitOfWork.ArtworkObj.Update(cartItem.artwork);
-                }
-                _unitOfWork.Save();
             }
 
-            HttpContext.Session.Clear();
 
+            List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.buyerID == orderHeader.applicationUserId).ToList();
             _unitOfWork.ShoppingCartObj.RemoveRange(shoppingCarts);
             _unitOfWork.Save();
             return View(id);
