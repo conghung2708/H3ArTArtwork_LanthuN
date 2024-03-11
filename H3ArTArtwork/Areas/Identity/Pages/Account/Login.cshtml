@@ -86,7 +86,7 @@
     <div class="wrapper">
         <nav class="nav">
             <div class="nav-logo">
-                <a href="#" class=""><img src="~/image/login/whitelogo.png" alt="logo"/></a>
+                <a href="/" class=""><img src="~/image/login/whitelogo.png" alt="logo"/></a>
                 
             </div>
             <div class="nav-button">
@@ -150,7 +150,7 @@
                                             <p>
                                                 @foreach (var provider in Model.ExternalLogins!)
                                                 {
-                                                    <button type="submit" class="button-86" role="button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                                    <button style="margin: 10px;" type="submit" class="button-86" role="button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
                                                 }
                                             </p>
                                         </div>
@@ -159,8 +159,9 @@
                             }
                         </section>
                     </div>
+                    <a href="#">Forgot password?</a>
                 </div>
-                <div class="two-col">
+                @* <div class="two-col">
                     <div class="one">
                         <input type="checkbox" id="login-check" />
                         <label for="login-check"> Remember Me</label>
@@ -168,7 +169,7 @@
                     <div class="two">
                         <label><a href="#">Forgot password?</a></label>
                     </div>
-                </div>
+                </div> *@
                 <!-- <hr />
                 <a href="#" class="submit input-box-submit"><i class="bx bxl-google"></i>Sign in with Google</a>
                 <a href="#" class="submit input-box-submit"><i class="bx bxl-facebook"></i>Sign in with Facebook</a> -->
