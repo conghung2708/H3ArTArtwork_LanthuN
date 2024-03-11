@@ -134,14 +134,14 @@
                 
                 <div class="blog-item">
                     <div class="blog-img">
-                        <img src="@blog.imageUrl" alt="" />
+                        <img src="@blog.ImageUrl" alt="" />
                         <span><i class="far fa-heart"></i></span>
                     </div>
                     <div class="blog-text">
-                        <span>@blog.createAt</span> @* date *@
-                        <h2>@blog.title</h2> @* title *@
+                        <span>@blog.CreatedAt</span> @* date *@
+                        <h2>@blog.Title</h2> @* title *@
                         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis libero quas ipsum laudantium nihil! Quaerat.</p>
-                        <a asp-action="Blog_Details" asp-route-blogID="@blog.blogID">More</a>
+                        <a asp-action="Blog_Details" asp-route-blogID="@blog.BlogId">More</a>
                     </div>
                 </div>
                 }

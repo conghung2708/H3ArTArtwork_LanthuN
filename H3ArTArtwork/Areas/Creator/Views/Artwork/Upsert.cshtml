@@ -6,16 +6,16 @@
         <div class="row">
             <div class="col-12 text-center">
                 <!-- Note this dynamic -->
-                <h2 class="text-white py-2">@(Model.artwork.artworkId != 0 ? "Update" : "Create") Artwork</h2>
+                <h2 class="text-white py-2">@(Model.Artwork.ArtworkId != 0 ? "Update" : "Create") Artwork</h2>
             </div>
         </div>
     </div>
     <div class="card-body p-4">
         <form method="post" class="row" enctype="multipart/form-data">
-            <input asp-for="artwork.artworkId" hidden />
-            <input asp-for="artwork.imageUrl" hidden />
-            <input asp-for="artwork.artistID" hidden />
-            <input asp-for="@Model.artwork.applicationUser" hidden />
+            <input asp-for="Artwork.ArtworkId" hidden />
+            <input asp-for="Artwork.ImageUrl" hidden />
+            <input asp-for="Artwork.ArtistId" hidden />
+            <input asp-for="@Model.Artwork.ApplicationUser" hidden />
 
 
 
@@ -34,54 +34,54 @@
 
                         <!-- Title -->
                         <div class="form-floating py-2 col-12">
-                            <input asp-for="artwork.title" class="form-control border-0 shadow" />
-                            <label class="p-0 ms-2" asp-for="artwork.title"></label>
-                            <span asp-validation-for="artwork.title" class="text-danger"></span>
+                            <input asp-for="Artwork.Title" class="form-control border-0 shadow" />
+                            <label class="p-0 ms-2" asp-for="Artwork.Title"></label>
+                            <span asp-validation-for="Artwork.Title" class="text-danger"></span>
                         </div>
 
                         <!-- Description -->
                         <div class="form-floating py-2 col-12">
-                            <textarea asp-for="artwork.description" class="form-control border-0 shadow"></textarea>
-                            <label class="p-0 ms-2" asp-for="artwork.description"></label>
+                            <textarea asp-for="Artwork.Description" class="form-control border-0 shadow"></textarea>
+                            <label class="p-0 ms-2" asp-for="Artwork.Description"></label>
                         </div>
 
                         <!-- Artist Name -->
                         <div class="form-floating py-2 col-12">
-                            <input asp-for="artwork.applicationUser.FullName" class="form-control border-0 shadow" />
-                            <label class="p-0 ms-2" asp-for="artwork.applicationUser.FullName"></label>
-                            <span asp-validation-for="artwork.applicationUser.FullName" class="text-danger"></span>
+                            <input asp-for="Artwork.ApplicationUser.FullName" class="form-control border-0 shadow" />
+                            <label class="p-0 ms-2" asp-for="Artwork.ApplicationUser.FullName"></label>
+                            <span asp-validation-for="Artwork.ApplicationUser.FullName" class="text-danger"></span>
                         </div>
 
                         <!-- Price -->
                         <div class="form-floating py-2 col-12">
-                            <input asp-for="artwork.price" class="form-control border-0 shadow" />
-                            <label class="p-0 ms-2" asp-for="artwork.price"></label>
-                            <span asp-validation-for="artwork.price" class="text-danger"></span>
+                            <input asp-for="Artwork.Price" class="form-control border-0 shadow" />
+                            <label class="p-0 ms-2" asp-for="Artwork.Price"></label>
+                            <span asp-validation-for="Artwork.Price" class="text-danger"></span>
                         </div>
 
                         <!-- Category -->
                         <div class="form-floating py-2 col-12">
-                            <select asp-for="artwork.categoryID" asp-items="@Model.categoryList" class="form-select border-0 shadow">
+                            <select asp-for="Artwork.CategoryId" asp-items="@Model.CategoryList" class="form-select border-0 shadow">
                                 <option disabled selected>--Select Category</option>
                             </select>
-                            <label class="p-0 ms-2" asp-for="artwork.categoryID"></label>
-                            <span asp-validation-for="artwork.categoryID" class="text-danger"></span>
+                            <label class="p-0 ms-2" asp-for="Artwork.CategoryId"></label>
+                            <span asp-validation-for="Artwork.CategoryId" class="text-danger"></span>
                         </div>
 
                         <!-- Image URL -->
                         <div class="form-floating py-2 col-12">
                             <input type="file" name="file" class="form-control border-0 shadow" />
-                            <label class="p-0 ms-2" asp-for="artwork.imageUrl"></label>
+                            <label class="p-0 ms-2" asp-for="Artwork.ImageUrl"></label>
                         </div>
 
                         <div class="form-check form-switch py-2 col-12">
-                            <input type="checkbox" class="form-check-input" asp-for="artwork.isPremium" />
-                            <label class="form-check-label ms-2" asp-for="artwork.isPremium">Premium</label>
+                            <input type="checkbox" class="form-check-input" asp-for="Artwork.IsPremium" />
+                            <label class="form-check-label ms-2" asp-for="Artwork.IsPremium">Premium</label>
                         </div>
                         <!-- Buttons -->
                         <div class="row">
                             <div class="col-6 col-md-3">
-                                <input type="submit" value="@(Model.artwork.artworkId != 0 ? "Update" : "Create")" class="btn btn-outline-primary border form-control" />
+                                <input type="submit" value="@(Model.Artwork.ArtworkId != 0 ? "Update" : "Create")" class="btn btn-outline-primary border form-control" />
                             </div>
                             <div class="col-6 col-md-3">
                                 <a asp-controller="Artwork" asp-action="Index" class="btn btn-outline-primary form-control">Back to list</a>
@@ -90,7 +90,7 @@
                     </div>
                 </div>
                 <div class="col-2">
-                    <img src="@Model.artwork.imageUrl" width="100%"
+                    <img src="@Model.Artwork.ImageUrl" width="100%"
                          style="border-radius:5px; border:1px solid #bbb9b9" />
                 </div>
             </div>

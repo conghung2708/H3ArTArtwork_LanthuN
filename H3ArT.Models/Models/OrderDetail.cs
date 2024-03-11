@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace H3ArT.Models.Models
 {
@@ -13,20 +8,19 @@ namespace H3ArT.Models.Models
     {
         public int Id { get; set; }
 
-        public int orderHeaderId { get; set; }
-        [ForeignKey("orderHeaderId")]
+        public int OrderHeaderId { get; set; }
+        [ForeignKey("OrderHeaderId")]
         [ValidateNever]
-        public OrderHeader orderHeader { get; set; }
+        public OrderHeader OrderHeader { get; set; }
 
         [Required]
-        public int artworkId { get; set; }
-        [ForeignKey("artworkId")]
+        public int ArtworkId { get; set; }
+        [ForeignKey("ArtworkId")]
         [ValidateNever]
-        public Artwork artwork { get; set; }
+        public Artwork Artwork { get; set; }
 
-        public int count { get; set; }
+        public int Count { get; set; }
 
-        //not updated
-        public double price { get; set; }
+        public double Price { get; set; }
     }
 }

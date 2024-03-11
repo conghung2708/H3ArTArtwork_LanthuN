@@ -49,15 +49,15 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
                 Blog blog = new Blog();
-                blog.creatorID = userId;
-                blog.applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+                blog.CreatorId = userId;
+                blog.ApplicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 
                 return View(blog);
             }
             else
             {
                 //update
-                Blog blog = _unitOfWork.BlogObj.Get(u => u.blogID == id, includeProperties: "applicationUser");
+                Blog blog = _unitOfWork.BlogObj.Get(u => u.BlogId == id, includeProperties: "ApplicationUser");
                 return View(blog);
             }
 
@@ -80,10 +80,10 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                         string productPath = Path.Combine(wwwRootPath, @"image\blog");
 
-                        if (!string.IsNullOrEmpty(blog.imageUrl))
+                        if (!string.IsNullOrEmpty(blog.ImageUrl))
                         {
                             // Delete the old image
-                            var oldImagePath = Path.Combine(wwwRootPath, blog.imageUrl.TrimStart('\\'));
+                            var oldImagePath = Path.Combine(wwwRootPath, blog.ImageUrl.TrimStart('\\'));
 
                             if (System.IO.File.Exists(oldImagePath))
                             {
@@ -95,20 +95,20 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                             file.CopyTo(fileStream);
                         }
 
-                        blog.imageUrl = @"\image\blog\" + fileName;
+                        blog.ImageUrl = @"\image\blog\" + fileName;
                     }
-                    if (blog.blogID == 0)
+                    if (blog.BlogId == 0)
                     {
                         // Assign current time to createdAt property
-                        blog.createAt = DateTime.Now;
+                        blog.CreatedAt = DateTime.Now;
 
                         // Add product
                         _unitOfWork.BlogObj.Add(blog);
                         _unitOfWork.Save();
                  
 
-                        blog.creatorID = userId;
-                        var unknownUser = blog.applicationUser;
+                        blog.CreatorId = userId;
+                        var unknownUser = blog.ApplicationUser;
                         _unitOfWork.BlogObj.Update(blog);
                      
                     
@@ -152,22 +152,22 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            List<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.creatorID ==  userId, includeProperties: "applicationUser").ToList();
+            List<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.CreatorId ==  userId, includeProperties: "ApplicationUser").ToList();
             return Json(new { data = blogList });
         }
 
         [HttpDelete]
         public IActionResult Delete(int? id)
         {
-            var blogToBeDeleted = _unitOfWork.BlogObj.Get(u => u.blogID == id);
+            var blogToBeDeleted = _unitOfWork.BlogObj.Get(u => u.BlogId == id);
             if (blogToBeDeleted == null)
             {
                 return Json(new { success = false, message = "Error during deleting" });
             }
 
-            if (!string.IsNullOrEmpty(blogToBeDeleted.imageUrl))
+            if (!string.IsNullOrEmpty(blogToBeDeleted.ImageUrl))
             {
-                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, blogToBeDeleted.imageUrl.TrimStart('\\'));
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, blogToBeDeleted.ImageUrl.TrimStart('\\'));
                 if (System.IO.File.Exists(oldImagePath))
                 {
                     System.IO.File.Delete(oldImagePath);
@@ -180,7 +180,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            List<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.creatorID == userId, includeProperties: "applicationUser").ToList();
+            List<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.CreatorId == userId, includeProperties: "ApplicationUser").ToList();
             return Json(new { success = true, message = "Delete Successful" });
         }
         #endregion

@@ -9,14 +9,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
+using System;
 using System.Collections.Generic;
-using System.Security.Claims;
+using System.Linq;
 
 namespace H3ArTArtwork.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin)]
-
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -25,6 +24,8 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         {
             _db = db;
         }
+
+        [Authorize(Roles = SD.Role_Admin)]
         public IActionResult Index()
         {
             return View();
@@ -32,24 +33,23 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
         #region API CALLS
         [HttpGet]
+        [Authorize(Roles = SD.Role_Admin)]
         public IActionResult GetAll()
         {
             List<ApplicationUser> UserList = _db.ApplicationUsers.ToList();
 
-            //Get the userRole
             var userRoles = _db.UserRoles.ToList();
-            //Get the Role Name
             var roles = _db.Roles.ToList();
             foreach (var user in UserList)
             {
-                var roleId = userRoles.FirstOrDefault(u => u.UserId == user.Id).RoleId;
-                user.Role = roles.FirstOrDefault(u => u.Id == roleId).Name;
-
+                var roleId = userRoles.FirstOrDefault(u => u.UserId == user.Id)?.RoleId;
+                user.Role = roles.FirstOrDefault(u => u.Id == roleId)?.Name;
             }
             return Json(new { data = UserList });
         }
 
         [HttpPost]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Moderator)]
         public IActionResult LockUnlock([FromBody] string id)
         {
             var isAdmin = IsAdmin(id);
@@ -57,6 +57,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             {
                 return Json(new { success = false, message = "Admin user cannot be locked/unlocked." });
             }
+
             var objFromDb = _db.ApplicationUsers.FirstOrDefault(u => u.Id == id);
             if (objFromDb == null)
             {
@@ -65,7 +66,6 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
             if (objFromDb.LockoutEnd != null && objFromDb.LockoutEnd > DateTime.Now)
             {
-                //User is currently locked and we need to unlock them
                 objFromDb.LockoutEnd = DateTime.Now;
             }
             else
@@ -88,6 +88,4 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         }
         #endregion
     }
-
-
 }

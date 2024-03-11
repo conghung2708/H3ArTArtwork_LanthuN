@@ -18,17 +18,17 @@ namespace H3ArT.DataAccess.Repository
         }
         public void Update(Blog blog)
         {
-            var blogFromDb = _db.TblBlog.FirstOrDefault(u => u.blogID == blog.blogID);
+            var blogFromDb = _db.TblBlog.FirstOrDefault(u => u.BlogId == blog.BlogId);
             if (blogFromDb != null )
             {
-                blogFromDb.creatorID = blog.creatorID;
-                blogFromDb.title = blog.title;
-                blogFromDb.description = blog.description;
-                blogFromDb.createAt = blog.createAt;
-                if(blogFromDb.imageUrl != null )
+                blogFromDb.CreatorId = blog.CreatorId;
+                blogFromDb.Title = blog.Title;
+                blogFromDb.Description = blog.Description;
+                blogFromDb.CreatedAt = blog.CreatedAt;
+                if(blogFromDb.ImageUrl != null )
                 {
-                    blogFromDb.imageUrl = blog.imageUrl;
-
+                    blogFromDb.ImageUrl = blog.ImageUrl;
+                    
                 }
             }
         }

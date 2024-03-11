@@ -59,23 +59,23 @@
                     <!-- Post header-->
                     <header class="mb-4">
                         <!-- Post title-->
-                        <h1 class="fw-bolder mb-1">@Model.title</h1>
+                        <h1 class="fw-bolder mb-1">@Model.Title</h1>
                         <!-- Post meta content-->
-                        <div class="text-muted fst-italic mb-2">Posted on @Model.createAt</div>
+                        <div class="text-muted fst-italic mb-2">Posted on @Model.CreatedAt</div>
                         <div class="text-muted fst-italic mb-2">
-                            <a asp-action="ArtistProfile" asp-route-artistId="@Model.creatorID" style="text-decoration: none; color: #6c757d !important;">Creator: @Model.applicationUser.FullName</a>
+                            <a asp-action="ArtistProfile" asp-route-artistId="@Model.CreatorId" style="text-decoration: none; color: #6c757d !important;">Creator: @Model.ApplicationUser.FullName</a>
                         </div>
                         <!-- Post categories-->
                        
                     </header>
                     <!-- Preview image figure-->
-                    <figure class="mb-4"><img class="img-fluid rounded" src="@Model.imageUrl" alt="..." /></figure>
+                    <figure class="mb-4"><img class="img-fluid rounded" src="@Model.ImageUrl" alt="..." /></figure>
                     <!-- Post content-->
                     <section class="mb-5 pb-2">
                         <div class="position-relative">
-                            <p class="fs-5 mb-4">@Html.Raw(@Model.description)</p>
+                            <p class="fs-5 mb-4">@Html.Raw(@Model.Description)</p>
                             <div class="position-absolute end-0 pe-2">
-                                <a asp-action="ReportBlog" asp-route-blogID="@Model.blogID" style="text-decoration: none; color: red">
+                                <a asp-action="ReportBlog" asp-route-blogID="@Model.BlogId" style="text-decoration: none; color: red">
                                     <i class="bi bi-flag-fill"></i> Report
                                 </a>
                             </div>
@@ -93,7 +93,7 @@
                                 <div id="disqus_thread">
                                 </div>
                                 <script type="text/javascript">
-                                    var disqus_shortname = 'demowebsite';
+                                    var disqus_shortname = 'Artworksharingplatform-1';
                                     var disqus_developer = 0;
                                     (function () {
                                         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

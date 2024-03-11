@@ -23,24 +23,24 @@
     </div>
     <div class="container mb-4 position-relative">
         @{
-            string avatarImageSrc = string.IsNullOrEmpty(Model.artist.AvatarImage) ? "~/image/defaultava/default.jpg" : Model.artist.AvatarImage;
+            string avatarImageSrc = string.IsNullOrEmpty(Model.Artist.AvatarImage) ? "~/image/defaultava/default.jpg" : Model.Artist.AvatarImage;
         }
    
         <img src="@Url.Content(avatarImageSrc)" class="mt-neg100 mb-4 rounded-circle" width="128" alt="avatar">
 
 
-        <h1 class="font-weight-bold title">@Model.artist.FullName</h1>
+        <h1 class="font-weight-bold title">@Model.Artist.FullName</h1>
         <p>
             I love Art, Web Design, Photography, Design, Illustration
         </p>
         <div class="position-absolute top-0 end-0 pe-2">
             <div>
-                <a asp-action="ReportArtist" asp-route-artistID="@Model.artist.Id">
+                <a asp-action="ReportArtist" asp-route-artistID="@Model.Artist.Id">
                     <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Report
                 </a>
             </div>
             <div>
-                <a asp-action="ViewBlog" asp-route-artistID="@Model.artist.Id" style="color: #00a67d;">
+                <a asp-action="ViewBlog" asp-route-artistID="@Model.Artist.Id" style="color: #00a67d;">
                     <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> View my blog
                 </a>
             </div>
@@ -50,17 +50,17 @@
         <div class="row">
             <div class="card-columns">
 
-                @foreach (var artwork in Model.artworkList)
+                @foreach (var artwork in Model.ArtworkList)
                 {
 
                     <div class="card card-pin">
-                        <img class="card-img" src="@artwork.imageUrl" alt="Card image">
+                        <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
                         <div class="overlay">
-                            <h2 class="card-title title">@artwork.title</h2>
+                            <h2 class="card-title title">@artwork.Title</h2>
                             <div class="more">
-                                @if (!artwork.isBought)
+                                @if (!artwork.IsBought)
                                 {
-                                    <a asp-action="Details" asp-route-artworkId="@artwork.artworkId">
+                                    <a asp-action="Details" asp-route-artworkId="@artwork.ArtworkId">
                                         <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
                                     </a>
                                 }

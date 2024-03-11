@@ -34,8 +34,8 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         {
             OrderVM = new()
             {
-                orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == orderId, includeProperties: "applicationUser"),
-                orderDetail = _unitOfWork.OrderDetailObj.GetAll(u => u.orderHeaderId == orderId, includeProperties: "artwork")
+                OrderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == orderId, includeProperties: "ApplicationUser"),
+                OrderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderId, includeProperties: "Artwork")
             };
             return View(OrderVM);
         }
@@ -43,9 +43,9 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         [Authorize(Roles = SD.Role_Admin)]
         public IActionResult UpdateOrderDetail()
         {
-            var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.orderHeader.Id);
-            orderHeaderFromDb.name = OrderVM.orderHeader.name;
-            orderHeaderFromDb.phoneNumber = OrderVM.orderHeader.phoneNumber;
+            var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.OrderHeader.Id);
+            orderHeaderFromDb.Name = OrderVM.OrderHeader.Name;
+            orderHeaderFromDb.PhoneNumber = OrderVM.OrderHeader.PhoneNumber;
 
             _unitOfWork.OrderHeaderObj.Update(orderHeaderFromDb);
             _unitOfWork.Save();
@@ -59,10 +59,10 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         [Authorize(Roles = SD.Role_Admin)]
         public IActionResult StartProcessing()
         {
-            _unitOfWork.OrderHeaderObj.UpdateStatus(OrderVM.orderHeader.Id, SD.StatusInProcess);
+            _unitOfWork.OrderHeaderObj.UpdateStatus(OrderVM.OrderHeader.Id, SD.StatusInProcess);
             _unitOfWork.Save();
             TempData["Success"] = "Order Details Updated Sucessfully";
-            return RedirectToAction(nameof(Details), new { orderId = OrderVM.orderHeader.Id });
+            return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
 
         }
 
@@ -70,13 +70,13 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         [Authorize(Roles = SD.Role_Admin)]
         public IActionResult DoneOrder()
         {
-            var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.orderHeader.Id);
-            orderHeaderFromDb.orderStatus = SD.StatusDone;
+            var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.OrderHeader.Id);
+            orderHeaderFromDb.OrderStatus = SD.StatusDone;
 
             _unitOfWork.OrderHeaderObj.Update(orderHeaderFromDb);
             _unitOfWork.Save();
             TempData["Success"] = "Order Shipped Sucessfully";
-            return RedirectToAction(nameof(Details), new { orderId = OrderVM.orderHeader.Id });
+            return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
 
         }
 
@@ -85,15 +85,15 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         [Authorize(Roles = SD.Role_Admin)]
         public IActionResult CancelOrder()
         {
-            var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.orderHeader.Id);
+            var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.OrderHeader.Id);
 
 
-            if (orderHeaderFromDb.paymentStatus == SD.PaymentStatusApproved)
+            if (orderHeaderFromDb.PaymentStatus == SD.PaymentStatusApproved)
             {
                 var options = new RefundCreateOptions
                 {
                     Reason = RefundReasons.RequestedByCustomer,
-                    PaymentIntent = orderHeaderFromDb.paymentIntentId
+                    PaymentIntent = orderHeaderFromDb.PaymentIntentId
                 };
                 var service = new RefundService();
                 Refund refund = service.Create(options);
@@ -104,7 +104,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             {
                 _unitOfWork.OrderHeaderObj.UpdateStatus(orderHeaderFromDb.Id, SD.StatusCancelled, SD.StatusCancelled);
             }
-            var orderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.orderHeaderId == orderHeaderFromDb.Id, includeProperties: "artwork");
+            var orderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderHeaderFromDb.Id, includeProperties: "Artwork");
 
             // Set the isBought property of artwork to false for all items in this order
             foreach (var orderDetail in orderDetails)
@@ -112,13 +112,13 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                 // Fetch the associated artwork for this order detail
 
                 // Update the isBought property to false
-                orderDetail.artwork.isBought = false;
-                _unitOfWork.ArtworkObj.Update(orderDetail.artwork);
+                orderDetail.Artwork.IsBought = false;
+                _unitOfWork.ArtworkObj.Update(orderDetail.Artwork);
 
             }
             _unitOfWork.Save();
             TempData["Success"] = "Order Cancelled Sucessfully";
-            return RedirectToAction(nameof(Details), new { orderId = OrderVM.orderHeader.Id });
+            return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
         }
 
         #region API CALLS
@@ -129,7 +129,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
             if (User.IsInRole(SD.Role_Admin))
             {
-                orderHeaderList = _unitOfWork.OrderHeaderObj.GetAll(includeProperties: "applicationUser").ToList();
+                orderHeaderList = _unitOfWork.OrderHeaderObj.GetAll(includeProperties: "ApplicationUser").ToList();
             }
             else
             {
@@ -137,22 +137,22 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                orderHeaderList = _unitOfWork.OrderHeaderObj.GetAll(u => u.applicationUserId == userId, includeProperties: "applicationUser");
+                orderHeaderList = _unitOfWork.OrderHeaderObj.GetAll(u => u.ApplicationUserId == userId, includeProperties: "ApplicationUser");
             }
             switch (status)
             {
                 //STATUS FILTER
                 case "pending":
-                    orderHeaderList = orderHeaderList.Where(u => u.paymentStatus == SD.PaymentStatusPending);
+                    orderHeaderList = orderHeaderList.Where(u => u.PaymentStatus == SD.PaymentStatusPending);
                     break;
                 case "inprocess":
-                    orderHeaderList = orderHeaderList.Where(u => u.orderStatus == SD.StatusInProcess);
+                    orderHeaderList = orderHeaderList.Where(u => u.OrderStatus == SD.StatusInProcess);
                     break;
                 case "completed":
-                    orderHeaderList = orderHeaderList.Where(u => u.orderStatus == SD.StatusDone);
+                    orderHeaderList = orderHeaderList.Where(u => u.OrderStatus == SD.StatusDone);
                     break;
                 case "approved":
-                    orderHeaderList = orderHeaderList.Where(u => u.orderStatus == SD.StatusApproved);
+                    orderHeaderList = orderHeaderList.Where(u => u.OrderStatus == SD.StatusApproved);
                     break;
                 default:
                     break;

@@ -24,7 +24,7 @@ namespace H3ArTArtwork.ViewComponents
                 if (HttpContext.Session.GetInt32(SD.SessionCart) == null)
                 {
                     HttpContext.Session.SetInt32(SD.SessionCart,
-                    _unitOfWork.ShoppingCartObj.GetAll(u => u.buyerID == claim.Value).Count());
+                    _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == claim.Value).Count());
                 }
 
                 return View(HttpContext.Session.GetInt32(SD.SessionCart));
