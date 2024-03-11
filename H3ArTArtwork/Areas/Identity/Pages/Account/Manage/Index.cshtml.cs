@@ -77,6 +77,8 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account.Manage
 
             public string AvatarImage { get; set; }
 
+            [Required]
+            public bool Gender {  get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -85,6 +87,8 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var fullName = user.FullName;
             var avatarImage = user.AvatarImage;
+            var gender = user.Gender;
+
             Username = userName;
 
             Input = new InputModel
@@ -92,6 +96,7 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account.Manage
                 PhoneNumber = phoneNumber,
                 FullName = fullName,
                 AvatarImage = avatarImage,
+                Gender = gender,
             };
         }
 
@@ -144,9 +149,19 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            if (Input.Gender != user.Gender)
+            {
+                user.Gender = Input.Gender;
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    StatusMessage = "Unexpected error when trying to update gender.";
+                    return RedirectToPage();
+                }
+            }
 
             // Update Avatar Image
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
             if (file != null)
             {
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);

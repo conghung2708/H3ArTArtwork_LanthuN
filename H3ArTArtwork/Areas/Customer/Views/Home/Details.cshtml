@@ -28,33 +28,33 @@
                 <div class="row justify-content-center">
                     <div class="col-md-7">
                         <article class="card">
-                            <img class="card-img-top mb-2" src="@Model.artwork.imageUrl" alt="Card image">
+                            <img class="card-img-top mb-2" src="@Model.Artwork.ImageUrl" alt="Card image">
 
                             <div class="card-body">
                                 <h1 class="card-title display-4" style="text-align: center;">
-                                    @Model.artwork.title
+                                    @Model.Artwork.Title
                                 </h1>
                                 <div style="text-align: center;">
-                                    <a asp-action="ArtistProfile" asp-route-artistId="@Model.artistID" style="font-size: smaller; display: inline-block;">Artist: @Model.artwork.applicationUser.FullName</a>
+                                    <a asp-action="ArtistProfile" asp-route-artistId="@Model.ArtistId" style="font-size: smaller; display: inline-block;">Artist: @Model.Artwork.ApplicationUser.FullName</a>
                                 </div>
 
-                                @Html.Raw(@Model.artwork.description)
+                                @Html.Raw(@Model.Artwork.Description)
 
 
                                 <div class="position-absolute end-0 pe-2">
-                                    <a asp-action="ReportArtwork" asp-route-artworkId="@Model.artworkID">
+                                    <a asp-action="ReportArtwork" asp-route-ArtworkId="@Model.ArtworkId">
                                         <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Report
                                     </a>
                                 </div>
 
-                                @if (Model.artwork.isPremium)
+                                @if (Model.Artwork.IsPremium)
                                 {
                                     <div class="fs-5 mb-5">
 
-                                        <span>Price: @Model.artwork.price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</span>
+                                        <span>Price: @Model.Artwork.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</span>
                                     </div>
                                     <form method="post">
-                                        <input asp-for="artworkID" hidden />
+                                        <input asp-for="ArtworkId" hidden />
                                         @{
                                             var checkCreator = User.IsInRole(SD.Role_Creator);
                                             var checkCustomer = User.IsInRole(SD.Role_Customer);
@@ -78,7 +78,7 @@
                                     <div id="disqus_thread">
                                     </div>
                                     <script type="text/javascript">
-                                        var disqus_shortname = 'demowebsite';
+                                        var disqus_shortname = 'Artworksharingplatform-1';
                                         var disqus_developer = 0;
                                         (function () {
                                             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -106,14 +106,14 @@
                             var randomArtworks = Model.RelatedArtworks.OrderBy(x => random.Next()).Take(10);
                         }
 
-                        @foreach (var artwork in randomArtworks)
+                        @foreach (var Artwork in randomArtworks)
                         {
                             <div class="card card-pin">
-                                <img class="card-img" src="@artwork.imageUrl" alt="Card image">
+                                <img class="card-img" src="@Artwork.ImageUrl" alt="Card image">
                                 <div class="overlay">
-                                    <h2 class="card-title title">@artwork.title</h2>
+                                    <h2 class="card-title title">@Artwork.Title</h2>
                                     <div class="more">
-                                        <a asp-action="Details" asp-route-artworkId="@artwork.artworkId">
+                                        <a asp-action="Details" asp-route-ArtworkId="@Artwork.ArtworkId">
                                             <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
                                         </a>
                                     </div>

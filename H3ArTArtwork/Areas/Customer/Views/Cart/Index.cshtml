@@ -31,23 +31,23 @@
                     {
                         <div class="row border-bottom pb-3">
                             <div class="d-none d-lg-block col-lg-1 text-center py-2">
-                                <img src="@item.artwork.imageUrl" class="rounded" width="100%" />
+                                <img src="@item.Artwork.ImageUrl" class="rounded" width="100%" />
                             </div>
                             <div class="col-12 col-lg-6 pt-md-3">
-                                <h5 class="text-uppercase text-secondary"><strong>@item.artwork.title</strong></h5>
-                                <p><small>@Html.Raw(item.artwork.description)</small></p>
+                                <h5 class="text-uppercase text-secondary"><strong>@item.Artwork.Title</strong></h5>
+                                <p><small>@Html.Raw(item.Artwork.Description)</small></p>
                             </div>
                             <div class="col-12  col-lg-5 text-center row">
                                 <div class="col-3 text-md-right pt-2 pt-md-4">
                                     <h6 class="fw-semibold">
-                                        @item.price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))
-                                        <span class="text-muted">&nbsp;x&nbsp;</span>@item.count
+                                        @item.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))
+                                        <span class="text-muted">&nbsp;x&nbsp;</span>@item.Count
                                     </h6>
                                 </div>
                                 <div class="col-6 col-sm-4 col-lg-6 pt-2">
                                 </div>
                                 <div class="col-3 col-sm-4 col-lg-2 offset-lg-1 text-right pt-2">
-                                    <a asp-action="Remove" asp-route-cartId="@item.shoppingCartId" class="btn btn-danger bg-gradient py-2 ">
+                                    <a asp-action="Remove" asp-route-cartId="@item.ShoppingCartId" class="btn btn-danger bg-gradient py-2 ">
                                         <i class="bi bi-trash-fill"></i>
                                     </a>
                                 </div>
@@ -66,7 +66,7 @@
                                 <ul class="list-group mb-4">
                                     <li class="d-flex justify-content-between align-items-center">
                                         <h5 class="text-dark fw-semibold text-uppercase"> Total (USD)</h5>
-                                        <h4 class="text-dark fw-bolder">@Model.orderHeader.orderTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</h4>
+                                        <h4 class="text-dark fw-bolder">@Model.OrderHeader.OrderTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</h4>
                                     </li>
                                 </ul>
                             </div>

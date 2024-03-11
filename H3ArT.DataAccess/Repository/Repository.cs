@@ -21,7 +21,7 @@ namespace H3ArT.DataAccess.Repository
             //the table = dbSet
             this.dbSet = _db.Set<T>();
             //include here
-            _db.TblArtwork.Include(u => u.category).Include(u => u.applicationUser);
+            _db.TblArtwork.Include(u => u.Category).Include(u => u.ApplicationUser);
         }
         public void Add(T entity)
         {

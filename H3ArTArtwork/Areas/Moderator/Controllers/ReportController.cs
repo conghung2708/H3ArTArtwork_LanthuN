@@ -39,7 +39,7 @@ namespace H3ArTArtwork.Areas.Moderator.Controllers
         public IActionResult GetAllReportArtwork()
         {
             List<ReportArtwork> reportArtworks = _unitOfWork.ReportArtworkObj.GetAll(
-                includeProperties: "artwork,applicationUser"
+                includeProperties: "Artwork,ApplicationUser"
             ).ToList();
             return Json(new { data = reportArtworks });
         }
@@ -47,15 +47,15 @@ namespace H3ArTArtwork.Areas.Moderator.Controllers
         [HttpDelete]
         public IActionResult Delete_Artwork(int? id)
         {
-            var productToBeDeleted = _unitOfWork.ArtworkObj.Get(u => u.artworkId == id);
+            var productToBeDeleted = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == id);
             if (productToBeDeleted == null)
             {
                 return Json(new { success = false, message = "Error during deleting" });
             }
 
-            if (!string.IsNullOrEmpty(productToBeDeleted.imageUrl))
+            if (!string.IsNullOrEmpty(productToBeDeleted.ImageUrl))
             {
-                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.imageUrl.TrimStart('\\'));
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.ImageUrl.TrimStart('\\'));
                 if (System.IO.File.Exists(oldImagePath))
                 {
                     System.IO.File.Delete(oldImagePath);
@@ -65,14 +65,14 @@ namespace H3ArTArtwork.Areas.Moderator.Controllers
             _unitOfWork.ArtworkObj.Remove(productToBeDeleted);
             _unitOfWork.Save();
 
-            List<Artwork> listProduct = _unitOfWork.ArtworkObj.GetAll(includeProperties: "category,applicationUser").ToList();
+            List<Artwork> listProduct = _unitOfWork.ArtworkObj.GetAll(includeProperties: "Category,ApplicationUser").ToList();
             return Json(new { success = true, message = "Delete Successful" });
         }
 
         [HttpGet]
         public IActionResult GetAllReportArtist()
         {
-            List<ReportArtist> reportArtist = _unitOfWork.ReportArtistObj.GetAll(includeProperties: "artist,reporter").ToList();
+            List<ReportArtist> reportArtist = _unitOfWork.ReportArtistObj.GetAll(includeProperties: "Artist,Reporter").ToList();
             return Json(new { data = reportArtist });
         }
 
@@ -80,7 +80,7 @@ namespace H3ArTArtwork.Areas.Moderator.Controllers
         public IActionResult GetAllReportBlog()
         {
             List<ReportBlog> reportBlogs = _unitOfWork.ReportBlogObj.GetAll(
-                includeProperties: "blog,applicationUser"
+                includeProperties: "Blog,ApplicationUser"
             ).ToList();
             return Json(new { data = reportBlogs });
         }
@@ -89,14 +89,14 @@ namespace H3ArTArtwork.Areas.Moderator.Controllers
         public IActionResult Hide([FromBody] int id)
         {
            
-            var artwork = _unitOfWork.ArtworkObj.Get(u => u.artworkId == id);
+            var artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == id);
 
            
             if (artwork != null)
             {
                 
-                artwork.reportedConfirm = !artwork.reportedConfirm;
-
+                artwork.ReportedConfirm = !artwork.ReportedConfirm;
+                
                 try
                 {
                    
@@ -122,16 +122,16 @@ namespace H3ArTArtwork.Areas.Moderator.Controllers
         [HttpDelete]
         public IActionResult Delete(int? id)
         {
-            var blogToBeDeleted = _unitOfWork.BlogObj.Get(u => u.blogID == id);
-            IEnumerable<ReportBlog> reportBlogList = _unitOfWork.ReportBlogObj.GetAll(u => u.blogID == id);
+            var blogToBeDeleted = _unitOfWork.BlogObj.Get(u => u.BlogId == id);
+            IEnumerable<ReportBlog> reportBlogList = _unitOfWork.ReportBlogObj.GetAll(u => u.BlogId == id);
             if (blogToBeDeleted == null)
             {
                 return Json(new { success = false, message = "Error during deleting" });
             }
 
-            if (!string.IsNullOrEmpty(blogToBeDeleted.imageUrl))
+            if (!string.IsNullOrEmpty(blogToBeDeleted.ImageUrl))
             {
-                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, blogToBeDeleted.imageUrl.TrimStart('\\'));
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, blogToBeDeleted.ImageUrl.TrimStart('\\'));
                 if (System.IO.File.Exists(oldImagePath))
                 {
                     System.IO.File.Delete(oldImagePath);
@@ -145,7 +145,7 @@ namespace H3ArTArtwork.Areas.Moderator.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            List<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.creatorID == userId, includeProperties: "applicationUser").ToList();
+            List<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.CreatorId == userId, includeProperties: "ApplicationUser").ToList();
             return Json(new { success = true, message = "Delete Successful" });
         }
         #endregion

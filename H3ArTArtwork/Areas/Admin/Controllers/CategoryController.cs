@@ -52,7 +52,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            Category? categoryFromDb = _unitOfWork.CategoryObj.Get(u => u.categoryId == id);
+            Category? categoryFromDb = _unitOfWork.CategoryObj.Get(u => u.CategoryId == id);
             if (categoryFromDb == null)
             {
                 return NotFound();
@@ -85,7 +85,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            Category? categoryFromDB = _unitOfWork.CategoryObj.Get(u => u.categoryId == id);
+            Category? categoryFromDB = _unitOfWork.CategoryObj.Get(u => u.CategoryId == id);
 
 
             if (categoryFromDB == null)
@@ -99,7 +99,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         //Edit base on ID
         public IActionResult DeletePOST(int? id)
         {
-            Category? category = _unitOfWork.CategoryObj.Get(u => u.categoryId == id);
+            Category? category = _unitOfWork.CategoryObj.Get(u => u.CategoryId == id);
             if (category == null)
             {
                 return NotFound();

@@ -1,29 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace H3ArT.Models.Models
 {
     public class Blog
     {
         [Key]
-        public int blogID { get; set; }
+        public int BlogId { get; set; }
 
-        public string creatorID { get; set; }
-        [ForeignKey("creatorID")]
+        public string CreatorId { get; set; }
+        [ForeignKey("CreatorId")]
         [ValidateNever]
-        public ApplicationUser applicationUser { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
-        public string title { get; set; }
+        public string Title { get; set; }
+
         [StringLength(100, MinimumLength = 100, ErrorMessage = "Description must be at least 100 characters.")]
-        public string description { get; set; }
-        public DateTime createAt { get; set; }
-        [ValidateNever]
-        public string imageUrl { get; set; }
+        public string Description { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public string ImageUrl { get; set; }
     }
 }
