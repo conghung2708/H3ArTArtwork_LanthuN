@@ -3,7 +3,7 @@
 
 
 @{
-   
+
 }
 
 <!DOCTYPE html>
@@ -56,10 +56,18 @@
                     <div class="card-columns">
                         @foreach (var artwork in Model)
                         {
-                            @if(!artwork.reportedConfirm && !artwork.isBought)
+
+                            @if (!artwork.reportedConfirm && !artwork.isBought)
                             {
                                 <div class="card card-pin">
-                                    <img class="card-img" src="@artwork.imageUrl" alt="Card image">
+                                    <div class="position-relative">
+                                        <img class="card-img" src="@artwork.imageUrl" alt="Card image">
+                                        @if (artwork.isPremium == true)
+                                        {
+                                            <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>
+                                        }
+                                    </div>
+
                                     <div class="overlay">
                                         <h2 class="card-title title">@artwork.title</h2>
                                         <div class="more">
@@ -70,7 +78,6 @@
                                     </div>
                                 </div>
                             }
-                            
                         }
                     </div>
                 </div>

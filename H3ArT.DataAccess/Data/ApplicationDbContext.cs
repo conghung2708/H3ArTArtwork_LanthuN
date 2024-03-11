@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using H3ArT.Models;
 using H3ArT.Models.Models;
+using H3ArT.DataAccess.Repository.IRepository;
 
 namespace H3ArT.DataAccess.Data
 {
@@ -29,6 +30,7 @@ namespace H3ArT.DataAccess.Data
         public DbSet<ReportArtwork> TblReportArtwork { get; set; }
         public DbSet<Blog> TblBlog { get; set; }
         public DbSet<ReportBlog> TblReportBlog { get; set;}
-
+        public DbSet<Package> TblPackage { get; set; }
+        public DbSet<OrderDetailPackage> TblOrderDetailPackage { get; set; }
     }
 }
