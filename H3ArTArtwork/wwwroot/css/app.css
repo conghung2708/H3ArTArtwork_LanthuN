@@ -171,22 +171,23 @@ sup {
 
 /* line 198, node_modules/bootstrap/scss/_reboot.scss */
 a {
-  color: #bd081c;
-  text-decoration: none;
-  background-color: transparent;
-  -webkit-text-decoration-skip: objects; }
+    color: slategray;
+    text-decoration: none;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+}
   /* line 13, node_modules/bootstrap/scss/mixins/_hover.scss */
   a:hover {
-    color: #740511;
+    color: slategray;
     text-decoration: underline; }
 
 /* line 216, node_modules/bootstrap/scss/_reboot.scss */
 a:not([href]):not([tabindex]) {
-  color: inherit;
+  color: slategray;
   text-decoration: none; }
   /* line 17, node_modules/bootstrap/scss/mixins/_hover.scss */
   a:not([href]):not([tabindex]):hover, a:not([href]):not([tabindex]):focus {
-    color: inherit;
+    color: slategray;
     text-decoration: none; }
   /* line 225, node_modules/bootstrap/scss/_reboot.scss */
   a:not([href]):not([tabindex]):focus {
