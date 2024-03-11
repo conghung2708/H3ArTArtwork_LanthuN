@@ -113,7 +113,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                         // if user had pay for package
                         artworkVM.Artwork.CreateAt = DateTime.Now;
                         artworkVM.Artwork.ReportedConfirm = false;
-                        _unitOfWork.ArtworkObj.Add(artworkVM.artwork);
+                        _unitOfWork.ArtworkObj.Add(artworkVM.Artwork);
                         _unitOfWork.Save();
                         applicationUser.AvaiblePost -= 1;
                         _unitOfWork.ApplicationUserObj.Update(applicationUser);
