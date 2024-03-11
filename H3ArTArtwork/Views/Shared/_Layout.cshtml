@@ -1,4 +1,4 @@
-﻿﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 <!DOCTYPE html>
 <html lang="en">
@@ -77,6 +77,44 @@
                                                 <a class="dropdown-item" asp-area="Creator" asp-controller="Blog" asp-action="Index">Blog</a>
                                             </li>
 
+                                     <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Creator" asp-controller="Blog" asp-action="Index">Blog</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Creator" asp-controller="Upgrade" asp-action="Index">Upgrade</a>
+                                    </li>
+
+                                    @* Đây là nơi để test chức năng Package
+                                    khi nhấn vào sẽ reset số lượng artwork được đăng về 0 *@
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Creator" asp-controller="Upgrade" asp-action="Reset">Reset</a>
+                                    </li>
+                                  
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+                            </li>
+
+                           
+                        }
+                        @if (!User.IsInRole(SD.Role_Moderator))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Order" asp-action="Index">Order</a>
+                            </li>
+                        }
+                        @if (User.IsInRole(SD.Role_Moderator))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;">
+                                    Report
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Moderator" asp-controller="Report" asp-action="Index_Creator">Creator</a>
+                                    </li>
 
                                             <li><hr class="dropdown-divider"></li>
                                             <li><a class="dropdown-item" href="#">Something else here</a></li>
@@ -90,59 +128,24 @@
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-area="Admin" asp-controller="Order" asp-action="Index">Order</a>
                                     </li>
-                                }
-                                @if (User.IsInRole(SD.Role_Moderator))
-                                {
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;">
-                                            Report
-                                        </a>
 
-                                        <ul class="dropdown-menu">
-                                            <li class="nav-item">
-                                                <a class="dropdown-item" asp-area="Moderator" asp-controller="Report" asp-action="Index_Creator">Creator</a>
-                                            </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+                            </li>
+                        }  
 
-                                            <li class="nav-item">
-                                                <a class="dropdown-item" asp-area="Moderator" asp-controller="Report" asp-action="Index_Blog">Blog</a>
-                                            </li>
-
-                                            <li class="nav-item">
-                                                <a class="dropdown-item" asp-area="Moderator" asp-controller="Report" asp-action="Index_Artwork">Artwork</a>
-                                            </li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                        </ul>
+                        @if (User.IsInRole(SD.Role_Admin))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Content Management
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
                                     </li>
 
-                                }
-
-
-                                @if (User.IsInRole(SD.Role_Admin))
-                                {
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Content Management
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li class="nav-item">
-                                                <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
-                                            </li>
-
-
-                                            <li class="nav-item">
-                                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Create a User</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">Manage Users</a>
-                                            </li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                        </ul>
-                                    </li>
-                                }
-                                @if (!User.IsInRole(SD.Role_Admin) && !User.IsInRole(SD.Role_Moderator))
-                                {
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Blog">Blog</a>
                                     </li>
@@ -152,23 +155,30 @@
                                         </a>
                                     </li>
 
-                                }
-                            </ul>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Creator" asp-controller="Artwork" asp-action="Index">Manage Artwork</a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (!User.IsInRole(SD.Role_Admin) && !User.IsInRole(SD.Role_Moderator))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Blog">Blog</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index" style="color: black;">
+                                    @await Component.InvokeAsync("ShoppingCart")
+                                </a>
+                            </li>
+                            
+                        }
+                    </ul>
 
-                            <partial name="_LoginPartial" />
-                        </div>
-                    </div>
-                </nav>
-
-
-            </header>
-        </div>
-        <div id="body-main">
-            <div class=" " style="">
-                <main role="main" class="">
-                    <partial name="_Notification" />
-                    @RenderBody()
-                </main>
+                    <partial name="_LoginPartial" />
+                </div>
             </div>
         </div>
         <div class="footer-main" id="footer-main">

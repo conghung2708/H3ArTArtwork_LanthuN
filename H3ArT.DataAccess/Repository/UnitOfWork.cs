@@ -22,6 +22,8 @@ namespace H3ArT.DataAccess.Repository
         public IReportArtworkRepository ReportArtworkObj { get; private set; }
         public IBlogRepository BlogObj { get; private set; }
         public IReportBlogRepository ReportBlogObj { get; private set; }
+        public IPackageRepository PackageObj { get; private set; }
+        public IOrderDetailPackageRepository OrderDetailPackageObj { get; private set; }
         private readonly ApplicationDbContext _db;
 
         public UnitOfWork(ApplicationDbContext db)
@@ -39,7 +41,8 @@ namespace H3ArT.DataAccess.Repository
             ReportBlogObj = new ReportBlogRepository(_db);
 
             //Eg Category = new CategoryRepository(_db);
-
+            PackageObj = new PackageRepository(_db);
+            OrderDetailPackageObj = new OrderDetailPackageRepository(_db);
         }
 
 

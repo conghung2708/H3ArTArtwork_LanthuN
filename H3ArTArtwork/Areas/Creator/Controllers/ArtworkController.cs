@@ -6,12 +6,12 @@ using H3ArT.Models.ViewModels;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using H3ArT.Utility;
-
+using H3ArT.Models;
 
 namespace H3ArTArtwork.Areas.Creator.Controllers
 {
     [Area("Creator")]
-    [Authorize(Roles = SD.Role_Creator)]
+    // [Authorize(Roles = SD.Role_Creator)]
     public class ArtworkController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -21,13 +21,15 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
         }
+
+        [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Admin)]
         public IActionResult Index()
         {
             //get the id
 
             return View();
         }
-
+        [Authorize(Roles = SD.Role_Creator)]
         public IActionResult Upsert(int? id)
         {
 
@@ -48,7 +50,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
                 artworkVM.artwork.artistID = userId;
                 artworkVM.artwork.applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
-
+                artworkVM.artwork.applicationUser.AvaiblePost -= 1;
                 return View(artworkVM);
             }
             else
@@ -61,6 +63,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = SD.Role_Creator)]
         public IActionResult Upsert(ArtworkVM artworkVM, IFormFile? file)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -98,16 +101,26 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                     {
 
                         // Add product
+                        ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+                        if (applicationUser.AvaiblePost <= 0 || applicationUser.AvaiblePost == null)
+                        {
+                            TempData["error"] = "You do not have enough posting credits to place an order. Please purchase a package to continue.";
+                            return RedirectToAction("Index", "Artwork");
+                        }
+
+                        // if user had pay for package
                         artworkVM.artwork.reportedConfirm = false;
                         _unitOfWork.ArtworkObj.Add(artworkVM.artwork);
                         _unitOfWork.Save();
-                 
+                        applicationUser.AvaiblePost -= 1;
+                        _unitOfWork.ApplicationUserObj.Update(applicationUser);
+                        _unitOfWork.Save();
 
                         artworkVM.artwork.artistID = userId;
                         var unknownUser = artworkVM.artwork.applicationUser;
                         _unitOfWork.ArtworkObj.Update(artworkVM.artwork);
-                     
-                    
+
+
                         _unitOfWork.ApplicationUserObj.Remove(unknownUser);
 
                         _unitOfWork.Save();
@@ -152,8 +165,14 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            List<Artwork> artworkList = _unitOfWork.ArtworkObj.GetAll(u => u.artistID == userId, includeProperties: "category,applicationUser").ToList();
+            var user = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+            List<Artwork> artworkList;
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                artworkList = _unitOfWork.ArtworkObj.GetAll(includeProperties: "category,applicationUser").ToList();
+                return Json(new { data = artworkList });
+            }
+            artworkList = _unitOfWork.ArtworkObj.GetAll(u => u.artistID == userId, includeProperties: "category,applicationUser").ToList();
             return Json(new { data = artworkList });
         }
         public IActionResult Delete(int? id)
