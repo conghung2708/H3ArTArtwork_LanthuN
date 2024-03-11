@@ -1,9 +1,8 @@
 ﻿@using H3ArT.Models.Models
 @model IEnumerable<Artwork>
 
-
 @{
-   
+
 }
 
 <!DOCTYPE html>
@@ -17,49 +16,57 @@
     <script type="text/javascript">(function () { var css = document.createElement('link'); css.href = 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'; css.rel = 'stylesheet'; css.type = 'text/css'; document.getElementsByTagName('head')[0].appendChild(css); })();</script>
     <link href="~/css/app.css" rel="stylesheet" />
     <link href="~/css/theme.css" rel="stylesheet" />
-
 </head>
 
 
 <body>
-    <main role="main">
-        <section class="mt-4 mb-5">
-            <!-- Navigation Bar for Artwork -->
-            <div class="container mb-4">
-                <h1 class="font-weight-bold title">Explore</h1>
-                <div class="row">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-white pl-2 pr-2">
-                        <button class="navbar-light navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExplore" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse " id="navbarsExplore">
-                            <!-- Filter by Category -->
-                            @await Component.InvokeAsync("CategoryList")
+    <section class="mt-4 mb-5">
+        <!-- Navigation Bar for Artwork -->
+        <div class="container mb-4">
+            <h1 class="font-weight-bold title">Explore</h1>
+            <div class="row">
+                <nav class="navbar navbar-expand-lg navbar-light bg-white pl-2 pr-2">
+                    <button class="navbar-light navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExplore" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse " id="navbarsExplore">
+                        <!-- Filter by Category -->
+                        @await Component.InvokeAsync("CategoryList")
 
-                            <!-- Search Bar -->
-                            <form method="get" class="position-absolute bottom-0 end-0">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search...">
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-primary">Search</button>
-                                    </div>
+                        <!-- Search Bar -->
+                        <form method="get" class="position-absolute bottom-0 end-0">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search...">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Search</button>
                                 </div>
-                            </form>
-                        </div>
-                    </nav>
-                </div>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
             </div>
-            <!-- End of Navigation Bar for Artwork -->
-            <!-- Section for Product-->
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card-columns">
-                        @foreach (var artwork in Model)
+        </div>
+        <!-- End of Navigation Bar for Artwork -->
+        <!-- Section for Product-->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="card-columns">
+                    @foreach (var artwork in Model)
+                    {
+                        @if (!artwork.reportedConfirm && !artwork.isBought)
                         {
-                            @if(!artwork.ReportedConfirm && !artwork.IsBought)
+
+                            @if (!artwork.ReportedConfirm && !artwork.IsBought)
                             {
                                 <div class="card card-pin">
-                                    <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
+                                    <div class="position-relative">
+                                        <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
+                                        @if (artwork.isPremium == true)
+                                        {
+                                            <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>
+                                        }
+                                    </div>
+
                                     <div class="overlay">
                                         <h2 class="card-title title">@artwork.Title</h2>
                                         <div class="more">
@@ -70,51 +77,16 @@
                                     </div>
                                 </div>
                             }
-                            
                         }
-                    </div>
+                    }
                 </div>
             </div>
-            <!-- End of Section for Product-->
-        </section>
-
-    </main>
-
-    <script src="~/js/app.js"></script>
-    <script src="~/js/theme.js"></script>
-    <!-- Footer -->
-    <footer class="footer pt-5 pb-5 text-center">
-
-        <div class="container">
-
-            <div class="socials-media">
-
-                <ul class="list-unstyled">
-                    <li class="d-inline-block ml-1 mr-1"><a href="#" class="text-dark"><i class="fa fa-facebook"></i></a></li>
-                    <li class="d-inline-block ml-1 mr-1"><a href="#" class="text-dark"><i class="fa fa-twitter"></i></a></li>
-                    <li class="d-inline-block ml-1 mr-1"><a href="#" class="text-dark"><i class="fa fa-instagram"></i></a></li>
-                    <li class="d-inline-block ml-1 mr-1"><a href="#" class="text-dark"><i class="fa fa-google-plus"></i></a></li>
-                    <li class="d-inline-block ml-1 mr-1"><a href="#" class="text-dark"><i class="fa fa-behance"></i></a></li>
-                    <li class="d-inline-block ml-1 mr-1"><a href="#" class="text-dark"><i class="fa fa-dribbble"></i></a></li>
-                </ul>
-
-            </div>
-
-            <!--
-              All the links in the footer should remain intact.
-              You may remove the links only if you donate:
-              https://www.wowthemes.net/freebies-license/
-            -->
-            <p>
-                ©  <span class="credits font-weight-bold">
-                    <a target="_blank" class="text-dark" href="https://www.wowthemes.net/pintereso-free-html-bootstrap-template/"><u>Pintereso Bootstrap HTML Template</u> by WowThemes.net.</a>
-                </span>
-            </p>
-
-
         </div>
+        <!-- End of Section for Product-->
+    </section>
 
-    </footer>
 </body>
+<script src="~/js/app.js"></script>
+<script src="~/js/theme.js"></script>
 
 </html>

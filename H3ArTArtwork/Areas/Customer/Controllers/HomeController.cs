@@ -15,6 +15,9 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        [BindProperty]
+        public PackagePaymentVM PackagePaymentVM { get; set; }
+        public ShoppingCartVM ShoppingCartVM { get; set; }
 
         public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
         {
