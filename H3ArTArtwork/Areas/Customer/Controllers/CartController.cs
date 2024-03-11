@@ -246,7 +246,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             }
 
 
-            List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.buyerID == orderHeader.applicationUserId).ToList();
+             shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == orderHeader.ApplicationUserId).ToList();
             _unitOfWork.ShoppingCartObj.RemoveRange(shoppingCarts);
             _unitOfWork.Save();
             return View(id);

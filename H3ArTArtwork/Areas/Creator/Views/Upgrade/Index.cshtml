@@ -32,13 +32,13 @@
                         <div class="card pricing-card pricing-card-highlighted  pricing-plan-pro">
                             <div class="card-body">
                                 <i class="mdi mdi-trophy pricing-plan-icon"></i>
-                                <p class="pricing-plan-title">@package.packageName</p>
-                                <h3 class="pricing-plan-cost ml-auto">@package.price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</h3>
+                                <p class="pricing-plan-title">@package.PackageName</p>
+                                <h3 class="pricing-plan-cost ml-auto">@package.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</h3>
                                 <ul class="pricing-plan-features">
-                                    <li>@Html.Raw(package.description)</li>
+                                    <li>@Html.Raw(package.Description)</li>
                                 </ul>
                                 <form method="get" asp-action="SummaryPackage">
-                                    <input type="hidden" name="packageId" value="@package.packageID" />
+                                    <input type="hidden" name="packageId" value="@package.PackageId" />
                                     <button type="submit" class="btn pricing-plan-purchase-btn">Purchase</button>
                                 </form>
                             </div>

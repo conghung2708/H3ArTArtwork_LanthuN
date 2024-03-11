@@ -23,8 +23,8 @@
         amountPostToCompare = 0;
     }
     @inject IUnitOfWork _unitOfWork;
-    var packageID = Model.packageId;
-    Model.package = _unitOfWork.PackageObj.Get(u => u.packageID == packageID);
+    var packageID = Model.PackageId;
+    Model.Package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
     
     // var claimsIdentity = (ClaimsIdentity)User.Identity;
     // var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -62,8 +62,8 @@
                                     <label>Name</label>
                                 </div>
                                 <div class="col-9">
-                                    <input asp-for="orderHeader.name" class="form-control" />
-                                    <span asp-validation-for="orderHeader.name" class="text-danger"></span>
+                                    <input asp-for="OrderHeader.Name" class="form-control" />
+                                    <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row my-1">
@@ -71,8 +71,8 @@
                                     <label>Phone</label>
                                 </div>
                                 <div class="col-9">
-                                    <input asp-for="orderHeader.phoneNumber" class="form-control" />
-                                    <span asp-validation-for="orderHeader.phoneNumber" class="text-danger"></span>
+                                    <input asp-for="OrderHeader.PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -85,16 +85,16 @@
                                 { *@
                                 <li class="list-group-item d-flex justify-content-between">
                                     <div>
-                                        <h6 class="my-0">@Model.package.packageName</h6>
+                                        <h6 class="my-0">@Model.Package.PackageName</h6>
                                         <small class="text-muted">Quantity: 1</small>
                                     </div>
-                                    <span class="text-muted">@Model.package.price.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) </span>
+                                    <span class="text-muted">@Model.Package.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) </span>
                                 </li>
                                 @* }  *@
 
                                 <li class="list-group-item d-flex justify-content-between bg-light">
                                     <small class="text-info">Total (USD)</small>
-                                    <strong class="text-info">@Model.orderHeader.orderTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</strong>
+                                    <strong class="text-info">@Model.OrderHeader.OrderTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</strong>
                                 </li>
                             </ul>
                         </div>
