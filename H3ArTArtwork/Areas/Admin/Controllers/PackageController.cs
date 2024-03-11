@@ -50,7 +50,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                         else
                         {*/
             //update
-            package = _unitOfWork.PackageObj.Get(u => u.packageID == packageID);
+            package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
             return View(package);
             //}
 

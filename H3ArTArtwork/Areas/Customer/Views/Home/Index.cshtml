@@ -53,7 +53,7 @@
                 <div class="card-columns">
                     @foreach (var artwork in Model)
                     {
-                        @if (!artwork.reportedConfirm && !artwork.isBought)
+                        @if (!artwork.ReportedConfirm && !artwork.IsBought)
                         {
 
                             @if (!artwork.ReportedConfirm && !artwork.IsBought)
@@ -61,7 +61,7 @@
                                 <div class="card card-pin">
                                     <div class="position-relative">
                                         <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
-                                        @if (artwork.isPremium == true)
+                                        @if (artwork.IsPremium == true)
                                         {
                                             <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>
                                         }

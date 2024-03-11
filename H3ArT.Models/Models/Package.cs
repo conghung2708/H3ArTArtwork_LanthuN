@@ -12,16 +12,16 @@ namespace H3ArT.Models.Models
     public class Package
     {
         [Key]
-        public int packageID { get; set; }
+        public int PackageId { get; set; }
 
         [Required]
-        public string packageName { get; set; }
+        public string PackageName { get; set; }
 
-        public double price { get; set; }
+        public double Price { get; set; }
 
-        public int amountPost { get; set; }
-        public string description { get; set; }
-        public string adminID { get; set; }
+        public int AmountPost { get; set; }
+        public string Description { get; set; }
+        public string AdminID { get; set; }
         //[ForeignKey("adminID")]
         //public ApplicationUser ApplicationUser { get; set; }
 
