@@ -9,10 +9,10 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/admin/package/getall' },
         "columns": [
-            { data: 'packageID', "width": "10%" },
-            { data: 'price', "width": "10%" },
-            { data: 'amountPost', "width": "10%" },
-            { data: 'description', "width": "30%" },
+            { data: 'packageID', "width": "5%" },
+            { data: 'price', "width": "5%" },
+            { data: 'amountPost', "width": "5%" },
+            { data: 'description', "width": "25%" },
             // { data: 'applicationUser.fullName', "width": "10%" }, // Accessing displayOrder within the category object //need to fix here
             // Corrected here
             {

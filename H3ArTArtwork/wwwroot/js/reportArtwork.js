@@ -8,8 +8,8 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/Moderator/report/GetAllReportArtwork' },
         "columns": [
-            { data: 'reportArtworkId', "width": "25%" },
-            { data: 'artworkId', "width": "25%" },
+            { data: 'reportArtworkId', "width": "5%" },
+            { data: 'artworkId', "width": "5%" },
             { data: 'artwork.title', "width": "10%" },
             {
                 data: 'artwork.imageUrl',

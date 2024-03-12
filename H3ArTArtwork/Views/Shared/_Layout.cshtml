@@ -63,20 +63,26 @@
                                 </li>
                                 @if (User.IsInRole(SD.Role_Creator))
                                 {
+
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;">
                                             Content Management
                                         </a>
                                         <ul class="dropdown-menu">
+
+
                                             <li class="nav-item">
                                                 <a class="dropdown-item" asp-area="Creator" asp-controller="Artwork" asp-action="Index">Artwork</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="dropdown-item" asp-area="Creator" asp-controller="Blog" asp-action="Index">Blog</a>
-                                            </li>
-                                            <li class="nav-item">
                                                 <a class="dropdown-item" asp-area="Creator" asp-controller="Upgrade" asp-action="Index">Upgrade</a>
                                             </li>
+
+
+                                            <li class="nav-item">
+                                                <a class="dropdown-item" asp-area="Creator" asp-controller="Blog" asp-action="Index">Blog</a>
+                                            </li>
+
 
                                             @* Đây là nơi để test chức năng Package
                                         khi nhấn vào sẽ reset số lượng artwork được đăng về 0 *@
@@ -121,8 +127,9 @@
 
                                 @if (User.IsInRole(SD.Role_Admin))
                                 {
+
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;" >
                                             Content Management
                                         </a>
                                         <ul class="dropdown-menu">
@@ -138,6 +145,10 @@
 
                                             <li class="nav-item">
                                                 <a class="dropdown-item" asp-area="Creator" asp-controller="Artwork" asp-action="Index">Manage Artwork</a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a class="dropdown-item" asp-area="Creator" asp-controller="Blog" asp-action="Index">Manage Blog</a>
                                             </li>
                                             <li><hr class="dropdown-divider"></li>
                                             <li><a class="dropdown-item" href="#">Something else here</a></li>

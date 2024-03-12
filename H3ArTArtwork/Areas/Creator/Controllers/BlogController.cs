@@ -12,7 +12,7 @@ using H3ArT.Utility;
 namespace H3ArTArtwork.Areas.Creator.Controllers
 {
     [Area("Creator")]
-    [Authorize(Roles = SD.Role_Creator)]
+    [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Admin)]
     public class BlogController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -23,6 +23,8 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
         }
+
+        
         public IActionResult Index()
         {
             //get the id
@@ -30,6 +32,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             return View();
         }
 
+     
         public IActionResult Upsert(int? id)
         {
 
@@ -64,6 +67,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         }
 
         [HttpPost]
+      
         public IActionResult Upsert(Blog blog, IFormFile? file)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -151,8 +155,13 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            List<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.CreatorId ==  userId, includeProperties: "ApplicationUser").ToList();
+            List<Blog> blogList;
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                blogList = _unitOfWork.BlogObj.GetAll(includeProperties: "ApplicationUser").ToList();
+                return Json(new { data = blogList });
+            }
+            blogList = _unitOfWork.BlogObj.GetAll(u => u.CreatorId ==  userId, includeProperties: "ApplicationUser").ToList();
             return Json(new { data = blogList });
         }
 

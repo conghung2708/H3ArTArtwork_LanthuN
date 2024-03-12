@@ -37,6 +37,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                 OrderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == orderId, includeProperties: "ApplicationUser"),
                 OrderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderId, includeProperties: "Artwork")
             };
+
             return View(OrderVM);
         }
         [HttpPost]

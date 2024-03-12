@@ -8,7 +8,7 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/moderator/report/GetAllReportArtist' },
         "columns": [
-            { "data": "reportArtistId", "width": "15%" },
+            { "data": "reportArtistId", "width": "5%" },
             { "data": "artist.fullName", "width": "15%" },
             { "data": "reporter.fullName", "width": "15%" },
             {
