@@ -1,4 +1,5 @@
 ﻿using H3ArT.DataAccess.Repository.IRepository;
+using H3ArT.Models;
 using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
 using H3ArT.Utility;
@@ -72,6 +73,22 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         {
             var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.orderHeader.Id);
             orderHeaderFromDb.orderStatus = SD.StatusDone;
+
+            if(orderHeaderFromDb.isPackageOrder == true)
+            {
+                // get information of user buy the package
+                var userID = orderHeaderFromDb.applicationUserId;
+                var applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userID);
+
+                // get the package information
+                var orderDetailPackage = _unitOfWork.OrderDetailPackageObj.Get(u => u.orderHeaderId == orderHeaderFromDb.Id);
+                var package = _unitOfWork.PackageObj.Get(u => u.packageID == orderDetailPackage.packageId);
+
+                // update amountPost for user
+                applicationUser.AvaiblePost = package.amountPost;
+                _unitOfWork.ApplicationUserObj.Update(applicationUser);
+                _unitOfWork.Save();
+            }
 
             _unitOfWork.OrderHeaderObj.Update(orderHeaderFromDb);
             _unitOfWork.Save();

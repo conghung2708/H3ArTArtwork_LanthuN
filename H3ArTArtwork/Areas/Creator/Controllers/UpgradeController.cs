@@ -81,11 +81,10 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 Package package = PackagePaymentVM.package;
                 //Package package = _unitOfWork.PackageObj.Get(u => u.packageID == packageId);
 
-
-
                 PackagePaymentVM.orderHeader.orderDate = System.DateTime.Now;
                 PackagePaymentVM.orderHeader.applicationUserId = userId;
                 PackagePaymentVM.orderHeader.orderTotal = package.price;
+                PackagePaymentVM.orderHeader.isPackageOrder = true;
 
                 if (!ModelState.IsValid)
                 {
@@ -156,9 +155,10 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 //}
                 //stripe logic
                 var domain = "https://localhost:44358/";
+                //var domain = "https://localhost:7034/";
                 var options = new SessionCreateOptions
                 {
-                    SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={PackagePaymentVM.orderHeader.Id}",
+                    SuccessUrl = domain + $"creator/upgrade/PackageOrderConfirmation?id={PackagePaymentVM.orderHeader.Id}&packageID={PackagePaymentVM.packageId}",
                     CancelUrl = domain + "customer/cart/index",
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
@@ -186,14 +186,43 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 Session session = service.Create(options);
                 _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(PackagePaymentVM.orderHeader.Id, session.Id, session.PaymentIntentId);
                 _unitOfWork.Save();
+                //applicationUser.AvaiblePost = package.amountPost;
+                //_unitOfWork.ApplicationUserObj.Update(applicationUser);
+                //_unitOfWork.Save();
 
-                applicationUser.AvaiblePost = package.amountPost;
-                _unitOfWork.ApplicationUserObj.Update(applicationUser);
-                _unitOfWork.Save();
                 Response.Headers.Add("Location", session.Url);
                 return new StatusCodeResult(303);
             }
             return View(PackagePaymentVM);
+        }
+
+        public IActionResult PackageOrderConfirmation(int id, int packageID)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+            Package package = _unitOfWork.PackageObj.Get(u => u.packageID == packageID);
+            OrderHeader orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id, includeProperties: "applicationUser");
+
+            //this is an order by customer
+            var service = new SessionService();
+            Session session = service.Get(orderHeader.sessionId);
+
+            if (session.PaymentStatus.ToLower() == "paid")
+            {
+                _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
+                _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                _unitOfWork.Save();
+            }
+            // update amountPost
+            //applicationUser.AvaiblePost = package.amountPost;
+            //_unitOfWork.ApplicationUserObj.Update(applicationUser);
+            //_unitOfWork.Save();
+
+            //List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.buyerID == orderHeader.applicationUserId).ToList();
+            //_unitOfWork.ShoppingCartObj.RemoveRange(shoppingCarts);
+            //_unitOfWork.Save();
+            return View(id);
         }
 
         public IActionResult Reset()

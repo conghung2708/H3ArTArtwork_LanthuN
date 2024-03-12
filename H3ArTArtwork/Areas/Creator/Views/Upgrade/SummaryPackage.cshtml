@@ -1,140 +1,140 @@
-﻿@using H3ArT.DataAccess.Repository.IRepository
-@using H3ArT.Models.ViewModels
-@using System.Globalization
-@using System.Security.Claims
-@model PackagePaymentVM
+﻿    @using H3ArT.DataAccess.Repository.IRepository
+    @using H3ArT.Models.ViewModels
+    @using System.Globalization
+    @using System.Security.Claims
+    @model PackagePaymentVM
 
-@{
-    int amountPostToCompare = 0;
+    @{
+        int amountPostToCompare = 0;
 
-    if (Model.ApplicationUser == null)
-    {
-        // ApplicationUser is null, set amountPostToCompare to 0
-        amountPostToCompare = 0;
+        if (Model.ApplicationUser == null)
+        {
+            // ApplicationUser is null, set amountPostToCompare to 0
+            amountPostToCompare = 0;
+        }
+        else if (Model.ApplicationUser.AvaiblePost.HasValue)
+        {
+            // ApplicationUser is not null and AvaiblePost has value, assign it to amountPostToCompare
+            amountPostToCompare = (int)Model.ApplicationUser.AvaiblePost.Value;
+        }
+        else
+        {
+            // ApplicationUser is not null but AvaiblePost is null, set amountPostToCompare to 0
+            amountPostToCompare = 0;
+        }
+        @inject IUnitOfWork _unitOfWork;
+        var packageID = Model.packageId;
+        Model.package = _unitOfWork.PackageObj.Get(u => u.packageID == packageID);
+
+        // var claimsIdentity = (ClaimsIdentity)User.Identity;
+        // var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+        //ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+
     }
-    else if (Model.ApplicationUser.AvaiblePost.HasValue)
-    {
-        // ApplicationUser is not null and AvaiblePost has value, assign it to amountPostToCompare
-        amountPostToCompare = (int)Model.ApplicationUser.AvaiblePost.Value;
-    }
-    else
-    {
-        // ApplicationUser is not null but AvaiblePost is null, set amountPostToCompare to 0
-        amountPostToCompare = 0;
-    }
-    @inject IUnitOfWork _unitOfWork;
-    var packageID = Model.packageId;
-    Model.package = _unitOfWork.PackageObj.Get(u => u.packageID == packageID);
-    
-    // var claimsIdentity = (ClaimsIdentity)User.Identity;
-    // var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-    //ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+    <form method="post">
+        <br />
+        <div class="container">
+            <div class="card shadow border-0">
 
-}
-<form method="post">
-    <br />
-    <div class="container">
-        <div class="card shadow border-0">
-
-            <div class="card-header bg-secondary bg-gradient text-light ml-0 py-4">
-                <div class="row px-4">
-                    <div class="col-6">
-                        <h5 class="pt-2 text-white">
-                            Shopping Cart
-                        </h5>
-                    </div>
-                    <div class="col-6 text-end">
-                        <a asp-action="Index" class="btn btn-outline-danger btn-sm">Back to Cart</a>
+                <div class="card-header bg-secondary bg-gradient text-light ml-0 py-4">
+                    <div class="row px-4">
+                        <div class="col-6">
+                            <h5 class="pt-2 text-white">
+                                Shopping Cart
+                            </h5>
+                        </div>
+                        <div class="col-6 text-end">
+                            <a asp-action="Index" class="btn btn-outline-danger btn-sm">Back to Cart</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="container rounded p-2">
-                    <div class="row">
-                        <div class="col-12 col-lg-6 pb-4">
-                            <div class="row">
-                                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-info">Information Details:</span>
-                                </h4>
-                            </div>
-                            <div class="row my-1">
-                                <div class="col-3">
-                                    <label>Name</label>
+                <div class="card-body">
+                    <div class="container rounded p-2">
+                        <div class="row">
+                            <div class="col-12 col-lg-6 pb-4">
+                                <div class="row">
+                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-info">Information Details:</span>
+                                    </h4>
                                 </div>
-                                <div class="col-9">
-                                    <input asp-for="orderHeader.name" class="form-control" />
-                                    <span asp-validation-for="orderHeader.name" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="row my-1">
-                                <div class="col-3">
-                                    <label>Phone</label>
-                                </div>
-                                <div class="col-9">
-                                    <input asp-for="orderHeader.phoneNumber" class="form-control" />
-                                    <span asp-validation-for="orderHeader.phoneNumber" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-5 offset-lg-1">
-                            <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-info">Order Summary:</span>
-                            </h4>
-                            <ul class="list-group mb-3">
-                                @*  @foreach (var details in Model.Package)
-                                { *@
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <div>
-                                        <h6 class="my-0">@Model.package.packageName</h6>
-                                        <small class="text-muted">Quantity: 1</small>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Name</label>
                                     </div>
-                                    <span class="text-muted">@Model.package.price.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) </span>
-                                </li>
-                                @* }  *@
+                                    <div class="col-9">
+                                        <input asp-for="orderHeader.name" class="form-control" />
+                                        <span asp-validation-for="orderHeader.name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Phone</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="orderHeader.phoneNumber" class="form-control" />
+                                        <span asp-validation-for="orderHeader.phoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-5 offset-lg-1">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-info">Order Summary:</span>
+                                </h4>
+                                <ul class="list-group mb-3">
+                                    @*  @foreach (var details in Model.Package)
+                                    { *@
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="my-0">@Model.package.packageName</h6>
+                                            <small class="text-muted">Quantity: 1</small>
+                                        </div>
+                                        <span class="text-muted">@Model.package.price.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) </span>
+                                    </li>
+                                    @* }  *@
 
-                                <li class="list-group-item d-flex justify-content-between bg-light">
-                                    <small class="text-info">Total (USD)</small>
-                                    <strong class="text-info">@Model.orderHeader.orderTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</strong>
-                                </li>
-                            </ul>
+                                    <li class="list-group-item d-flex justify-content-between bg-light">
+                                        <small class="text-info">Total (USD)</small>
+                                        <strong class="text-info">@Model.orderHeader.orderTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</strong>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-12 col-md-8 pt-2">
-                        <p style="color:maroon; font-size:14px;">
-                            Estimate Arrival Date:
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-12 col-md-8 pt-2">
+                            <p style="color:maroon; font-size:14px;">
+                                Estimate Arrival Date:
 
-                        </p>
-                    </div>
-                    @if (Model.ApplicationUser != null)
-                    {
-                        var availablePost = Model.ApplicationUser.AvaiblePost;
-                        @if (Model.ApplicationUser.AvaiblePost != 0 || Model.ApplicationUser.AvaiblePost != null)
+                            </p>
+                        </div>
+                        @if (Model.ApplicationUser != null)
                         {
-                            <div class="col-12 col-md-4">
-                                <button type="submit" method="post" value="Place Order" disabled class="btn btn-primary form-control">Place Order</button>
-                                <p class="fst-italic text-danger h6">You cannot purchase a new package while your current package is @Model.ApplicationUser.AvaiblePost still active. Please wait until your current package expires.</p>
-                            </div>
-                        }
+                            var availablePost = Model.ApplicationUser.AvaiblePost;
+                            @if (availablePost > 0)
+                            {
+                                <div class="col-12 col-md-4">
+                                    <button type="submit" method="post" value="Place Order" disabled class="btn btn-primary form-control">Place Order</button>
+                                    <p class="fst-italic text-danger h6">You cannot purchase a new package while your current package is @Model.ApplicationUser.AvaiblePost still active. Please wait until your current package expires.</p>
+                                </div>
+                            }
 
-                        @if (Model.ApplicationUser.AvaiblePost == 0 || Model.ApplicationUser.AvaiblePost == null)
+                            else
+                            {
+                                <div class="col-12 col-md-4">
+                                    <button type="submit" method="post" value="Place Order" class="btn btn-primary form-control">Place Order</button>
+                                </div>
+                            }
+                        }
+                        else
                         {
                             <div class="col-12 col-md-4">
                                 <button type="submit" method="post" value="Place Order" class="btn btn-primary form-control">Place Order</button>
                             </div>
                         }
-                    }
-                    else
-                    {
-                        <div class="col-12 col-md-4">
-                            <button type="submit" method="post" value="Place Order" class="btn btn-primary form-control">Place Order</button>
-                        </div>
-                    }
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
