@@ -188,7 +188,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
 
             }
             //stripe logic
-            var domain = "https://localhost:7034/";
+            var domain = "https://localhost:44358/";
             var options = new SessionCreateOptions
             {
                 SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",

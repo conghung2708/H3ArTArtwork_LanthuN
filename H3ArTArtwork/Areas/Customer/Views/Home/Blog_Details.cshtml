@@ -74,10 +74,85 @@
                     <section class="mb-5 pb-2">
                         <div class="position-relative">
                             <p class="fs-5 mb-4">@Html.Raw(@Model.Description)</p>
+                            <!-- Button trigger modal -->
                             <div class="position-absolute end-0 pe-2">
-                                <a asp-action="ReportBlog" asp-route-blogID="@Model.BlogId" style="text-decoration: none; color: red">
+                                <a data-bs-toggle="modal" data-bs-target="#centeredModal" style="text-decoration: none; color: red">
                                     <i class="bi bi-flag-fill"></i> Report
                                 </a>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="centeredModal" tabindex="-1" aria-labelledby="centeredModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title" id="centeredModalLabel">Report</h3>
+                                            <button type="button" class="btn-close" style="margin-block:auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form id="centeredRadioForm" meathod="post" asp-action="ReportBlog">
+                                            <div class="modal-body" style="margin: 0 10px 0 10px">
+                                                <div class="mb-3 form-check">
+                                                    <input type="radio" class="form-check-input" id="spam" name="reportReason" value="Spam">
+                                                    <label class="form-check-label" for="spam">Spam</label>
+                                                    <div class="text-muted">Misleading or repetitive posts</div>
+                                                </div>
+
+                                                <!-- Nudity or Pornography Option -->
+                                                <div class="mb-3 form-check">
+                                                    <input type="radio" class="form-check-input" id="nudity" name="reportReason" value="Nudity, pornography or sexualized content">
+                                                    <label class="form-check-label" for="nudity">Nudity, pornography or sexualized content</label>
+                                                    <div class="text-muted">Sexually explicit content involving adults or nudity, non-nudity or intentional misuse involving minors</div>
+                                                </div>
+
+                                                <!-- Self-harm Option -->
+                                                <div class="mb-3 form-check">
+                                                    <input type="radio" class="form-check-input" id="selfHarm" name="reportReason" value="Self-harm">
+                                                    <label class="form-check-label" for="selfHarm">Self-harm</label>
+                                                    <div class="text-muted">Eating disorders, cutting, suicide, drugs</div>
+                                                </div>
+
+                                                <!-- Misinformation Option -->
+                                                <div class="mb-3 form-check">
+                                                    <input type="radio" class="form-check-input" id="misinformation" name="reportReason" value="Misinformation">
+                                                    <label class="form-check-label" for="misinformation">Misinformation</label>
+                                                    <div class="text-muted">Health, climate, voting misinformation or conspiracies</div>
+                                                </div>
+
+                                                <!-- Hateful Activities Option -->
+                                                <div class="mb-3 form-check">
+                                                    <input type="radio" class="form-check-input" id="hatefulActivities" name="reportReason" value="Hateful activities">
+                                                    <label class="form-check-label" for="hatefulActivities">Hateful activities</label>
+                                                    <div class="text-muted">Prejudice, stereotypes, white supremacy, slurs</div>
+                                                </div>
+
+                                                <!-- Dangerous Goods Option -->
+                                                <div class="mb-3 form-check">
+                                                    <input type="radio" class="form-check-input" id="dangerousGoods" name="reportReason" value="Dangerous goods">
+                                                    <label class="form-check-label" for="dangerousGoods">Dangerous goods</label>
+                                                    <div class="text-muted">Drugs, weapons, regulated products</div>
+                                                </div>
+
+                                                <!-- Harassment or Criticism Option -->
+                                                <div class="mb-3 form-check">
+                                                    <input type="radio" class="form-check-input" id="harassmentCriticism" name="reportReason" value="Harassment or privacy violations">
+                                                    <label class="form-check-label" for="harassmentCriticism">Harassment or privacy violations</label>
+                                                    <div class="text-muted">Blackmail, personal attacks or bullying</div>
+                                                </div>
+
+                                                <!-- Graphic Violence Option -->
+                                                <div class="mb-3 form-check">
+                                                    <input type="radio" class="form-check-input" id="graphicViolence" name="reportReason" value="Graphic violence">
+                                                    <label class="form-check-label" for="graphicViolence">Graphic violence</label>
+                                                    <div class="text-muted">Promotion of violence</div>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button asp-action="ReportBlog" asp-route-blogID="@Model.BlogId" type="submit" class="btn btn-primary" form="centeredRadioForm">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </section>

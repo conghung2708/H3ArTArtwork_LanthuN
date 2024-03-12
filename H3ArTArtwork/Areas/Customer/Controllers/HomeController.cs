@@ -133,12 +133,14 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return View(blogList);
         }
 
+        [HttpPost]
         [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer)]
         public IActionResult ReportArtwork(int artworkID)
         {
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var reason = Request.Form["reportReason"];
 
             Artwork artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == artworkID);
 
@@ -150,19 +152,20 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             ReportArtwork reportArtwork = new ReportArtwork();
             reportArtwork.ArtworkId = artworkID;
             reportArtwork.ReporterUserId = userId;
+            reportArtwork.Reason = reason;
             _unitOfWork.ReportArtworkObj.Add(reportArtwork);
             _unitOfWork.Save();
             TempData["success"] = "Report artwork successfully";
             return RedirectToAction(nameof(Details), new { artworkID = artworkID });
         }
-
+        [HttpPost]
         [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer)]
         public IActionResult ReportBlog(int blogID)
         {
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
+            var reason = Request.Form["reportReason"];
             Blog blog = _unitOfWork.BlogObj.Get(u => u.BlogId == blogID);
 
             if (blog.CreatorId.Equals(userId))
@@ -172,6 +175,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             }
             ReportBlog reportBlog = new ReportBlog();
             reportBlog.BlogId = blogID;
+            reportBlog.Reason = reason;
             reportBlog.ReporterUserId = userId;
             _unitOfWork.ReportBlogObj.Add(reportBlog);
             _unitOfWork.Save();
@@ -179,13 +183,14 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return RedirectToAction(nameof(Blog_Details), new { blogID = blogID });
         }
 
-
+        [HttpPost]
         [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer)]
         public IActionResult ReportArtist(string artistID)
         {
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var reason = Request.Form["reportReason"];
             if (userId == artistID)
             {
                 TempData["error"] = "Cannot report yourself";
@@ -193,7 +198,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             }
             ReportArtist reportArtist = new ReportArtist();
             reportArtist.ArtistId = artistID;
-
+            reportArtist.Reason = reason;
             reportArtist.ReporterUserId = userId;
             _unitOfWork.ReportArtistObj.Add(reportArtist);
             _unitOfWork.Save();
