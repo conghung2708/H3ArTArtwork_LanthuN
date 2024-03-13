@@ -115,7 +115,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
                 cart.Price = cart.Artwork.Price;
-                ShoppingCartVM.OrderHeader.PhoneNumber += cart.Price;
+                ShoppingCartVM.OrderHeader.OrderTotal += cart.Price;
                 if (cart.Artwork.IsBought)
                 {
 
@@ -207,6 +207,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 var sessionLineItem = new SessionLineItemOptions
                 {
                     PriceData = new SessionLineItemPriceDataOptions
+
                     {
                         UnitAmount = (long)(item.Price * 100),
                         Currency = "usd",
