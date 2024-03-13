@@ -155,11 +155,14 @@
                                         </ul>
                                     </li>
                                 }
-                                @if (!User.IsInRole(SD.Role_Admin) && !User.IsInRole(SD.Role_Moderator))
-                                {
+                                @if(!User.IsInRole(SD.Role_Admin)) {
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Blog">Blog</a>
                                     </li>
+                                }
+                                   
+                                @if (!User.IsInRole(SD.Role_Admin) && !User.IsInRole(SD.Role_Moderator))
+                                {
                                     <li class="nav-item">
                                         <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index" style="color: black;">
                                             @await Component.InvokeAsync("ShoppingCart")
