@@ -2,6 +2,7 @@
 using H3ArT.Models;
 using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using System.Security.Claims;
 namespace H3ArTArtwork.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class PackageController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -34,14 +36,14 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                package.adminID = userId;
+                package.AdminID = userId;
                 // artworkVM.artwork.applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
                 return View(package);
             }
             else
             {
                 //update
-                package = _unitOfWork.PackageObj.Get(u => u.packageID == packageID);
+                package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
                 return View(package);
                 //}
 
@@ -58,13 +60,13 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if (package.packageID == 0)
+                    if (package.PackageId == 0)
                     {
 
                         // Add product
                         _unitOfWork.PackageObj.Add(package);
                         _unitOfWork.Save();
-                        package.adminID = userId;
+                        package.AdminID = userId;
                         _unitOfWork.PackageObj.Update(package);
                         _unitOfWork.Save();
 
@@ -111,7 +113,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         {
             try
             {
-                var packageToBeDeleted = _unitOfWork.PackageObj.Get(u => u.packageID == id);
+                var packageToBeDeleted = _unitOfWork.PackageObj.Get(u => u.PackageId == id);
                 if (packageToBeDeleted == null)
                 {
                     return Json(new { success = false, message = "Error: Package not found" });
