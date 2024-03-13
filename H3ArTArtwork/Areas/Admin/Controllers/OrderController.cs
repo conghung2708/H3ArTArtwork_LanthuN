@@ -74,18 +74,18 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeaderFromDb.OrderStatus = SD.StatusDone;
 
-            if(orderHeaderFromDb.isPackageOrder == true)
+            if(orderHeaderFromDb.IsPackageOrder == true)
             {
                 // get information of user buy the package
-                var userID = orderHeaderFromDb.applicationUserId;
+                var userID = orderHeaderFromDb.ApplicationUserId;
                 var applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userID);
 
                 // get the package information
                 var orderDetailPackage = _unitOfWork.OrderDetailPackageObj.Get(u => u.orderHeaderId == orderHeaderFromDb.Id);
-                var package = _unitOfWork.PackageObj.Get(u => u.packageID == orderDetailPackage.packageId);
+                var package = _unitOfWork.PackageObj.Get(u => u.PackageId == orderDetailPackage.packageId);
 
                 // update amountPost for user
-                applicationUser.AvaiblePost = package.amountPost;
+                applicationUser.AvaiblePost = package.AmountPost;
                 _unitOfWork.ApplicationUserObj.Update(applicationUser);
                 _unitOfWork.Save();
             }

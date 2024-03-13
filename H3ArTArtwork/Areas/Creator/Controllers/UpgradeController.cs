@@ -7,10 +7,12 @@ using H3ArT.Models;
 using H3ArT.Utility;
 using Stripe.Checkout;
 using H3ArT.DataAccess.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace H3ArTArtwork.Areas.Creator.Controllers
 {
     [Area("Creator")]
+    [Authorize(Roles = "Creator")]
     public class UpgradeController : Controller
     {
         [BindProperty]
@@ -81,10 +83,10 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 Package package = PackagePaymentVM.Package;
                 //Package package = _unitOfWork.PackageObj.Get(u => u.packageID == packageId);
 
-                PackagePaymentVM.orderHeader.OrderDate = System.DateTime.Now;
-                PackagePaymentVM.orderHeader.ApplicationUserId = userId;
-                PackagePaymentVM.orderHeader.OrderTotal = package.price;
-                PackagePaymentVM.orderHeader.IsPackageOrder = true;
+                PackagePaymentVM.OrderHeader.OrderDate = System.DateTime.Now;
+                PackagePaymentVM.OrderHeader.ApplicationUserId = userId;
+                PackagePaymentVM.OrderHeader.OrderTotal = package.Price;
+                PackagePaymentVM.OrderHeader.IsPackageOrder = true;
 
 
                 if (!ModelState.IsValid)
@@ -159,7 +161,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 //var domain = "https://localhost:7034/";
                 var options = new SessionCreateOptions
                 {
-                    SuccessUrl = domain + $"creator/upgrade/PackageOrderConfirmation?id={PackagePaymentVM.orderHeader.Id}&packageID={PackagePaymentVM.packageId}",
+                    SuccessUrl = domain + $"creator/upgrade/PackageOrderConfirmation?id={PackagePaymentVM.OrderHeader.Id}&packageID={PackagePaymentVM.PackageId}",
 
                     CancelUrl = domain + "customer/cart/index",
                     LineItems = new List<SessionLineItemOptions>(),
@@ -203,12 +205,12 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
-            Package package = _unitOfWork.PackageObj.Get(u => u.packageID == packageID);
+            Package package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
             OrderHeader orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id, includeProperties: "applicationUser");
 
             //this is an order by customer
             var service = new SessionService();
-            Session session = service.Get(orderHeader.sessionId);
+            Session session = service.Get(orderHeader.SessionId);
 
             if (session.PaymentStatus.ToLower() == "paid")
             {
