@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
+using H3ArT.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +72,9 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
 
         }
 
-        public IActionResult OnGet(string code = null)
+        [TempData]
+        public string Mail { get; set; }
+        public async Task<IActionResult> OnGetAsync(string userId, string code = null)
         {
             if (code == null)
             {
@@ -79,6 +82,12 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
             }
             else
             {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound($"Unable to load user with ID '{userId}'.");
+                }
+                Mail = user.Email;
                 Input = new InputModel
                 {
                     Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))

@@ -208,7 +208,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
             Package package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
-            OrderHeader orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id, includeProperties: "applicationUser");
+            OrderHeader orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id, includeProperties: "ApplicationUser");
 
             //this is an order by customer
             var service = new SessionService();
