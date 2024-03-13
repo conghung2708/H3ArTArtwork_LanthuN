@@ -18,9 +18,11 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         [BindProperty]
         public PackagePaymentVM PackagePaymentVM { get; set; }
         private readonly IUnitOfWork _unitOfWork;
-        public UpgradeController(IUnitOfWork unitOfWork)
+        private readonly IConfiguration _config;
+        public UpgradeController(IUnitOfWork unitOfWork, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
+            _config = config;
         }
 
         // trang nay hien ra 3 cai de chon --> chuyen qua Summary
@@ -69,7 +71,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         // nay la khi nhan cai nut thanh toan trong trang Summary --> POST
         [HttpPost]
         [ActionName("SummaryPackage")]
-        public IActionResult SummaryPackagePOST(IConfiguration _config)
+        public IActionResult SummaryPackagePOST()
         {
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
