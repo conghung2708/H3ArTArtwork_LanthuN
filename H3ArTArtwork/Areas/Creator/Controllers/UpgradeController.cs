@@ -77,7 +77,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
             if (applicationUser.AvaiblePost <= 0 || applicationUser.AvaiblePost == null)
             {
-                //ShoppingCartVM will automatically be populated
+                //PackagePaymentVM will automatically be populated
                 var packageId = PackagePaymentVM.PackageId;
                 PackagePaymentVM.Package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageId);
                 Package package = PackagePaymentVM.Package;
