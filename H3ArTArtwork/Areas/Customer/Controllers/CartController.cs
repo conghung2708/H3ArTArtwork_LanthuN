@@ -20,12 +20,14 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _config;
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
-        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender)
+        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
+            _config = config;
         }
         public IActionResult Index()
         {
@@ -101,7 +103,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
 
         [HttpPost]
         [ActionName("Summary")]
-        public IActionResult SummaryPOST(IConfiguration _config)
+        public IActionResult SummaryPOST()
         {
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
