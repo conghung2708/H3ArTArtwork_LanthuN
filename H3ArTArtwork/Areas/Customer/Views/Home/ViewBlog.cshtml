@@ -21,12 +21,12 @@
             font-weight: 600;
             font-family: 'Open Sans', sans-serif;
             /**
-           * If you set it to a value higher than the 'font-size',
-           * you will have to take account of the difference
-           * between the 'line-height' and the 'font-size'
-           * to vertically centre the arrow
-           * and align it with the text.
-           **/
+                   * If you set it to a value higher than the 'font-size',
+                   * you will have to take account of the difference
+                   * between the 'line-height' and the 'font-size'
+                   * to vertically centre the arrow
+                   * and align it with the text.
+                   **/
             line-height: 1;
             /* Makes some place for the arrow */
             padding-left: 15px;
@@ -34,39 +34,32 @@
             position: relative;
         }
 
-        #footer{
+        #footer {
             display: none;
         }
     </style>
 </head>
 <body>
     <a href="#" class="go-back" onclick="goBack()"> <i class="bi bi-skip-backward-circle"></i> Go Back</a>
-
-
-   
-            <div class="blog-content">
-                <!-- item -->
-                @foreach (var blog in Model)
-                {
-
-
-                    <div class="blog-item">
-                        <div class="blog-img">
-                            <img src="@blog.ImageUrl" alt="" />
-                            <span><i class="far fa-heart"></i></span>
-                        </div>
-                        <div class="blog-text">
-                            <span>@blog.CreatedAt</span> @* date *@
-                            <h2>@blog.Title</h2> @* title *@
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis libero quas ipsum laudantium nihil! Quaerat.</p>
-                            <a asp-action="Blog_Details" asp-route-blogID="@blog.BlogId">More</a>
-                        </div>
-                    </div>
-                }
-                <!-- end of item -->
-
+    <div class="blog-content">
+        <!-- item -->
+        @foreach (var blog in Model)
+        {
+            <div class="blog-item">
+                <div class="blog-img">
+                    <img src="@blog.ImageUrl" alt="" />
+                    <span><i class="far fa-heart"></i></span>
+                </div>
+                <div class="blog-text">
+                    <span>@blog.CreatedAt</span> @* date *@
+                    <h2>@blog.Title</h2> @* title *@
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis libero quas ipsum laudantium nihil! Quaerat.</p>
+                    <a asp-action="Blog_Details" asp-route-blogID="@blog.BlogId">More</a>
+                </div>
             </div>
-       
+        }
+        <!-- end of item -->
+    </div>
     <footer>
         <div class="social-links">
             <a href="#"><i class="fab fa-facebook-f"></i></a>

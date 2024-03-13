@@ -52,7 +52,6 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
         {
             var cartFromDb = _unitOfWork.ShoppingCartObj.Get(u => u.ShoppingCartId == cartId, tracked: true);
 
-
             // Fetch the associated orderHeaderId using userId or any other relevant information
             var userId = cartFromDb.BuyerId;
             var orderHeader = _unitOfWork.OrderHeaderObj.Get(o => o.ApplicationUserId == userId && o.OrderStatus == SD.StatusPending);
@@ -71,8 +70,6 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             _unitOfWork.ShoppingCartObj.Remove(cartFromDb);
             //Remove from session
             HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == cartFromDb.BuyerId).Count() - 1);
-
-
             _unitOfWork.Save();
 
             return RedirectToAction(nameof(Index));
@@ -111,8 +108,6 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
 
             //ShoppingCartVM will automatically be populated
             ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == userId, includeProperties: "Artwork");
-
-
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 
             ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
@@ -145,7 +140,6 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             // bam place order ma khong thanh toan => pending
             // lay ra nhung cai nay de tranh update 2 lan vao doan code o ben duoi
             var existingOrder = _unitOfWork.OrderHeaderObj.Get(o => o.ApplicationUserId == userId && o.PaymentStatus == SD.PaymentStatusPending);
-
 
             // neu ma no ton tai (!=null) => cap nhat lai nhung gia tri nhu la`
             //[orderDate],[orderTotal],[orderStatus],[paymentStatus],[paymentDate],[paymentIntentId],[name],[phoneNumber],[sessionId]
@@ -199,7 +193,6 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                     cart.IsNew = false; // Reset isNew flag
                     _unitOfWork.ShoppingCartObj.Update(cart);
                 }
-
             }
             //stripe logic
             var domain = _config.GetValue<string>("Stripe:Domain"); ;
