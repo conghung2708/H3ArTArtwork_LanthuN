@@ -1,8 +1,8 @@
 ﻿@using H3ArT.Models.Models
 @model List<OrderDetail>
 
-<di style ="display:flex; justify-content: center; align-content:center">
-    <div class="container row pt-4 " >
+<di style="display:flex; justify-content: center; align-content:center">
+    <div class="container row pt-4 ">
         <div class="col-12 text-center">
             <h1 class="text-primary text-center">Order Placed Successfully!</h1>
             </br>
@@ -11,7 +11,7 @@
                 <p>Date: @Model[0].OrderHeader.PaymentDate</p>
                 <p>Status Order: @Model[0].OrderHeader.OrderStatus</p>
                 <p>Your Order Number is : @Model[0].OrderHeaderId </p>
-            </div>    
+            </div>
             </br>
             <table class="table">
                 <thead>
@@ -28,17 +28,26 @@
                     @foreach (var item in Model)
                     {
                         <tr style="height:10vh">
-                            <td>@item.Id</td>
-                            <td>@item.Artwork.Title</td>
-                            <td style="height:10vh"><div><img src="@item.Artwork.ImageUrl" width="100vh"/></div> </td>
-                            <td>@item.Count</td>
-                            <td>@item.Price</td>
+                            <td><p style="margin: auto">@item.Id</p></td>
+                            <td><p style="margin: auto">@item.Artwork.Title</p></td>
+                            <td style="height:10vh"><div><img style="margin: auto" src="@item.Artwork.ImageUrl" width="100vh" /></div> </td>
+                            <td><p style="margin: auto">@item.Count</p></td>
+                            <td><p style="margin: auto">@item.Price$</p></td>
                             <!-- Thêm các cột khác tùy theo yêu cầu -->
                         </tr>
                     }
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Order Total:</th>
+                        <th>@Model[0].OrderHeader.OrderTotal$</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
-        
+
     </div>
 </di>

@@ -121,7 +121,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
                 cart.Price = cart.Artwork.Price;
-                ShoppingCartVM.OrderHeader.PhoneNumber += cart.Price;
+                ShoppingCartVM.OrderHeader.OrderTotal += cart.Price;
                 if (cart.Artwork.IsBought)
                 {
                     // Add model error if artwork is already bought
@@ -251,7 +251,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                     tableHtml.Append("<tr>");
                     tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;\">{item.Artwork.Title}</td>");
                     tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;text-align:center; \">{item.Count}</td>");
-                    tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;text-align:center; \">{item.Price}</td>");
+                    tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;text-align:center; \">{item.Price}$</td>");
                     tableHtml.Append("</tr>");
                 }   
                 tableHtml.Append("</table>");
@@ -259,7 +259,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                     $"<p>Name: {orderHeader.Name}</p>" +
                     $"<p>Date: {orderHeader.PaymentDate}</p>" +
                     $"<p>Status Order: {orderHeader.OrderStatus}</p>" +
-                    $"<p>Order Total: {orderHeader.OrderTotal}</p>" +
+                    $"<p>Order Total: {orderHeader.OrderTotal}$</p>" +
                     $"<p>Please see the following table: </p>" +
                     $"<div>{tableHtml.ToString()}</div>";
 

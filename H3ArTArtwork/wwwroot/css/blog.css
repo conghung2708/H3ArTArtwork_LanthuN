@@ -20,9 +20,9 @@ body {
 }
 
 img {
-    width: 100%;
     display: block;
 }
+
 
 .container {
     max-width: 1320px;
