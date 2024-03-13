@@ -1,8 +1,8 @@
-﻿@using H3ArT.DataAccess.Repository.IRepository
-@using H3ArT.Models.ViewModels
-@using System.Globalization
-@using System.Security.Claims
-@model PackagePaymentVM
+﻿    @using H3ArT.DataAccess.Repository.IRepository
+    @using H3ArT.Models.ViewModels
+    @using System.Globalization
+    @using System.Security.Claims
+    @model PackagePaymentVM
 
 @{
     int amountPostToCompare = 0;
@@ -25,7 +25,7 @@
     @inject IUnitOfWork _unitOfWork;
     var packageID = Model.PackageId;
     Model.Package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
-    
+
     // var claimsIdentity = (ClaimsIdentity)User.Identity;
     // var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
     //ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
@@ -56,6 +56,7 @@
                                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                                     <span class="text-info">Information Details:</span>
                                 </h4>
+
                             </div>
                             <div class="row my-1">
                                 <div class="col-3">
@@ -98,6 +99,7 @@
                                 </li>
                             </ul>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -112,7 +114,7 @@
                     @if (Model.ApplicationUser != null)
                     {
                         var availablePost = Model.ApplicationUser.AvaiblePost;
-                        @if (Model.ApplicationUser.AvaiblePost != 0 || Model.ApplicationUser.AvaiblePost != null)
+                        @if (availablePost > 0)
                         {
                             <div class="col-12 col-md-4">
                                 <button type="submit" method="post" value="Place Order" disabled class="btn btn-primary form-control">Place Order</button>
@@ -120,7 +122,7 @@
                             </div>
                         }
 
-                        @if (Model.ApplicationUser.AvaiblePost == 0 || Model.ApplicationUser.AvaiblePost == null)
+                        else
                         {
                             <div class="col-12 col-md-4">
                                 <button type="submit" method="post" value="Place Order" class="btn btn-primary form-control">Place Order</button>

@@ -7,10 +7,12 @@ using H3ArT.Models;
 using H3ArT.Utility;
 using Stripe.Checkout;
 using H3ArT.DataAccess.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace H3ArTArtwork.Areas.Creator.Controllers
 {
     [Area("Creator")]
+    [Authorize(Roles = "Creator")]
     public class UpgradeController : Controller
     {
         [BindProperty]
@@ -81,11 +83,11 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 Package package = PackagePaymentVM.Package;
                 //Package package = _unitOfWork.PackageObj.Get(u => u.packageID == packageId);
 
-
-
                 PackagePaymentVM.OrderHeader.OrderDate = System.DateTime.Now;
                 PackagePaymentVM.OrderHeader.ApplicationUserId = userId;
                 PackagePaymentVM.OrderHeader.OrderTotal = package.Price;
+                PackagePaymentVM.OrderHeader.IsPackageOrder = true;
+
 
                 if (!ModelState.IsValid)
                 {
@@ -156,9 +158,11 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 //}
                 //stripe logic
                 var domain = "https://localhost:44358/";
+                //var domain = "https://localhost:7034/";
                 var options = new SessionCreateOptions
                 {
-                    SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={PackagePaymentVM.OrderHeader.Id}",
+                    SuccessUrl = domain + $"creator/upgrade/PackageOrderConfirmation?id={PackagePaymentVM.OrderHeader.Id}&packageID={PackagePaymentVM.PackageId}",
+
                     CancelUrl = domain + "customer/cart/index",
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
@@ -186,14 +190,43 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 Session session = service.Create(options);
                 _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(PackagePaymentVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
                 _unitOfWork.Save();
+                //applicationUser.AvaiblePost = package.amountPost;
+                //_unitOfWork.ApplicationUserObj.Update(applicationUser);
+                //_unitOfWork.Save();
 
-                applicationUser.AvaiblePost = package.AmountPost;
-                _unitOfWork.ApplicationUserObj.Update(applicationUser);
-                _unitOfWork.Save();
                 Response.Headers.Add("Location", session.Url);
                 return new StatusCodeResult(303);
             }
             return View(PackagePaymentVM);
+        }
+
+        public IActionResult PackageOrderConfirmation(int id, int packageID)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+            Package package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
+            OrderHeader orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id, includeProperties: "applicationUser");
+
+            //this is an order by customer
+            var service = new SessionService();
+            Session session = service.Get(orderHeader.SessionId);
+
+            if (session.PaymentStatus.ToLower() == "paid")
+            {
+                _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
+                _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                _unitOfWork.Save();
+            }
+            // update amountPost
+            //applicationUser.AvaiblePost = package.amountPost;
+            //_unitOfWork.ApplicationUserObj.Update(applicationUser);
+            //_unitOfWork.Save();
+
+            //List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.buyerID == orderHeader.applicationUserId).ToList();
+            //_unitOfWork.ShoppingCartObj.RemoveRange(shoppingCarts);
+            //_unitOfWork.Save();
+            return View(id);
         }
 
         public IActionResult Reset()

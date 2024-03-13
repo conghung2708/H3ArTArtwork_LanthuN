@@ -2,6 +2,7 @@
 using H3ArT.Models;
 using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using System.Security.Claims;
 namespace H3ArTArtwork.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class PackageController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -27,33 +29,25 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
         public IActionResult Upsert(int? packageID)
         {
-
             Package package = new Package();
-            /*
-                        if (packageID == null || packageID == 0)
-                        {
-                            //create
-                            var claimsIdentity = (ClaimsIdentity)User.Identity;
-                            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-                            //ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
-                            //if (artworkVM.artwork.applicationUser.AvaiblePost <= 0 || artworkVM.artwork.applicationUser.AvaiblePost == null)
-                            //{
-                            //    TempData["error"] = "You do not have enough posting credits to place an order. Please purchase a package to continue.";
-                            //}
+            if (packageID == null || packageID == 0)
+            {
+                //create
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+                package.AdminID = userId;
+                // artworkVM.artwork.applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+                return View(package);
+            }
+            else
+            {
+                //update
+                package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
+                return View(package);
+                //}
 
-                            artworkVM.artwork.artistID = userId;
-                            artworkVM.artwork.applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
-                            artworkVM.artwork.applicationUser.AvaiblePost -= 1;
-                            return View(artworkVM);
-                        }
-                        else
-                        {*/
-            //update
-            package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
-            return View(package);
-            //}
-
+            }
         }
 
         [HttpPost]
@@ -66,46 +60,33 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    //if (package.packageID == 0)
-                    //{
+                    if (package.PackageId == 0)
+                    {
 
-                    //    // Add product
-                    //    ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
-                    //    if (applicationUser.AvaiblePost <= 0 || applicationUser.AvaiblePost == null)
-                    //    {
-                    //        TempData["error"] = "You do not have enough posting credits to place an order. Please purchase a package to continue.";
-                    //        return RedirectToAction("Index", "Artwork");
-                    //    }
+                        // Add product
+                        _unitOfWork.PackageObj.Add(package);
+                        _unitOfWork.Save();
+                        package.AdminID = userId;
+                        _unitOfWork.PackageObj.Update(package);
+                        _unitOfWork.Save();
 
-                    //    // if user has pay for package
-                    //    _unitOfWork.ArtworkObj.Add(package.artwork);
-                    //    _unitOfWork.Save();
-                    //    package.artwork.artistID = userId;
-                    //    _unitOfWork.ArtworkObj.Update(package.artwork);
-                    //    _unitOfWork.Save();
+                        TempData["success"] = "Package created successfully";
+                    }
+                    else
+                    {
+                        // Update product
+                        _unitOfWork.PackageObj.Update(package);
 
-                    //    applicationUser.AvaiblePost -= 1;
-                    //    _unitOfWork.ApplicationUserObj.Update(applicationUser);
-                    //    _unitOfWork.Save();
+                        _unitOfWork.Save();
 
-
-                    //    TempData["success"] = "Artwork created successfully";
-                    //}
-                    //else
-                    //{
-                    // Update product
-                    _unitOfWork.PackageObj.Update(package);
-
-                    _unitOfWork.Save();
-
-                    TempData["success"] = "Artwork updated successfully";
-                    //}
+                        TempData["success"] = "Package updated successfully";
+                    }
                     return RedirectToAction("Index", "Package");
+
                 }
                 else
                 {
                     package = _unitOfWork.PackageObj.GetAll().FirstOrDefault();
-
                     return View(package);
                 }
             }
@@ -126,6 +107,56 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
 
             return Json(new { data = listPackage });
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            try
+            {
+                var packageToBeDeleted = _unitOfWork.PackageObj.Get(u => u.PackageId == id);
+                if (packageToBeDeleted == null)
+                {
+                    return Json(new { success = false, message = "Error: Package not found" });
+                }
+
+                // Check if there are any order details associated with this artwork
+                //bool hasOrderDetails = _unitOfWork.OrderDetailObj.GetAll(od => od.artworkId == id).Any();
+                //if (hasOrderDetails)
+                //{
+                //    // Set error message in TempData
+                //    TempData["error"] = "Cannot delete artwork with associated orders";
+                //    return Json(new { success = false, message = "Cannot delete artwork with associated orders" });
+                //}
+
+                //if (!string.IsNullOrEmpty(packageToBeDeleted.imageUrl))
+                //{
+                //    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, packageToBeDeleted.imageUrl.TrimStart('\\'));
+                //    if (System.IO.File.Exists(oldImagePath))
+                //    {
+                //        System.IO.File.Delete(oldImagePath);
+                //    }
+                //}
+
+                _unitOfWork.PackageObj.Remove(packageToBeDeleted);
+                _unitOfWork.Save();
+
+                //var claimsIdentity = (ClaimsIdentity)User.Identity;
+                //var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                //List<Artwork> listArtwork = _unitOfWork.ArtworkObj.GetAll(u => u.artistID == userId, includeProperties: "category,applicationUser").ToList();
+
+                List<Package> listPackage = _unitOfWork.PackageObj.GetAll().ToList();
+
+                // Set success message in TempData
+                TempData["success"] = "Delete Successful";
+
+                return Json(new { success = true, message = "Delete Successful" });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for debugging purposes
+                Console.WriteLine(ex.Message);
+                return Json(new { success = false, message = "An error occurred while deleting the artwork" });
+            }
         }
 
         #endregion
