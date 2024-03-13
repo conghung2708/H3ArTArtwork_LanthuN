@@ -29,7 +29,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddAuthentication().AddFacebook(option =>
 {
     option.AppId = builder.Configuration.GetSection("Authentication:Facebook:AppId").Get<string>();
-    option.AppSecret = builder.Configuration.GetSection("Authentication:Facebook:AppSecret").Get<string>(); 
+    option.AppSecret = builder.Configuration.GetSection("Authentication:Facebook:AppSecret").Get<string>();
 }).AddGoogle(option =>
 {
     option.ClientId = builder.Configuration.GetSection("Authentication:Google:ClientId").Get<string>();

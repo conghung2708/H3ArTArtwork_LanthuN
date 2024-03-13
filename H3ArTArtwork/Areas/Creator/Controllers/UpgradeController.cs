@@ -18,9 +18,11 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         [BindProperty]
         public PackagePaymentVM PackagePaymentVM { get; set; }
         private readonly IUnitOfWork _unitOfWork;
-        public UpgradeController(IUnitOfWork unitOfWork)
+        private readonly IConfiguration _config;
+        public UpgradeController(IUnitOfWork unitOfWork, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
+            _config = config;
         }
 
         // trang nay hien ra 3 cai de chon --> chuyen qua Summary
@@ -157,8 +159,8 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
                 //}
                 //stripe logic
-                var domain = "https://localhost:44358/";
-                //var domain = "https://localhost:7034/";
+                var domain = _config.GetValue<string>("Stripe:Domain"); 
+
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = domain + $"creator/upgrade/PackageOrderConfirmation?id={PackagePaymentVM.OrderHeader.Id}&packageID={PackagePaymentVM.PackageId}",

@@ -48,9 +48,7 @@
                         <span><i class="far fa-heart"></i> 22</span>
                         <span>Art & Design</span>
                     </div>
-                    <div class="design-title">
-                        <a href="#">make an awesome art portfolio for college or university</a>
-                    </div>
+                   
                 </div>
                 <!-- end of item -->
                 <!-- item -->
@@ -61,9 +59,7 @@
                         <span><i class="far fa-heart"></i> 22</span>
                         <span>Art & Design</span>
                     </div>
-                    <div class="design-title">
-                        <a href="#">make an awesome art portfolio for college or university</a>
-                    </div>
+
                 </div>
                 <!-- end of item -->
                 <!-- item -->
@@ -73,9 +69,7 @@
                         <span><i class="far fa-heart"></i> 22</span>
                         <span>Art & Design</span>
                     </div>
-                    <div class="design-title">
-                        <a href="#">make an awesome art portfolio for college or university</a>
-                    </div>
+                 
                 </div>
                 <!-- end of item -->
                 <!-- item -->
@@ -86,9 +80,7 @@
                         <span><i class="far fa-heart"></i> 22</span>
                         <span>Art & Design</span>
                     </div>
-                    <div class="design-title">
-                        <a href="#">make an awesome art portfolio for college or university</a>
-                    </div>
+                   
                 </div>
                 <!-- end of item -->
                 <!-- item -->
@@ -98,9 +90,7 @@
                         <span><i class="far fa-heart"></i> 22</span>
                         <span>Art & Design</span>
                     </div>
-                    <div class="design-title">
-                        <a href="#">make an awesome art portfolio for college or university</a>
-                    </div>
+
                 </div>
                 <!-- end of item -->
                 <!-- item -->
@@ -110,9 +100,7 @@
                         <span><i class="far fa-heart"></i> 22</span>
                         <span>Art & Design</span>
                     </div>
-                    <div class="design-title">
-                        <a href="#">make an awesome art portfolio for college or university</a>
-                    </div>
+                    
                 </div>
                 <!-- end of item -->
             </div>
@@ -128,22 +116,23 @@
             </div>
             <div class="blog-content">
                 <!-- item -->
-                @foreach(var blog in Model)
+                @{
+                    var sortedBlogs = Model.OrderByDescending(blog => blog.CreatedAt);
+                }
+
+                @foreach (var blog in sortedBlogs)
                 {
-                    
-                
-                <div class="blog-item">
-                    <div class="blog-img">
-                        <img src="@blog.ImageUrl" alt="" />
-                        <span><i class="far fa-heart"></i></span>
+                    <div class="blog-item">
+                        <div class="blog-img" style="width: 382px; height: 200px;">
+                            <img src="@blog.ImageUrl" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="blog-text">
+                            <span>@blog.CreatedAt</span> <!-- date -->
+                            <h2>@blog.Title</h2> <!-- title -->
+                            <p>@Html.Raw(@blog.Description.Substring(0, 100))...</p>
+                            <a asp-action="Blog_Details" asp-route-blogID="@blog.BlogId">More</a>
+                        </div>
                     </div>
-                    <div class="blog-text">
-                        <span>@blog.CreatedAt</span> @* date *@
-                        <h2>@blog.Title</h2> @* title *@
-                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis libero quas ipsum laudantium nihil! Quaerat.</p>
-                        <a asp-action="Blog_Details" asp-route-blogID="@blog.BlogId">More</a>
-                    </div>
-                </div>
                 }
                 <!-- end of item -->
 

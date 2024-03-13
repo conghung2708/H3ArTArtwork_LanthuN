@@ -8,6 +8,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using H3ArT.Models;
 using H3ArT.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace H3ArTArtwork.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize(Roles = "Customer, Creator")]
     public class IndexModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
