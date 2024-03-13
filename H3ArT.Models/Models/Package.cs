@@ -17,6 +17,7 @@ namespace H3ArT.Models.Models
         [Required]
         public string PackageName { get; set; }
 
+
         public double Price { get; set; }
 
         public int AmountPost { get; set; }
