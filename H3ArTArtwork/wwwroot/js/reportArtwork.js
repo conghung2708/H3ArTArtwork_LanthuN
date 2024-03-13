@@ -8,8 +8,8 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/Moderator/report/GetAllReportArtwork' },
         "columns": [
-            { data: 'reportArtworkId', "width": "25%" },
-            { data: 'artworkId', "width": "25%" },
+            { data: 'reportArtworkId', "width": "20%" },
+            { data: 'artworkId', "width": "20%" },
             { data: 'artwork.title', "width": "10%" },
             {
                 data: 'artwork.imageUrl',
@@ -19,6 +19,7 @@ function loadDataTable() {
                 width: "10%"
             },
             { data: 'applicationUser.fullName', "width": "10%" },
+            { data: 'reason', "width": "20%" },
             {
                 data: 'artwork.reportedConfirm',
                 "render": function (data, type, row) {

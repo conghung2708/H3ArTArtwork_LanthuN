@@ -8,8 +8,8 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/Moderator/report/GetAllReportBlog' },
         "columns": [
-            { data: 'reportBlogId', "width": "25%" },
-            { data: 'blogId', "width": "25%" },
+            { data: 'reportBlogId', "width": "20%" },
+            { data: 'blogId', "width": "20%" },
             { data: 'blog.title', "width": "10%" },
             {
                 data: 'blog.imageUrl',
@@ -19,6 +19,7 @@ function loadDataTable() {
                 width: "10%"
             },
             { data: 'applicationUser.fullName', "width": "10%" }, // Accessing displayOrder within the category object
+            { data: 'reason', "width": "20%" },
             {
                 data: 'blogId',
                 "render": function (data) {

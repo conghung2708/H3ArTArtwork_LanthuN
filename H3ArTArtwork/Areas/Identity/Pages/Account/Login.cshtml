@@ -111,13 +111,14 @@
                     
                 <div class="input-box">
                     <input asp-for="Input.Email" autocomplete="username" type="text" aria-required="true" class="input-field" placeholder="Email" />
+                        <i class="bx bx-user"></i>
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
-                    <i class="bx bx-user"></i>
+                    
                 </div>
                 <div class="input-box">
                     <input asp-for="Input.Password" autocomplete="current-password" aria-required="true" type="password" class="input-field" placeholder="Password" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    <i class="bx bx-lock-alt"></i>
+                        <i class="bx bx-lock-alt"></i>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>                  
                 </div>
                 <div class="input-box">
                     <input type="submit" class="submit" value="Sign In" />

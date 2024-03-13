@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.Extensions.Primitives;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,5 +19,6 @@ namespace H3ArT.Models.Models
         [ForeignKey("ReporterUserId")]
         [ValidateNever]
         public ApplicationUser Reporter { get; set; }
+        public string Reason { get; set; }
     }
 }
