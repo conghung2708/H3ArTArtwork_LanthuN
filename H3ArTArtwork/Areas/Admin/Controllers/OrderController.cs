@@ -83,7 +83,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = SD.Role_Admin)]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Creator + "," + SD.Role_Admin)]
         public IActionResult CancelOrder()
         {
             var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.OrderHeader.Id);
@@ -91,20 +91,32 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
             if (orderHeaderFromDb.PaymentStatus == SD.PaymentStatusApproved)
             {
-                var options = new RefundCreateOptions
+                if (User.IsInRole(SD.Role_Admin))
                 {
-                    Reason = RefundReasons.RequestedByCustomer,
-                    PaymentIntent = orderHeaderFromDb.PaymentIntentId
-                };
-                var service = new RefundService();
-                Refund refund = service.Create(options);
+                    var options = new RefundCreateOptions
+                    {
+                        Reason = RefundReasons.RequestedByCustomer,
+                        PaymentIntent = orderHeaderFromDb.PaymentIntentId
+                    };
+                    var service = new RefundService();
+                    Refund refund = service.Create(options);
 
-                _unitOfWork.OrderHeaderObj.UpdateStatus(orderHeaderFromDb.Id, SD.StatusCancelled, SD.StatusRefunded);
+                    _unitOfWork.OrderHeaderObj.UpdateStatus(orderHeaderFromDb.Id, SD.StatusCancelled, SD.StatusRefunded);
+                    _unitOfWork.Save();
+                }
+                else
+                {
+                    TempData["error"] = "You cannot cancel the approved order";
+                    return RedirectToAction(nameof(Details), new { orderId = orderHeaderFromDb.Id });
+                }
             }
+
             else
             {
                 _unitOfWork.OrderHeaderObj.UpdateStatus(orderHeaderFromDb.Id, SD.StatusCancelled, SD.StatusCancelled);
+                _unitOfWork.Save();
             }
+
             var orderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderHeaderFromDb.Id, includeProperties: "Artwork");
 
             // Set the isBought property of artwork to false for all items in this order

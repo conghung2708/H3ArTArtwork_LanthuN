@@ -137,7 +137,9 @@
                                 {
                                     <button asp-action="DoneOrder" type="submit" class="btn btn-primary form-control mb-2">Done Order</button>
                                 }
-                                @if (Model.OrderHeader.OrderStatus != SD.StatusRefunded && Model.OrderHeader.OrderStatus != SD.StatusCancelled && Model.OrderHeader.OrderStatus != SD.StatusDone)
+                            }
+                            @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Customer) || User.IsInRole(SD.Role_Creator)){
+                            @if (Model.OrderHeader.OrderStatus != SD.StatusRefunded && Model.OrderHeader.OrderStatus != SD.StatusCancelled && Model.OrderHeader.OrderStatus != SD.StatusDone)
                                 {
                                     <button type="submit" asp-action="CancelOrder" class="btn btn-danger form-control mb-2">Cancel Order</button>
                                 }
