@@ -101,7 +101,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
 
         [HttpPost]
         [ActionName("Summary")]
-        public IActionResult SummaryPOST()
+        public IActionResult SummaryPOST(IConfiguration _config)
         {
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -116,19 +116,25 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
             ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
 
-
+            List<string> purchasedArtworks = new List<string>();
             // set tong tien cho orderHeader
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
                 cart.Price = cart.Artwork.Price;
-                ShoppingCartVM.OrderHeader.PhoneNumber += cart.Price;
+                ShoppingCartVM.OrderHeader.OrderTotal += cart.Price;
                 if (cart.Artwork.IsBought)
                 {
-                    // Add model error if artwork is already bought
-                    ModelState.AddModelError("", $"The artwork '{cart.Artwork.Title}' has already been purchased.");
-                    return View(ShoppingCartVM); // or any other suitable action result
+
+                    purchasedArtworks.Add(cart.Artwork.Title);
                 }
             }
+            if (purchasedArtworks.Any())
+            {
+                // Add model error if multiple artworks are already bought
+                ModelState.AddModelError("", $"The following artworks have already been purchased: {string.Join(", ", purchasedArtworks)}");
+                return View(ShoppingCartVM);
+            }
+
             if (!ModelState.IsValid)
             {
                 // If model state is not valid, return the view with validation errors
@@ -194,7 +200,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
 
             }
             //stripe logic
-            var domain = "https://localhost:44358/";
+            var domain = _config.GetValue<string>("Stripe:Domain"); ;
             var options = new SessionCreateOptions
             {
                 SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
@@ -207,6 +213,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 var sessionLineItem = new SessionLineItemOptions
                 {
                     PriceData = new SessionLineItemPriceDataOptions
+
                     {
                         UnitAmount = (long)(item.Price * 100),
                         Currency = "usd",
@@ -251,7 +258,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                     tableHtml.Append("<tr>");
                     tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;\">{item.Artwork.Title}</td>");
                     tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;text-align:center; \">{item.Count}</td>");
-                    tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;text-align:center; \">{item.Price}</td>");
+                    tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;text-align:center; \">{item.Price}$</td>");
                     tableHtml.Append("</tr>");
                 }   
                 tableHtml.Append("</table>");
@@ -259,7 +266,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                     $"<p>Name: {orderHeader.Name}</p>" +
                     $"<p>Date: {orderHeader.PaymentDate}</p>" +
                     $"<p>Status Order: {orderHeader.OrderStatus}</p>" +
-                    $"<p>Order Total: {orderHeader.OrderTotal}</p>" +
+                    $"<p>Order Total: {orderHeader.OrderTotal}$</p>" +
                     $"<p>Please see the following table: </p>" +
                     $"<div>{tableHtml.ToString()}</div>";
 

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
 
 namespace H3ArTArtwork.Areas.Identity.Pages.Account
 {
@@ -26,6 +27,9 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
             _userManager = userManager;
             _emailSender = emailSender;
         }
+
+        [TempData]
+        public bool StatusMessage { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -47,7 +51,11 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+            
         }
+
+
+        
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -57,7 +65,8 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return RedirectToPage("./ForgotPasswordConfirmation");
+                    StatusMessage = false;
+                    return RedirectToPage("./ForgotPasswordConfirmation", StatusMessage);
                 }
 
                 // For more information on how to enable account confirmation and password reset please
@@ -74,10 +83,9 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
                     Input.Email,
                     "Reset Password",
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                return RedirectToPage("./ForgotPasswordConfirmation");
+                StatusMessage = true;
+                return RedirectToPage("./ForgotPasswordConfirmation", StatusMessage);
             }
-
             return Page();
         }
     }
