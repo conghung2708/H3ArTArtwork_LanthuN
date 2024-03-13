@@ -157,8 +157,8 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
                 //}
                 //stripe logic
-                var domain = "https://localhost:44358/";
-                //var domain = "https://localhost:7034/";
+                var domain = "https://localhost:7034/";
+
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = domain + $"creator/upgrade/PackageOrderConfirmation?id={PackagePaymentVM.OrderHeader.Id}&packageID={PackagePaymentVM.PackageId}",

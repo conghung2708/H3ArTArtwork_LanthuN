@@ -28,11 +28,11 @@ function loadDataTable(status) {
         },
         "columns": [
             { data: 'id', width: '5%' },
-            { data: 'name', width: '25%' },
-            { data: 'phoneNumber', width: '20%' },
-            { data: 'applicationUser.email', width: '20%%' },
-            { data: 'orderStatus', width: '10%' },
-            { data: 'orderTotal', width: '10%' }, // Accessing displayOrder within the category object //need to fix here
+            { data: 'name', width: '10%' },
+            { data: 'phoneNumber', width: '10%' },
+            { data: 'applicationUser.email', width: '10%%' },
+            { data: 'orderStatus', width: '5%' },
+            { data: 'orderTotal', width: '5%' }, // Accessing displayOrder within the category object //need to fix here
             // Corrected here
             {
                 data: 'id',

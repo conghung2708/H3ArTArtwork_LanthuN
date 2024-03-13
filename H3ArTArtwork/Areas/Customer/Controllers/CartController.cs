@@ -116,7 +116,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
             ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
 
-
+            List<string> purchasedArtworks = new List<string>();
             // set tong tien cho orderHeader
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
@@ -124,11 +124,17 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 ShoppingCartVM.OrderHeader.OrderTotal += cart.Price;
                 if (cart.Artwork.IsBought)
                 {
-                    // Add model error if artwork is already bought
-                    ModelState.AddModelError("", $"The artwork '{cart.Artwork.Title}' has already been purchased.");
-                    return View(ShoppingCartVM); // or any other suitable action result
+
+                    purchasedArtworks.Add(cart.Artwork.Title);
                 }
             }
+            if (purchasedArtworks.Any())
+            {
+                // Add model error if multiple artworks are already bought
+                ModelState.AddModelError("", $"The following artworks have already been purchased: {string.Join(", ", purchasedArtworks)}");
+                return View(ShoppingCartVM);
+            }
+
             if (!ModelState.IsValid)
             {
                 // If model state is not valid, return the view with validation errors
@@ -207,6 +213,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 var sessionLineItem = new SessionLineItemOptions
                 {
                     PriceData = new SessionLineItemPriceDataOptions
+
                     {
                         UnitAmount = (long)(item.Price * 100),
                         Currency = "usd",

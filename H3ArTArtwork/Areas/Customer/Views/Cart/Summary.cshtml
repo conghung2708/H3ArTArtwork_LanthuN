@@ -1,7 +1,7 @@
-﻿﻿@using H3ArT.Models.ViewModels
+Công Hưng
+@using H3ArT.Models.ViewModels
 @using System.Globalization
 @model ShoppingCartVM
-
 <form method="post">
     <br />
     <div class="container">
@@ -47,6 +47,9 @@
                                 </div>
                             </div>
 
+
+
+
                         </div>
                         <div class="col-12 col-lg-5 offset-lg-1">
                             <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -64,6 +67,7 @@
                                     </li>
                                 }
 
+
                                 <li class="list-group-item d-flex justify-content-between bg-light">
                                     <small class="text-info">Total (USD)</small>
                                     <strong class="text-info">@Model.OrderHeader.OrderTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</strong>
@@ -74,19 +78,13 @@
                 </div>
             </div>
             <div class="card-footer">
-                <div class="row">
-                    <div class="col-12 col-md-8 pt-2">
-                        <p style="color:maroon; font-size:14px;">
-                            Estimate Arrival Date:
 
-                        </p>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <button type="submit" value="Place Order" class="btn btn-primary form-control">Place Order</button>
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    </div>
+                <div class="col-12 col-md-4">
+                    <button type="submit" value="Place Order" class="btn btn-primary form-control">Place Order</button>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </form>

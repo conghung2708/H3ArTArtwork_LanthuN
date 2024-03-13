@@ -42,6 +42,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return View(artworkList);
         }
 
+        [Authorize(Roles = "Customer, Creator, Moderator")]
         public IActionResult Details(int artworkId)
         {
 
@@ -116,7 +117,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
+        [Authorize(Roles = "Customer, Creator, Moderator")]
         public IActionResult ArtistProfile(string artistID)
         {
             UserVM userVM = new()
@@ -127,6 +128,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return View(userVM);
         }
 
+        [Authorize(Roles = "Customer, Creator, Moderator")]
         public IActionResult ViewBlog(string artistID)
         {
             IEnumerable<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.CreatorId == artistID, includeProperties:"ApplicationUser");
@@ -208,12 +210,14 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return RedirectToAction(nameof(ArtistProfile), new { artistID = artistID });
         }
 
+        [Authorize(Roles = "Customer, Creator, Moderator")]
         public IActionResult Blog()
         {
             IEnumerable<Blog> blogList = _unitOfWork.BlogObj.GetAll(includeProperties: "ApplicationUser");
             return View(blogList);
         }
 
+        [Authorize(Roles = "Customer, Creator, Moderator")]
         public IActionResult Blog_Details(int blogID)
         {
             Blog blog = _unitOfWork.BlogObj.Get(u=>u.BlogId == blogID, includeProperties:"ApplicationUser");
