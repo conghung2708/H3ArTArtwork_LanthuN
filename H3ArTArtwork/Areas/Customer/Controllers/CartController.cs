@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Text.Encodings.Web;
+using System.Text;
 
 namespace H3ArTArtwork.Areas.Customer.Controllers
 {
@@ -15,11 +19,13 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
     public class CartController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailSender _emailSender;
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
-        public CartController(IUnitOfWork unitOfWork)
+        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender)
         {
             _unitOfWork = unitOfWork;
+            _emailSender = emailSender;
         }
         public IActionResult Index()
         {
@@ -222,11 +228,11 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return new StatusCodeResult(303);
         }
 
-        public IActionResult OrderConfirmation(int id)
+        public async Task<IActionResult> OrderConfirmationAsync(int id)
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id, includeProperties: "ApplicationUser");
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == orderHeader.ApplicationUserId, includeProperties: "Artwork").ToList();
-
+            List<OrderDetail> orderDetail = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderHeader.Id, includeProperties: "Artwork").ToList();
             //this is an order by customer
             var service = new SessionService();
             Session session = service.Get(orderHeader.SessionId);
@@ -236,6 +242,29 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
                 _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                 _unitOfWork.Save();
+                // Xây dựng HTML cho bảng
+                StringBuilder tableHtml = new StringBuilder();
+                tableHtml.Append("<table style=\"border-collapse: collapse; width: 100%;\">");
+                tableHtml.Append("<tr><th style =\"border: 1px solid #ddd; padding: 8px;\">Title</th><th style=\"border: 1px solid #ddd; padding: 8px;\">Quantity</th><th style=\"border: 1px solid #ddd; padding: 8px;\">Price</th></tr>");              
+                foreach (var item in orderDetail)
+                {
+                    tableHtml.Append("<tr>");
+                    tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;\">{item.Artwork.Title}</td>");
+                    tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;\">{item.Count}</td>");
+                    tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;\">{item.Price}</td>");
+                    tableHtml.Append("</tr>");
+                }   
+                tableHtml.Append("</table>");
+                string emailBody = 
+                    $"<p>Name: {orderHeader.Name}</p>" +
+                    $"<p>Date: {orderHeader.PaymentDate}</p>" +
+                    $"<p>Status Order: {orderHeader.OrderStatus}</p>" +
+                    $"<p>Order Total: {orderHeader.OrderTotal}</p>" +
+                    $"<p>Please see the following table: </p>" +
+                    $"<div>{tableHtml.ToString()}</div>";
+
+                await _emailSender.SendEmailAsync(orderHeader.ApplicationUser.Email, "Your Order",
+                       emailBody);
                 foreach (var cartItem in shoppingCarts)
                 {
                     cartItem.Artwork.IsBought = true;
@@ -249,7 +278,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
              shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == orderHeader.ApplicationUserId).ToList();
             _unitOfWork.ShoppingCartObj.RemoveRange(shoppingCarts);
             _unitOfWork.Save();
-            return View(id);
+            return View(orderDetail);
         }
 
     }

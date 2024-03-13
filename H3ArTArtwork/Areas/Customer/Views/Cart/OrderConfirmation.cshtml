@@ -1,13 +1,44 @@
-﻿@model int
+﻿@using H3ArT.Models.Models
+@model List<OrderDetail>
 
-<div class="container row pt-4">
-    <div class="col-12 text-center">
-        <h1 class="text-primary text-center">Order Placed Successfully!</h1>
-        Your Order Number is : @Model <br /><br />
-        <img src="~/image/artwork/6d3e579b-ed0f-4065-acea-380d92f09b7e.jpg" width="65%" />
+<di style ="display:flex; justify-content: center; align-content:center">
+    <div class="container row pt-4 " >
+        <div class="col-12 text-center">
+            <h1 class="text-primary text-center">Order Placed Successfully!</h1>
+            </br>
+            <div class="text-start">
+                <p>Name: @Model[0].OrderHeader.Name</p>
+                <p>Date: @Model[0].OrderHeader.PaymentDate</p>
+                <p>Status Order: @Model[0].OrderHeader.OrderStatus</p>
+                <p>Your Order Number is : @Model[0].OrderHeaderId </p>
+            </div>    
+            </br>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Artwork Name</th>
+                        <th>Image</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <!-- Thêm các cột khác tùy theo yêu cầu -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr style="height:10vh">
+                            <td>@item.Id</td>
+                            <td>@item.Artwork.Title</td>
+                            <td style="height:10vh"><div><img src="@item.Artwork.ImageUrl" width="100vh"/></div> </td>
+                            <td>@item.Count</td>
+                            <td>@item.Price</td>
+                            <!-- Thêm các cột khác tùy theo yêu cầu -->
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        
     </div>
-    <div class="col-12 text-center" style="color:maroon">
-        <br />
-        Your order has been placed successfully
-    </div>
-</div>
+</di>
