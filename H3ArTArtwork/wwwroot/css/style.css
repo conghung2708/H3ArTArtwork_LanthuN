@@ -5,8 +5,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    
 }
+
 body {
     background: url('../image/login/bg.jpg');
     background-size: cover;
@@ -16,6 +16,7 @@ body {
     font-size: 1rem;
     /*overflow: hidden;*/
 }
+
 .wrapper {
     display: flex;
     justify-content: center;
@@ -23,6 +24,7 @@ body {
     min-height: 110vh;
     background: rgba(39, 39, 39, 0.4);
 }
+
 .nav {
     position: fixed;
     top: 0;
@@ -44,15 +46,17 @@ body {
     justify-content: center;
     align-items: center;
 }
-.nav-logo a {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
-.nav-logo img {
-    height: 60%;
-}
+
+    .nav-logo a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    .nav-logo img {
+        height: 60%;
+    }
 /* .nav-menu ul {
     display: flex;
 }
@@ -80,21 +84,27 @@ body {
     cursor: pointer;
     transition: 0.3s ease;
 }
+
 .btn:hover {
     background: rgba(255, 255, 255, 0.3);
 }
+
 #registerBtn {
     margin-left: 15px;
 }
+
 .btn.white-btn {
     background: rgba(255, 255, 255, 0.7);
 }
+
 .btn.btn.white-btn:hover {
     background: rgba(255, 255, 255, 0.5);
 }
+
 .nav-menu-btn {
     display: none;
 }
+
 .form-box {
     position: relative;
     display: flex;
@@ -105,6 +115,7 @@ body {
     overflow: hidden;
     z-index: 2;
 }
+
 .login-container {
     position: absolute;
     left: 4px;
@@ -113,6 +124,7 @@ body {
     flex-direction: column;
     transition: 0.5s ease-in-out;
 }
+
 .register-container {
     position: absolute;
     right: -520px;
@@ -121,9 +133,11 @@ body {
     flex-direction: column;
     transition: 0.5s ease-in-out;
 }
+
 .top {
     position: relative;
 }
+
 .backHome {
     position: absolute;
     top: 0%;
@@ -135,6 +149,7 @@ body {
     color: #fff;
     font-size: small;
 }
+
 .top i {
     color: #ffffff;
     font-size: 30px;
@@ -142,6 +157,7 @@ body {
     justify-content: flex-start;
     align-items: center;
 }
+
 .top span {
     color: #fff;
     font-size: small;
@@ -150,21 +166,25 @@ body {
     display: flex;
     justify-content: center;
 }
-.top span a {
-    font-weight: 500;
-    color: #fff;
-    margin-left: 5px;
-}
+
+    .top span a {
+        font-weight: 500;
+        color: #fff;
+        margin-left: 5px;
+    }
+
 header {
     color: #fff;
     font-size: 30px;
     text-align: center;
     padding: 10px 0 30px 0;
 }
+
 .two-forms {
     display: flex;
     gap: 10px;
 }
+
 .input-field {
     font-size: 15px;
     background: rgba(255, 255, 255, 0.2);
@@ -177,42 +197,59 @@ header {
     outline: none;
     transition: 0.2s ease;
 }
-.input-field:hover,
-.input-field:focus {
-    background: rgba(255, 255, 255, 0.25);
-}
+
+    .input-field:hover,
+    .input-field:focus {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
 ::-webkit-input-placeholder {
     color: #fff;
 }
+
 .input-box i {
     position: relative;
     top: -35px;
     left: 17px;
     color: #fff;
 }
+
 .mid {
     margin-top: 15px;
     margin-bottom: 15px;
 }
-.mid p {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: small;
-    margin-bottom: 10px;
-}
-.mid i {
-    margin: 0px 5px 0 5px;
-    color: #ffffff;
-    font-size: 30px;
-}
+
+    .mid p {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: small;
+        margin-bottom: 10px;
+    }
+
+    .mid i {
+        margin: 0px 5px 0 5px;
+        color: #ffffff;
+        font-size: 30px;
+    }
+
+    .mid a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: #fff;
+        font-size: small;
+    }
+
 .icon-bar {
     display: flex;
     justify-content: center;
     align-items: center;
     text-decoration: none;
 }
+
 .input-box-submit {
     margin-top: 20px;
     display: flex;
@@ -220,11 +257,13 @@ header {
     align-items: center;
     text-decoration: none;
 }
-.input-box-submit i {
-    position: relative;
-    color: #000000;
-    font-size: 20px;
-}
+
+    .input-box-submit i {
+        position: relative;
+        color: #000000;
+        font-size: 20px;
+    }
+
 .submit {
     font-size: 15px;
     font-weight: 500;
@@ -238,10 +277,12 @@ header {
     cursor: pointer;
     transition: 0.3s ease-in-out;
 }
-.submit:hover {
-    background: rgba(255, 255, 255, 0.5);
-    box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);
-}
+
+    .submit:hover {
+        background: rgba(255, 255, 255, 0.5);
+        box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);
+    }
+
 .two-col {
     display: flex;
     justify-content: space-between;
@@ -249,24 +290,30 @@ header {
     font-size: small;
     margin-top: 10px;
 }
-.two-col .one {
-    display: flex;
-    gap: 5px;
-}
+
+    .two-col .one {
+        display: flex;
+        gap: 5px;
+    }
+
 .two label a {
     text-decoration: none;
     color: #fff;
 }
-.two label a:hover {
-    text-decoration: underline;
-}
+
+    .two label a:hover {
+        text-decoration: underline;
+    }
+
 @media only screen and (max-width: 786px) {
     .nav-button {
         display: none;
     }
+
     .nav-menu.responsive {
         top: 100px;
     }
+
     .nav-menu {
         position: absolute;
         top: -800px;
@@ -278,43 +325,51 @@ header {
         backdrop-filter: blur(20px);
         transition: 0.3s;
     }
-    .nav-menu ul {
-        flex-direction: column;
-        text-align: center;
-    }
+
+        .nav-menu ul {
+            flex-direction: column;
+            text-align: center;
+        }
+
     .nav-menu-btn {
         display: block;
     }
-    .nav-menu-btn i {
-        font-size: 25px;
-        color: #fff;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    .nav-menu-btn i:hover {
-        background: rgba(255, 255, 255, 0.15);
-    }
+
+        .nav-menu-btn i {
+            font-size: 25px;
+            color: #fff;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            .nav-menu-btn i:hover {
+                background: rgba(255, 255, 255, 0.15);
+            }
 }
+
 @media only screen and (max-width: 540px) {
     .wrapper {
         min-height: 100vh;
     }
+
     .form-box {
         width: 100%;
         height: 600px;
     }
+
     .register-container,
     .login-container {
         width: 100%;
         padding: 0 20px;
     }
-    .register-container .two-forms {
-        flex-direction: column;
-        gap: 0;
-    }
+
+        .register-container .two-forms {
+            flex-direction: column;
+            gap: 0;
+        }
     /* CSS */
-  
+
 }

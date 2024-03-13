@@ -11,11 +11,11 @@ namespace H3ArT.Models.ViewModels
 {
     public class PackagePaymentVM
     {
-        public int packageId { get; set; }
+        public int PackageId { get; set; }
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
         [ValidateNever]
-        public Package package { get; set; }
-        public OrderHeader orderHeader { get; set; }
+        public Package Package { get; set; }
+        public OrderHeader OrderHeader { get; set; }
     }
 }

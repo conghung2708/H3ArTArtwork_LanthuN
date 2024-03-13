@@ -268,12 +268,24 @@ img {
         opacity: 0.8;
     }
 
+#footer{
+    display: none;
+}
+
+.footer-main {
+    display: none;
+}
+
 /* footer */
 footer {
     background: var(--exDark);
     color: #fff;
-    text-align: center;
+    text-align: center; 
     padding: 2rem 0;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
 }
 
 .social-links {

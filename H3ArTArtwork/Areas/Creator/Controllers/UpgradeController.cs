@@ -46,17 +46,17 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
             PackagePaymentVM = new()
             {
-                packageId = packageId,
+                PackageId = packageId,
                 // Package = _unitOfWork.PackageObj.Get(u => u.packageID == packageId),
                 // , includeProperties: "artwork"
-                orderHeader = new()
+                OrderHeader = new()
             };
             //foreach (var cart in PackagePaymentVM.Package)
             //{
             //cart.price = cart.artwork.price;
-            Package package = _unitOfWork.PackageObj.Get(u => u.packageID == packageId);
-            PackagePaymentVM.orderHeader.orderTotal = package.price;
-            PackagePaymentVM.package = _unitOfWork.PackageObj.Get(u => u.packageID == packageId);
+            Package package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageId);
+            PackagePaymentVM.OrderHeader.OrderTotal = package.Price;
+            PackagePaymentVM.Package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageId);
             PackagePaymentVM.ApplicationUser = applicationUser;
             //}
             return View(PackagePaymentVM);
@@ -76,22 +76,23 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             if (applicationUser.AvaiblePost <= 0 || applicationUser.AvaiblePost == null)
             {
                 //ShoppingCartVM will automatically be populated
-                var packageId = PackagePaymentVM.packageId;
-                PackagePaymentVM.package = _unitOfWork.PackageObj.Get(u => u.packageID == packageId);
-                Package package = PackagePaymentVM.package;
+                var packageId = PackagePaymentVM.PackageId;
+                PackagePaymentVM.Package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageId);
+                Package package = PackagePaymentVM.Package;
                 //Package package = _unitOfWork.PackageObj.Get(u => u.packageID == packageId);
 
-                PackagePaymentVM.orderHeader.orderDate = System.DateTime.Now;
-                PackagePaymentVM.orderHeader.applicationUserId = userId;
-                PackagePaymentVM.orderHeader.orderTotal = package.price;
-                PackagePaymentVM.orderHeader.isPackageOrder = true;
+                PackagePaymentVM.orderHeader.OrderDate = System.DateTime.Now;
+                PackagePaymentVM.orderHeader.ApplicationUserId = userId;
+                PackagePaymentVM.orderHeader.OrderTotal = package.price;
+                PackagePaymentVM.orderHeader.IsPackageOrder = true;
+
 
                 if (!ModelState.IsValid)
                 {
                     // If model state is not valid, return the view with validation errors
                     return View(PackagePaymentVM); // or any other suitable action result
                 }
-                var existingOrder = _unitOfWork.OrderHeaderObj.Get(o => o.applicationUserId == userId && o.paymentStatus == SD.PaymentStatusPending);
+                var existingOrder = _unitOfWork.OrderHeaderObj.Get(o => o.ApplicationUserId == userId && o.PaymentStatus == SD.PaymentStatusPending);
                 /*
                 //if (existingOrder != null)
                 //{
@@ -131,10 +132,10 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 //foreach (var cart in ShoppingCartVM.ShoppingCartList)
                 //{
                 */
-                PackagePaymentVM.orderHeader.paymentStatus = SD.PaymentStatusPending;
-                PackagePaymentVM.orderHeader.orderStatus = SD.StatusPending;
+                PackagePaymentVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
+                PackagePaymentVM.OrderHeader.OrderStatus = SD.StatusPending;
 
-                _unitOfWork.OrderHeaderObj.Add(PackagePaymentVM.orderHeader);
+                _unitOfWork.OrderHeaderObj.Add(PackagePaymentVM.OrderHeader);
                 _unitOfWork.Save();
                 OrderDetailPackage orderDetailPackage = new OrderDetailPackage
                 {
@@ -142,9 +143,9 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                     //orderHeaderId = existingOrder.Id,
                     //price = cart.price,
                     //count = cart.count
-                    orderHeaderId = PackagePaymentVM.orderHeader.Id,
-                    packageId = package.packageID,
-                    price = package.price
+                    orderHeaderId = PackagePaymentVM.OrderHeader.Id,
+                    packageId = package.PackageId,
+                    price = package.Price
                 };
                 _unitOfWork.OrderDetailPackageObj.Add(orderDetailPackage);
                 _unitOfWork.Save();
@@ -159,22 +160,23 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = domain + $"creator/upgrade/PackageOrderConfirmation?id={PackagePaymentVM.orderHeader.Id}&packageID={PackagePaymentVM.packageId}",
+
                     CancelUrl = domain + "customer/cart/index",
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
                 };
                 //foreach (var item in ShoppingCartVM.ShoppingCartList)
                 //{
-                var packageItem = PackagePaymentVM.package;
+                var packageItem = PackagePaymentVM.Package;
                 var sessionLineItem = new SessionLineItemOptions
                 {
                     PriceData = new SessionLineItemPriceDataOptions
                     {
-                        UnitAmount = (long)(packageItem.price * 100),
+                        UnitAmount = (long)(packageItem.Price * 100),
                         Currency = "usd",
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
-                            Name = packageItem.packageName
+                            Name = packageItem.PackageName
                         }
                     },
                     Quantity = 1
@@ -184,7 +186,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 var service = new SessionService();
                 //create sessionId and paymentIntentId
                 Session session = service.Create(options);
-                _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(PackagePaymentVM.orderHeader.Id, session.Id, session.PaymentIntentId);
+                _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(PackagePaymentVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
                 _unitOfWork.Save();
                 //applicationUser.AvaiblePost = package.amountPost;
                 //_unitOfWork.ApplicationUserObj.Update(applicationUser);

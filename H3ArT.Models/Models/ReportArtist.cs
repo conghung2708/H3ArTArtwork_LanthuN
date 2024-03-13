@@ -1,26 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
-using System.Collections.Generic;
+using Microsoft.Extensions.Primitives;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace H3ArT.Models.Models
 {
     public class ReportArtist
     {
         [Key]
-        public int reportArtistID { get; set; }
-        public string artistID { get; set; }
-        [ForeignKey("artistID")]
-        [ValidateNever]
-        public ApplicationUser artist {  get; set; }
+        public int ReportArtistId { get; set; }
 
-        public string reporterUserID { get; set; }
-        [ForeignKey("reporterUserID")]
+        public string ArtistId { get; set; }
+        [ForeignKey("ArtistId")]
         [ValidateNever]
-        public ApplicationUser reporter {  get; set; }
+        public ApplicationUser Artist { get; set; }
+
+        public string ReporterUserId { get; set; }
+        [ForeignKey("ReporterUserId")]
+        [ValidateNever]
+        public ApplicationUser Reporter { get; set; }
+        public string Reason { get; set; }
     }
 }

@@ -86,7 +86,7 @@
     <div class="wrapper">
         <nav class="nav">
             <div class="nav-logo">
-                <a href="#" class=""><img src="~/image/login/whitelogo.png" alt="logo"/></a>
+                <a href="/" class=""><img src="~/image/login/whitelogo.png" alt="logo"/></a>
                 
             </div>
             <div class="nav-button">
@@ -111,13 +111,14 @@
                     
                 <div class="input-box">
                     <input asp-for="Input.Email" autocomplete="username" type="text" aria-required="true" class="input-field" placeholder="Email" />
+                        <i class="bx bx-user"></i>
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
-                    <i class="bx bx-user"></i>
+                    
                 </div>
                 <div class="input-box">
                     <input asp-for="Input.Password" autocomplete="current-password" aria-required="true" type="password" class="input-field" placeholder="Password" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    <i class="bx bx-lock-alt"></i>
+                        <i class="bx bx-lock-alt"></i>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>                  
                 </div>
                 <div class="input-box">
                     <input type="submit" class="submit" value="Sign In" />
@@ -150,7 +151,7 @@
                                             <p>
                                                 @foreach (var provider in Model.ExternalLogins!)
                                                 {
-                                                    <button type="submit" class="button-86" role="button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                                    <button style="margin: 10px;" type="submit" class="button-86" role="button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
                                                 }
                                             </p>
                                         </div>
@@ -159,8 +160,9 @@
                             }
                         </section>
                     </div>
+                    <a href="#">Forgot password?</a>
                 </div>
-                <div class="two-col">
+                @* <div class="two-col">
                     <div class="one">
                         <input type="checkbox" id="login-check" />
                         <label for="login-check"> Remember Me</label>
@@ -168,7 +170,7 @@
                     <div class="two">
                         <label><a href="#">Forgot password?</a></label>
                     </div>
-                </div>
+                </div> *@
                 <!-- <hr />
                 <a href="#" class="submit input-box-submit"><i class="bx bxl-google"></i>Sign in with Google</a>
                 <a href="#" class="submit input-box-submit"><i class="bx bxl-facebook"></i>Sign in with Facebook</a> -->

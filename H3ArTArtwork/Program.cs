@@ -28,12 +28,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 //add facebook
 builder.Services.AddAuthentication().AddFacebook(option =>
 {
-    option.AppId = "2212394772452011";
-    option.AppSecret = "30a380a6edd236d23aaf52d7b222cb5d";
+    option.AppId = builder.Configuration.GetSection("Authentication:Facebook:AppId").Get<string>();
+    option.AppSecret = builder.Configuration.GetSection("Authentication:Facebook:AppSecret").Get<string>(); 
 }).AddGoogle(option =>
 {
-    option.ClientId = "229922051805-19k9jlaos41mndcdotu97472lbhc74tn.apps.googleusercontent.com";
-    option.ClientSecret = "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";
+    option.ClientId = builder.Configuration.GetSection("Authentication:Google:ClientId").Get<string>();
+    option.ClientSecret = builder.Configuration.GetSection("Authentication:Google:ClientSecret").Get<string>();
 });
 
 //add session

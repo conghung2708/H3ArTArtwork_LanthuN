@@ -8,8 +8,8 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/Moderator/report/GetAllReportBlog' },
         "columns": [
-            { data: 'reportBlogID', "width": "25%" },
-            { data: 'blogID', "width": "25%" },
+            { data: 'reportBlogId', "width": "20%" },
+            { data: 'blogId', "width": "20%" },
             { data: 'blog.title', "width": "10%" },
             {
                 data: 'blog.imageUrl',
@@ -19,8 +19,9 @@ function loadDataTable() {
                 width: "10%"
             },
             { data: 'applicationUser.fullName', "width": "10%" }, // Accessing displayOrder within the category object
+            { data: 'reason', "width": "20%" },
             {
-                data: 'blogID',
+                data: 'blogId',
                 "render": function (data) {
                     return `<div class="w-75 btn-group" role="group">
                       <a onClick=Delete('/moderator/report/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
