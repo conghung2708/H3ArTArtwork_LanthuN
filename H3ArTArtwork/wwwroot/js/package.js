@@ -9,19 +9,20 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/admin/package/getall' },
         "columns": [
-            { data: 'packageID', "width": "5%" },
+            { data: 'packageName', "width": "10%" },
             { data: 'price', "width": "5%" },
             { data: 'amountPost', "width": "5%" },
             { data: 'description', "width": "25%" },
+
             // { data: 'applicationUser.fullName', "width": "10%" }, // Accessing displayOrder within the category object //need to fix here
             // Corrected here
             {
                 data: 'packageID',
                 "render": function (data) {
-                    return `<div class="w-75 btn-group" role="group">
+                    return `<div class="w-100 btn-group" role="group">
                      <a href="/admin/package/upsert?packageID=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                    </div>`
-                    //< a onClick = Delete('/creator/artwork/delete/${data}') class="btn btn-danger mx-2" > <i class="bi bi-trash-fill"></i> Delete</a >
+                     <a onClick=Delete('/admin/package/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                    </div>`    
                 },
                 "width": "40%"
             }

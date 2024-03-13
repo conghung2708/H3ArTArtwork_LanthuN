@@ -11,6 +11,7 @@ function loadDataTable() {
             { "data": "reportArtistId", "width": "5%" },
             { "data": "artist.fullName", "width": "15%" },
             { "data": "reporter.fullName", "width": "15%" },
+            { "data": "reason", "width": "15%" },
             {
                 "data": "artist.id",
                 "render": function (data,type, row) {

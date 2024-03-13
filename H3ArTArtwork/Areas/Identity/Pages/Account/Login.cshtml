@@ -86,8 +86,7 @@
     <div class="wrapper">
         <nav class="nav">
             <div class="nav-logo">
-                <a href="/" class=""><img src="~/image/login/whitelogo.png" alt="logo"/></a>
-                
+                <a href="/" class=""><img src="~/image/login/whitelogo.png" alt="logo"/></a>               
             </div>
             <div class="nav-button">
                 <a id="register" asp-area="Identity" asp-page="/Account/Register"> <button class="btn white-btn" id="loginBtn" onclick="login()">Sign Up</button></a>
@@ -111,13 +110,14 @@
                     
                 <div class="input-box">
                     <input asp-for="Input.Email" autocomplete="username" type="text" aria-required="true" class="input-field" placeholder="Email" />
+                        <i class="bx bx-user"></i>
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
-                    <i class="bx bx-user"></i>
+                    
                 </div>
                 <div class="input-box">
                     <input asp-for="Input.Password" autocomplete="current-password" aria-required="true" type="password" class="input-field" placeholder="Password" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    <i class="bx bx-lock-alt"></i>
+                        <i class="bx bx-lock-alt"></i>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>                  
                 </div>
                 <div class="input-box">
                     <input type="submit" class="submit" value="Sign In" />

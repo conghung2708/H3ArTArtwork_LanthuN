@@ -19,6 +19,7 @@ function loadDataTable() {
                 width: "10%"
             },
             { data: 'applicationUser.fullName', "width": "10%" }, // Accessing displayOrder within the category object
+            { data: 'reason', "width": "20%" },
             {
                 data: 'blogId',
                 "render": function (data) {

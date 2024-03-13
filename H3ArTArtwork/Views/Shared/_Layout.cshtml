@@ -42,6 +42,7 @@
             width: 100%;
             height: 60px; /* Height of the footer */
         }
+
     </style>
 </head>
 
@@ -49,9 +50,10 @@
     <div id="container-main">
         <div id="header-main">
             <header>
-                <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
                     <div class="container-fluid">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">H3ArTArtwork</a>
+                        @* <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">H3ArTArtwork</a> *@
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/image/login/BlackLogo - Copy.png" width="150vh" alt="H3ArTArtwork"/></a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                                 aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -87,8 +89,10 @@
                                             @* Đây là nơi để test chức năng Package
                                         khi nhấn vào sẽ reset số lượng artwork được đăng về 0 *@
                                             <li class="nav-item">
-                                                <a class="dropdown-item" asp-area="Creator" asp-controller="Upgrade" asp-action="Reset">Reset</a>
+                                                <a class="dropdown-item" asp-area="Creator" asp-controller="Upgrade" asp-action="Reset">Reset -- chức năng này là TEST</a>
                                             </li>
+                                            @* Đây là nơi để test chức năng Package
+                                        khi nhấn vào sẽ reset số lượng artwork được đăng về 0 *@
 
                                             <li><hr class="dropdown-divider"></li>
                                             <li><a class="dropdown-item" href="#">Something else here</a></li>
@@ -128,6 +132,10 @@
                                 @if (User.IsInRole(SD.Role_Admin))
                                 {
 
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="Admin" asp-controller="Package" asp-action="Index">Manage Package</a>
+                                    </li>
+
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;" >
                                             Content Management
@@ -142,7 +150,6 @@
                                             <li class="nav-item">
                                                 <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">Manage Users</a>
                                             </li>
-
                                             <li class="nav-item">
                                                 <a class="dropdown-item" asp-area="Creator" asp-controller="Artwork" asp-action="Index">Manage Artwork</a>
                                             </li>
@@ -153,7 +160,7 @@
                                             <li><hr class="dropdown-divider"></li>
                                             <li><a class="dropdown-item" href="#">Something else here</a></li>
                                         </ul>
-                                    </li>
+                                    </li> 
                                 }
                                 @if(!User.IsInRole(SD.Role_Admin)) {
                                     <li class="nav-item">
@@ -168,7 +175,6 @@
                                             @await Component.InvokeAsync("ShoppingCart")
                                         </a>
                                     </li>
-
                                 }
                             </ul>
                             <partial name="_LoginPartial" />

@@ -25,6 +25,7 @@ namespace H3ArT.Models.Models
 
         public string? SessionId { get; set; }
         public string? PaymentIntentId { get; set; }
+        public bool? IsPackageOrder { get; set; }
 
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters.")]
         [RegularExpression(@"^[^\d]+$", ErrorMessage = "Name cannot contain numbers.")]

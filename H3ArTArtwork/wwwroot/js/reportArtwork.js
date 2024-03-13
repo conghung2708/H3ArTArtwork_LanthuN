@@ -19,6 +19,7 @@ function loadDataTable() {
                 width: "10%"
             },
             { data: 'applicationUser.fullName', "width": "10%" },
+            { data: 'reason', "width": "20%" },
             {
                 data: 'artwork.reportedConfirm',
                 "render": function (data, type, row) {
