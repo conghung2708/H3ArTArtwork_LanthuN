@@ -69,7 +69,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         // nay la khi nhan cai nut thanh toan trong trang Summary --> POST
         [HttpPost]
         [ActionName("SummaryPackage")]
-        public IActionResult SummaryPackagePOST()
+        public IActionResult SummaryPackagePOST(IConfiguration _config)
         {
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -157,7 +157,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
                 //}
                 //stripe logic
-                var domain = "https://localhost:7034/";
+                var domain = _config.GetValue<string>("Stripe:Domain"); 
 
                 var options = new SessionCreateOptions
                 {
