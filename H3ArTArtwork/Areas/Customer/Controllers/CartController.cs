@@ -250,8 +250,8 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 {
                     tableHtml.Append("<tr>");
                     tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;\">{item.Artwork.Title}</td>");
-                    tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;\">{item.Count}</td>");
-                    tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;\">{item.Price}</td>");
+                    tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;text-align:center; \">{item.Count}</td>");
+                    tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;text-align:center; \">{item.Price}</td>");
                     tableHtml.Append("</tr>");
                 }   
                 tableHtml.Append("</table>");
