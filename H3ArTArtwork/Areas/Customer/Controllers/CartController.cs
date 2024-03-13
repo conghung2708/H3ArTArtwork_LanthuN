@@ -101,7 +101,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
 
         [HttpPost]
         [ActionName("Summary")]
-        public IActionResult SummaryPOST()
+        public IActionResult SummaryPOST(IConfiguration _config)
         {
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -200,7 +200,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
 
             }
             //stripe logic
-            var domain = "https://localhost:44358/";
+            var domain = _config.GetValue<string>("Stripe:Domain"); ;
             var options = new SessionCreateOptions
             {
                 SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
