@@ -8,12 +8,11 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/creator/artwork/getall' },
         "columns": [
-            { data: 'title', "width": "15%" },
-            { data: 'description', "width": "25%" },
-            { data: 'applicationUser.fullName', "width": "10%" },
-            { data: 'price', "width": "1%" },
-            { data: 'category.categoryName', "width": "5%" }, // Accessing displayOrder within the category object //need to fix here
-            // Corrected here
+            { data: 'title', "width": "20%" },  // Adjusted width to 20%
+            { data: 'description', "width": "30%" },  // Adjusted width to 30%
+            { data: 'applicationUser.fullName', "width": "15%" },  // Adjusted width to 15%
+            { data: 'price', "width": "10%" },  // Adjusted width to 10%
+            { data: 'category.categoryName', "width": "15%" },  // Adjusted width to 15%
             {
                 data: 'artworkId',
                 "render": function (data) {
@@ -22,11 +21,12 @@ function loadDataTable() {
                      <a onClick=Delete('/creator/artwork/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                     </div>`
                 },
-                "width": "10%"
+                "width": "10%"  // Adjusted width to 10%
             }
         ]
     });
 }
+
 
 
 function Delete(url) {

@@ -41,9 +41,14 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return View(artworkList);
         }
 
-        [Authorize(Roles = "Customer, Creator, Moderator")]
+      
         public IActionResult Details(int artworkId)
         {
+            if(User.IsInRole(SD.Role_Admin))
+            {
+                TempData["error"] = "Admin cannot see the artwork detail";
+                return RedirectToAction(nameof(Index));
+            }
             Artwork artworkFromDb = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == artworkId, includeProperties: "ApplicationUser");
 
             if (artworkFromDb.ReportedConfirm == true || artworkFromDb.IsBought == true)
@@ -107,9 +112,14 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Customer, Creator, Moderator")]
+    
         public IActionResult ArtistProfile(string artistID)
         {
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                TempData["error"] = "Admin cannot see the creator profile";
+                return RedirectToAction(nameof(Index));
+            }
             UserVM userVM = new()
             {
                 Artist = _unitOfWork.ApplicationUserObj.Get(u => u.Id == artistID),
@@ -118,10 +128,17 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return View(userVM);
         }
 
-        [Authorize(Roles = "Customer, Creator, Moderator")]
+      
+     
         public IActionResult ViewBlog(string artistID)
         {
-            IEnumerable<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.CreatorId == artistID, includeProperties: "ApplicationUser");
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                TempData["error"] = "Admin cannot view blogs";
+                return RedirectToAction(nameof(Index));
+            }
+            IEnumerable<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.CreatorId == artistID, includeProperties:"ApplicationUser");
+
             return View(blogList);
         }
 
@@ -199,17 +216,30 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return RedirectToAction(nameof(ArtistProfile), new { artistID = artistID });
         }
 
-        [Authorize(Roles = "Customer, Creator, Moderator")]
+       
+ 
         public IActionResult Blog()
         {
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                TempData["error"] = "Admin cannot view blogs";
+                return RedirectToAction(nameof(Index));
+            }
             IEnumerable<Blog> blogList = _unitOfWork.BlogObj.GetAll(includeProperties: "ApplicationUser");
             return View(blogList);
         }
 
-        [Authorize(Roles = "Customer, Creator, Moderator")]
+       
+
         public IActionResult Blog_Details(int blogID)
         {
-            Blog blog = _unitOfWork.BlogObj.Get(u => u.BlogId == blogID, includeProperties: "ApplicationUser");
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                TempData["error"] = "Admin cannot view the blog detail";
+                return RedirectToAction(nameof(Index));
+            }
+            Blog blog = _unitOfWork.BlogObj.Get(u=>u.BlogId == blogID, includeProperties:"ApplicationUser");
+
             return View(blog);
         }
 

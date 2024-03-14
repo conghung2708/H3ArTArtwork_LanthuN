@@ -44,7 +44,7 @@
                         </h5>
                     </div>
                     <div class="col-6 text-end">
-                        <a asp-action="Index" class="btn btn-outline-danger btn-sm">Back to Cart</a>
+                        <a asp-action="Index" class="btn btn-outline-danger btn-sm">Back</a>
                     </div>
                 </div>
             </div>
@@ -105,12 +105,7 @@
             </div>
             <div class="card-footer">
                 <div class="row">
-                    <div class="col-12 col-md-8 pt-2">
-                        <p style="color:maroon; font-size:14px;">
-                            Estimate Arrival Date:
-
-                        </p>
-                    </div>
+                   
                     @if (Model.ApplicationUser != null)
                     {
                         var availablePost = Model.ApplicationUser.AvaiblePost;
