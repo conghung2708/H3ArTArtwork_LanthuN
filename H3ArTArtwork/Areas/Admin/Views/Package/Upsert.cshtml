@@ -15,10 +15,6 @@
             <input asp-for="PackageId" hidden />
             <input asp-for="AdminID" hidden />
             @* <input asp-for="@Model.artwork.applicationUser" hidden /> *@
-
-
-
-
             <div class="row">
                 <div class="col-10">
                     <div class="border p-3">
@@ -42,14 +38,8 @@
                         <div class="form-floating py-2 col-12">
                             <textarea asp-for="Description" class="form-control border-0 shadow"></textarea>
                             <label class="p-0 ms-2" asp-for="Description"></label>
+                            <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
-
-                        <!-- Artist Name -->
-                        @* <div class="form-floating py-2 col-12">
-                        <input asp-for="ApplicationUser.FullName" class="form-control border-0 shadow" />
-                        <label class="p-0 ms-2" asp-for="ApplicationUser.FullName"></label>
-                        <span asp-validation-for="ApplicationUser.FullName" class="text-danger"></span>
-                        </div> *@
 
                         <!-- Price -->
                         <div class="form-floating py-2 col-12">
@@ -65,25 +55,6 @@
                             <span asp-validation-for="AmountPost" class="text-danger"></span>
                         </div>
 
-                        @* <!-- Category -->
-                        <div class="form-floating py-2 col-12">
-                        <select asp-for="artwork.categoryID" asp-items="@Model.categoryList" class="form-select border-0 shadow">
-                        <option disabled selected>--Select Category</option>
-                        </select>
-                        <label class="p-0 ms-2" asp-for="artwork.categoryID"></label>
-                        <span asp-validation-for="artwork.categoryID" class="text-danger"></span>
-                        </div>
-
-                        <!-- Image URL -->
-                        <div class="form-floating py-2 col-12">
-                        <input type="file" name="file" class="form-control border-0 shadow" />
-                        <label class="p-0 ms-2" asp-for="artwork.imageUrl"></label>
-                        </div> *@
-
-                        @* <div class="form-check form-switch py-2 col-12">
-                        <input type="checkbox" class="form-check-input" asp-for="artwork.isPremium" />
-                        <label class="form-check-label ms-2" asp-for="artwork.isPremium">Premium</label>
-                        </div> *@
                         <!-- Buttons -->
                         <div class="row">
                             <div class="col-6 col-md-3">
@@ -95,13 +66,7 @@
                         </div>
                     </div>
                 </div>
-                @* <div class="col-2">
-                <img src="@Model.artwork.imageUrl" width="100%"
-                style="border-radius:5px; border:1px solid #bbb9b9" />
-                </div> *@
             </div>
-
-
         </form>
     </div>
 </div>
@@ -111,8 +76,8 @@
     <script>
         tinymce.init({
             selector: 'textarea',
-            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker',
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            plugins: 'anchor autolink charmap codesample emoticons lists visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | align lineheight | numlist bullist indent outdent | emoticons charmap',
         });
     </script>
     @{

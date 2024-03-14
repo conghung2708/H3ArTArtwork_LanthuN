@@ -22,6 +22,8 @@ namespace H3ArT.Models.Models
 
         [Range(double.Epsilon, double.MaxValue, ErrorMessage = "Amount artworks must be greater than 0.")]
         public int AmountPost { get; set; }
+
+        [Required]
         public string Description { get; set; }
         public string AdminID { get; set; }
     }
