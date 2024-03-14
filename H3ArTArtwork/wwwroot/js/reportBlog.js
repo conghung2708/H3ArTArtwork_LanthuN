@@ -10,29 +10,28 @@ function loadDataTable() {
         "columns": [
             { data: 'reportBlogId', "width": "5%" },
             { data: 'blogId', "width": "5%" },
-            { data: 'blog.title', "width": "10%" },
+            { data: 'blog.title', "width": "15%" }, // Adjusted width to 15%
             {
                 data: 'blog.imageUrl',
                 "render": function (data) {
                     return `<img src="${data}" width="100px" height="auto">`;
                 },
-                width: "10%"
+                width: "15%" // Adjusted width to 15%
             },
-            { data: 'applicationUser.fullName', "width": "10%" }, // Accessing displayOrder within the category object
-            { data: 'reason', "width": "20%" },
+            { data: 'applicationUser.fullName', "width": "15%" }, // Adjusted width to 15%
+            { data: 'reason', "width": "20%" }, // Adjusted width to 20%
             {
                 data: 'blogId',
                 "render": function (data) {
-                    return `<div class="w-75 btn-group" role="group">
+                    return `<div class="w-100 btn-group" role="group">
                       <a onClick=Delete('/moderator/report/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                     </div>`
                 },
-                "width": "25%"
+                "width": "25%" // Adjusted width to 25%
             }
         ]
     });
 }
-
 
 function Delete(url) {
     Swal.fire({

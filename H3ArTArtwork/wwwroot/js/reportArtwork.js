@@ -10,16 +10,16 @@ function loadDataTable() {
         "columns": [
             { data: 'reportArtworkId', "width": "5%" },
             { data: 'artworkId', "width": "5%" },
-            { data: 'artwork.title', "width": "10%" },
+            { data: 'artwork.title', "width": "15%" }, // Adjusted width to 15%
             {
                 data: 'artwork.imageUrl',
                 "render": function (data) {
                     return `<img src="${data}" width="100px" height="auto">`;
                 },
-                width: "10%"
+                width: "15%" // Adjusted width to 15%
             },
-            { data: 'applicationUser.fullName', "width": "10%" },
-            { data: 'reason', "width": "20%" },
+            { data: 'applicationUser.fullName', "width": "15%" }, // Adjusted width to 15%
+            { data: 'reason', "width": "20%" }, // Adjusted width to 20%
             {
                 data: 'artwork.reportedConfirm',
                 "render": function (data, type, row) {
@@ -34,7 +34,7 @@ function loadDataTable() {
                         </div>`;
                     }
                 },
-                "width": "25%"
+                "width": "15%" // Adjusted width to 15%
             }
         ]
     });
