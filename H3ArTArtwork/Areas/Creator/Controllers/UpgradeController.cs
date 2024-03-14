@@ -1,14 +1,12 @@
 using H3ArT.DataAccess.Repository.IRepository;
+using H3ArT.Models;
 using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using H3ArT.Models;
 using H3ArT.Utility;
-using Stripe.Checkout;
-using H3ArT.DataAccess.Repository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
+using System.Security.Claims;
 
 namespace H3ArTArtwork.Areas.Creator.Controllers
 {
@@ -102,7 +100,8 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 _unitOfWork.Save();
 
                 // Set up Stripe payment logic
-                var domain = _config.GetValue<string>("Stripe:Domain"); 
+                
+                var domain = _config.GetValue<string>("Stripe:Domain");
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = domain + $"creator/upgrade/PackageOrderConfirmation?id={PackagePaymentVM.OrderHeader.Id}&packageID={PackagePaymentVM.PackageId}",
@@ -110,7 +109,16 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
                 };
-
+                if (PackagePaymentVM.OrderHeader.IsPackageOrder == true)
+                {
+                    options = new SessionCreateOptions
+                    {
+                        SuccessUrl = domain + $"creator/upgrade/PackageOrderConfirmation?id={PackagePaymentVM.OrderHeader.Id}&packageID={PackagePaymentVM.PackageId}",
+                        CancelUrl = domain + "creator/upgrade/index",
+                        LineItems = new List<SessionLineItemOptions>(),
+                        Mode = "payment",
+                    };
+                }
                 var packageItem = PackagePaymentVM.Package;
                 var sessionLineItem = new SessionLineItemOptions
                 {
