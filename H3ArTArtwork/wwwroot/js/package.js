@@ -9,27 +9,23 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/admin/package/getall' },
         "columns": [
-            { data: 'packageName', "width": "10%" },
-            { data: 'price', "width": "5%" },
-            { data: 'amountPost', "width": "5%" },
-            { data: 'description', "width": "25%" },
-
-            // { data: 'applicationUser.fullName', "width": "10%" }, // Accessing displayOrder within the category object //need to fix here
-            // Corrected here
+            { data: 'packageName', "width": "15%" }, // Adjusted width to 15%
+            { data: 'price', "width": "10%" }, // Adjusted width to 10%
+            { data: 'amountPost', "width": "10%" }, // Adjusted width to 10%
+            { data: 'description', "width": "25%" }, // Adjusted width to 25%
             {
-                data: 'packageID',
+                data: 'packageId',
                 "render": function (data) {
                     return `<div class="w-100 btn-group" role="group">
                      <a href="/admin/package/upsert?packageID=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
                      <a onClick=Delete('/admin/package/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
-                    </div>`    
+                    </div>`
                 },
-                "width": "40%"
+                "width": "40%" // Adjusted width to 40%
             }
         ]
     });
 }
-
 
 function Delete(url) {
     Swal.fire({

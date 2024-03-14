@@ -32,7 +32,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             return View();
         }
 
-     
+        [Authorize(Roles = SD.Role_Creator)]
         public IActionResult Upsert(int? id)
         {
 
@@ -67,7 +67,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         }
 
         [HttpPost]
-      
+        [Authorize(Roles = SD.Role_Creator)]
         public IActionResult Upsert(Blog blog, IFormFile? file)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;

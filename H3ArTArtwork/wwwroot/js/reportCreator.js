@@ -8,13 +8,13 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/moderator/report/GetAllReportArtist' },
         "columns": [
-            { "data": "reportArtistId", "width": "5%" },
-            { "data": "artist.fullName", "width": "15%" },
-            { "data": "reporter.fullName", "width": "15%" },
-            { "data": "reason", "width": "15%" },
+            { "data": "reportArtistId", "width": "10%" }, // Adjusted width to 10%
+            { "data": "artist.fullName", "width": "20%" }, // Adjusted width to 20%
+            { "data": "reporter.fullName", "width": "20%" }, // Adjusted width to 20%
+            { "data": "reason", "width": "20%" }, // Adjusted width to 20%
             {
                 "data": "artist.id",
-                "render": function (data,type, row) {
+                "render": function (data, type, row) {
                     var today = new Date().getTime();
                     var lockoutEnd = new Date(row.artist.lockoutEnd).getTime();
 
@@ -36,11 +36,12 @@ function loadDataTable() {
                         `;
                     }
                 },
-                "width": "25%"
+                "width": "30%" // Adjusted width to 30%
             }
         ]
     });
 }
+
 
 function LockUnlock(id) {
     $.ajax({

@@ -40,6 +40,8 @@
                         <div class="form-floating py-2 col-12">
                             <textarea asp-for="Description" class="form-control border-0 shadow"></textarea>
                             <label class="p-0 ms-2" asp-for="Description"></label>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+
                         </div>
 
                         <!-- Artist Name -->

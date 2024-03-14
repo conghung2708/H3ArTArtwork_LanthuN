@@ -8,24 +8,22 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/creator/blog/getall' },
         "columns": [
-            { data: 'title', "width": "15%" },
-            { data: 'description', "width": "25%" },
-            { data: 'applicationUser.fullName', "width": "10%" },
-            // Corrected here
+            { data: 'title', "width": "20%" },  // Adjusted width to 20%
+            { data: 'description', "width": "30%" },  // Adjusted width to 30%
+            { data: 'applicationUser.fullName', "width": "20%" },  // Adjusted width to 20%
             {
-                data: 'blogID',
+                data: 'blogId',
                 "render": function (data) {
-                    return `<div class="w-75 btn-group" role="group">
+                    return `<div class="w-100 btn-group" role="group">
                      <a href="/creator/blog/upsert?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
                      <a onClick=Delete('/creator/blog/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                     </div>`
                 },
-                "width": "10%"
+                "width": "30%"  // Adjusted width to 30%
             }
         ]
     });
 }
-
 
 function Delete(url) {
     Swal.fire({
