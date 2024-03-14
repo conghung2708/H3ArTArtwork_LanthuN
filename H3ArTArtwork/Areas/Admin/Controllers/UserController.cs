@@ -48,7 +48,6 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                     Value = i.Name
                 }),
             };
-
             RoleVM.ApplicationUser.Role = _db.Roles.FirstOrDefault(u => u.Id == RoleID).Name; 
             return View(RoleVM);
         }
