@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using H3ArT.Models;
 using H3ArT.Utility;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace H3ArTArtwork.Areas.Identity.Pages.Account
 {
@@ -31,13 +33,15 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public ExternalLoginModel(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -45,6 +49,8 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
+
         }
 
         /// <summary>
@@ -93,8 +99,10 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
 
             public Boolean Gender { get; set; }
             public string? Role { get; set; }
+            [ValidateNever]
+            public IEnumerable<SelectListItem> RoleList { get; set; }
         }
-        
+
         public IActionResult OnGet() => RedirectToPage("./Login");
 
         public IActionResult OnPost(string provider, string returnUrl = null)
@@ -107,13 +115,18 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
+
+
             returnUrl = returnUrl ?? Url.Content("~/");
+
             if (remoteError != null)
             {
                 ErrorMessage = $"Error from external provider: {remoteError}";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+
             var info = await _signInManager.GetExternalLoginInfoAsync();
+
             if (info == null)
             {
                 ErrorMessage = "Error loading external login information.";
@@ -122,11 +135,13 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
 
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
+
             if (result.IsLockedOut)
             {
                 return RedirectToPage("./Lockout");
@@ -136,6 +151,7 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
                 // If the user does not have an account, then ask the user to create an account.
                 ReturnUrl = returnUrl;
                 ProviderDisplayName = info.ProviderDisplayName;
+
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
                     Input = new InputModel
@@ -144,10 +160,25 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
                         FullName = info.Principal.FindFirstValue(ClaimTypes.Name)
                     };
                 }
+                if (User.IsInRole(SD.Role_Admin))
+                {
+                    Input.RoleList = _roleManager.Roles.Select(x => new SelectListItem
+                    {
+                        Text = x.Name,
+                        Value = x.Name
+                    }).ToList();
+                }
+                else
+                {
+                    Input.RoleList = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Customer", Value = SD.Role_Customer },
+            new SelectListItem { Text = "Creator", Value = SD.Role_Creator }
+        };
+                }
                 return Page();
             }
         }
-
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -173,7 +204,7 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, SD.Role_Customer);
+                    await _userManager.AddToRoleAsync(user, Input.Role);
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {

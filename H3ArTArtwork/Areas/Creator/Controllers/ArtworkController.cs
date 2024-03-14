@@ -1,12 +1,12 @@
 ﻿using H3ArT.DataAccess.Repository.IRepository;
+using H3ArT.Models;
 using H3ArT.Models.Models;
+using H3ArT.Models.ViewModels;
+using H3ArT.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using H3ArT.Models.ViewModels;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using H3ArT.Utility;
-using H3ArT.Models;
 
 namespace H3ArTArtwork.Areas.Creator.Controllers
 {
@@ -29,6 +29,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
             return View();
         }
+
         [Authorize(Roles = SD.Role_Creator)]
         public IActionResult Upsert(int? id)
         {
@@ -108,7 +109,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                     {
                         // Add product
                         ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
-                        
+
                         if (applicationUser.AvaiblePost <= 0 || applicationUser.AvaiblePost == null)
                         {
                             TempData["error"] = "You do not have enough posting credits to place an order. Please purchase a package to continue.";
@@ -128,7 +129,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                         artworkVM.Artwork.ArtistId = userId;
                         var unknownUser = artworkVM.Artwork.ApplicationUser;
 
-                        _unitOfWork.ArtworkObj.Update(artworkVM.Artwork);            
+                        _unitOfWork.ArtworkObj.Update(artworkVM.Artwork);
                         _unitOfWork.ApplicationUserObj.Remove(unknownUser);
                         _unitOfWork.Save();
                         TempData["success"] = "Artwork created successfully";
