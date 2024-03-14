@@ -1,12 +1,11 @@
 using H3ArT.DataAccess.Repository.IRepository;
 using H3ArT.Models.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using H3ArT.Models.ViewModels;
 using H3ArT.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using System.Security.Claims;
-using H3ArT.Models;
 
 namespace H3ArTArtwork.Areas.Customer.Controllers
 {

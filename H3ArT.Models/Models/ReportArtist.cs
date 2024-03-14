@@ -19,6 +19,6 @@ namespace H3ArT.Models.Models
         [ForeignKey("ReporterUserId")]
         [ValidateNever]
         public ApplicationUser Reporter { get; set; }
-        public string Reason { get; set; }
+        public string? Reason { get; set; }
     }
 }

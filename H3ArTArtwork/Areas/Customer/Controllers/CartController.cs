@@ -4,12 +4,10 @@ using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
 using H3ArT.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using System.Text.Encodings.Web;
 using System.Text;
 
 namespace H3ArTArtwork.Areas.Customer.Controllers
@@ -247,7 +245,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 // Xây dựng HTML cho bảng
                 StringBuilder tableHtml = new StringBuilder();
                 tableHtml.Append("<table style=\"border-collapse: collapse; width: 100%;\">");
-                tableHtml.Append("<tr><th style =\"border: 1px solid #ddd; padding: 8px;\">Title</th><th style=\"border: 1px solid #ddd; padding: 8px;\">Quantity</th><th style=\"border: 1px solid #ddd; padding: 8px;\">Price</th></tr>");              
+                tableHtml.Append("<tr><th style =\"border: 1px solid #ddd; padding: 8px;\">Title</th><th style=\"border: 1px solid #ddd; padding: 8px;\">Quantity</th><th style=\"border: 1px solid #ddd; padding: 8px;\">Price</th></tr>");
                 foreach (var item in orderDetail)
                 {
                     tableHtml.Append("<tr>");
@@ -255,9 +253,9 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                     tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;text-align:center; \">{item.Count}</td>");
                     tableHtml.Append($"<td style=\"border: 1px solid #ddd; padding: 8px;text-align:center; \">{item.Price}$</td>");
                     tableHtml.Append("</tr>");
-                }   
+                }
                 tableHtml.Append("</table>");
-                string emailBody = 
+                string emailBody =
                     $"<p>Name: {orderHeader.Name}</p>" +
                     $"<p>Date: {orderHeader.PaymentDate}</p>" +
                     $"<p>Status Order: {orderHeader.OrderStatus}</p>" +
@@ -277,7 +275,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             }
 
 
-             shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == orderHeader.ApplicationUserId).ToList();
+            shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == orderHeader.ApplicationUserId).ToList();
             _unitOfWork.ShoppingCartObj.RemoveRange(shoppingCarts);
             _unitOfWork.Save();
             return View(orderDetail);

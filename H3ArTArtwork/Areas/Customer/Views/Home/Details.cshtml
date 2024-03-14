@@ -148,7 +148,6 @@
                                     }
                                     @if (!User.IsInRole(SD.Role_Admin) && !User.IsInRole(SD.Role_Moderator))
                                     {
-
                                         <button type="submit"
                                                 class="btn btn-primary bg-gradient w-100 py-2 text-uppercase fw-semibold">
                                             Add to Cart
@@ -195,18 +194,24 @@
                     @foreach (var Artwork in randomArtworks)
                     {
                         <div class="card card-pin">
-                            <img class="card-img" src="@Artwork.ImageUrl" alt="Card image">
+                            <div class="position-relative">
+                                <img class="card-img" src="@Artwork.ImageUrl" alt="Card image">
+                                @if (Artwork.IsPremium == true)
+                                {
+                                    <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>
+                                }
+                            </div>
+
                             <div class="overlay">
                                 <h2 class="card-title title">@Artwork.Title</h2>
                                 <div class="more">
-                                    <a asp-action="Details" asp-route-ArtworkId="@Artwork.ArtworkId">
+                                    <a asp-action="Details" asp-route-artworkId="@Artwork.ArtworkId">
                                         <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
                                     </a>
                                 </div>
                             </div>
                         </div>
                     }
-
                 </div>
             </div>
         </div>

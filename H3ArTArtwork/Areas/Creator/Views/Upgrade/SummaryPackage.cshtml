@@ -1,36 +1,9 @@
-﻿    @using H3ArT.DataAccess.Repository.IRepository
-    @using H3ArT.Models.ViewModels
-    @using System.Globalization
-    @using System.Security.Claims
-    @model PackagePaymentVM
+﻿@using H3ArT.DataAccess.Repository.IRepository
+@using H3ArT.Models.ViewModels
+@using System.Globalization
+@using System.Security.Claims
+@model PackagePaymentVM
 
-@{
-    int amountPostToCompare = 0;
-
-    if (Model.ApplicationUser == null)
-    {
-        // ApplicationUser is null, set amountPostToCompare to 0
-        amountPostToCompare = 0;
-    }
-    else if (Model.ApplicationUser.AvaiblePost.HasValue)
-    {
-        // ApplicationUser is not null and AvaiblePost has value, assign it to amountPostToCompare
-        amountPostToCompare = (int)Model.ApplicationUser.AvaiblePost.Value;
-    }
-    else
-    {
-        // ApplicationUser is not null but AvaiblePost is null, set amountPostToCompare to 0
-        amountPostToCompare = 0;
-    }
-    @inject IUnitOfWork _unitOfWork;
-    var packageID = Model.PackageId;
-    Model.Package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
-
-    // var claimsIdentity = (ClaimsIdentity)User.Identity;
-    // var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-    //ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
-
-}
 <form method="post">
     <br />
     <div class="container">
@@ -56,8 +29,8 @@
                                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                                     <span class="text-info">Information Details:</span>
                                 </h4>
-
                             </div>
+
                             <div class="row my-1">
                                 <div class="col-3">
                                     <label>Name</label>
@@ -82,8 +55,6 @@
                                 <span class="text-info">Order Summary:</span>
                             </h4>
                             <ul class="list-group mb-3">
-                                @*  @foreach (var details in Model.Package)
-                                { *@
                                 <li class="list-group-item d-flex justify-content-between">
                                     <div>
                                         <h6 class="my-0">@Model.Package.PackageName</h6>
@@ -91,7 +62,6 @@
                                     </div>
                                     <span class="text-muted">@Model.Package.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) </span>
                                 </li>
-                                @* }  *@
 
                                 <li class="list-group-item d-flex justify-content-between bg-light">
                                     <small class="text-info">Total (USD)</small>
@@ -105,13 +75,22 @@
             </div>
             <div class="card-footer">
                 <div class="row">
-                   
+                    <div class="col-12 col-md-7 pt-2">
+                    </div>
+                            Estimate Arrival Date:
+
+                        </p>
+                    </div>
+                            Estimate Arrival Date:
+
+                        </p>
+                    </div>
                     @if (Model.ApplicationUser != null)
                     {
                         var availablePost = Model.ApplicationUser.AvaiblePost;
                         @if (availablePost > 0)
                         {
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-5">
                                 <button type="submit" method="post" value="Place Order" disabled class="btn btn-primary form-control">Place Order</button>
                                 <p class="fst-italic text-danger h6">You cannot purchase a new package while your current package is @Model.ApplicationUser.AvaiblePost still active. Please wait until your current package expires.</p>
                             </div>
@@ -119,14 +98,14 @@
 
                         else
                         {
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-5">
                                 <button type="submit" method="post" value="Place Order" class="btn btn-primary form-control">Place Order</button>
                             </div>
                         }
                     }
                     else
                     {
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-5">
                             <button type="submit" method="post" value="Place Order" class="btn btn-primary form-control">Place Order</button>
                         </div>
                     }

@@ -19,7 +19,7 @@ namespace H3ArT.DataAccess.Repository
         public void Update(Artwork artwork)
         {
             var artworkFromDb = _db.TblArtwork.FirstOrDefault(u => u.ArtworkId == artwork.ArtworkId);
-            if (artworkFromDb != null )
+            if (artworkFromDb != null)
             {
                 artworkFromDb.Title = artwork.Title;
                 artworkFromDb.ArtistId = artwork.ArtistId;
@@ -29,10 +29,10 @@ namespace H3ArT.DataAccess.Repository
                 artworkFromDb.CategoryId = artwork.CategoryId;
                 artworkFromDb.IsBought = artwork.IsBought;
                 artworkFromDb.ReportedConfirm = artwork.ReportedConfirm;
-                if(artwork.ImageUrl != null )
+                if (artwork.ImageUrl != null)
                 {
                     artworkFromDb.ImageUrl = artwork.ImageUrl;
-                    
+
                 }
             }
         }
