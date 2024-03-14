@@ -9,7 +9,14 @@ function loadDataTable() {
         "ajax": { url: '/creator/artwork/getall' },
         "columns": [
             { data: 'title', "width": "15%" },
-            { data: 'description', "width": "25%" },
+            {
+                data: 'imageUrl',
+                "render": function (data) {
+                    return `<img src="${data}" width="100px" height="auto">`;
+                },
+                width: "10%"
+            },
+            { data: 'description', "width": "20%" },
             { data: 'applicationUser.fullName', "width": "10%" },
             { data: 'price', "width": "1%" },
             { data: 'category.categoryName', "width": "5%" }, // Accessing displayOrder within the category object //need to fix here
@@ -22,7 +29,7 @@ function loadDataTable() {
                      <a onClick=Delete('/creator/artwork/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                     </div>`
                 },
-                "width": "10%"
+                "width": "15%"
             }
         ]
     });

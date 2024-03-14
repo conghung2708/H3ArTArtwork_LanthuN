@@ -14,7 +14,6 @@
             body {
                 background-color: #f8f9fa;
                 font-family: Arial, sans-serif;
-                
             }
 
             .admin-page {
@@ -136,28 +135,24 @@
                         {
                             @if (!artwork.ReportedConfirm && !artwork.IsBought)
                             {
+                                <div class="card card-pin">
+                                    <div class="position-relative">
+                                        <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
+                                        @if (artwork.IsPremium == true)
+                                        {
+                                            <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>
+                                        }
+                                    </div>
 
-                                @if (!artwork.ReportedConfirm && !artwork.IsBought)
-                                {
-                                    <div class="card card-pin">
-                                        <div class="position-relative">
-                                            <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
-                                            @if (artwork.IsPremium == true)
-                                            {
-                                                <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>
-                                            }
-                                        </div>
-
-                                        <div class="overlay">
-                                            <h2 class="card-title title">@artwork.Title</h2>
-                                            <div class="more">
-                                                <a asp-action="Details" asp-route-artworkId="@artwork.ArtworkId">
-                                                    <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
-                                                </a>
-                                            </div>
+                                    <div class="overlay">
+                                        <h2 class="card-title title">@artwork.Title</h2>
+                                        <div class="more">
+                                            <a asp-action="Details" asp-route-artworkId="@artwork.ArtworkId">
+                                                <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
+                                            </a>
                                         </div>
                                     </div>
-                                }
+                                </div>
                             }
                         }
                     </div>
@@ -169,5 +164,5 @@
     </body>
     <script src="~/js/app.js"></script>
     <script src="~/js/theme.js"></script>
-</html>
+    </html>
 }
