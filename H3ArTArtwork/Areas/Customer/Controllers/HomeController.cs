@@ -28,7 +28,6 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
         public IActionResult Index(int? categoryId, string search)
         {
             IEnumerable<Artwork> artworkList;
-
             if (categoryId.HasValue)
             {
                 artworkList = _unitOfWork.ArtworkObj.
@@ -36,23 +35,25 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             }
             else
             {
-                artworkList = _unitOfWork.ArtworkObj.GetAll(a => search == null || a.Title.Contains(search), includeProperties: "Category");
+                artworkList = _unitOfWork.ArtworkObj.
+                    GetAll(a => search == null || a.Title.Contains(search), includeProperties: "Category");
             }
-
             return View(artworkList);
         }
 
-        [Authorize(Roles = "Customer, Creator, Moderator")]
+      
         public IActionResult Details(int artworkId)
         {
-
+            if(User.IsInRole(SD.Role_Admin))
+            {
+                TempData["error"] = "Admin cannot see the artwork detail";
+                return RedirectToAction(nameof(Index));
+            }
             Artwork artworkFromDb = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == artworkId, includeProperties: "ApplicationUser");
 
             if (artworkFromDb.ReportedConfirm == true || artworkFromDb.IsBought == true)
             {
-        
                 TempData["error"] = "This artwork is bought or reported";
-
                 return RedirectToAction(nameof(Index));
             }
             ShoppingCart shoppingCart = new()
@@ -77,7 +78,6 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
 
             Artwork artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == shoppingCart.ArtworkId);
             shoppingCart.BuyerId = userId;
@@ -107,19 +107,19 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 _unitOfWork.Save();
                 //add the cart value to session
                 HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == userId).Count()); //Count the distinct item that user has
-
-
             }
-
             TempData["success"] = "Cart updated successfully";
-
-
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Customer, Creator, Moderator")]
+    
         public IActionResult ArtistProfile(string artistID)
         {
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                TempData["error"] = "Admin cannot see the creator profile";
+                return RedirectToAction(nameof(Index));
+            }
             UserVM userVM = new()
             {
                 Artist = _unitOfWork.ApplicationUserObj.Get(u => u.Id == artistID),
@@ -128,10 +128,17 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             return View(userVM);
         }
 
-        [Authorize(Roles = "Customer, Creator, Moderator")]
+      
+     
         public IActionResult ViewBlog(string artistID)
         {
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                TempData["error"] = "Admin cannot view blogs";
+                return RedirectToAction(nameof(Index));
+            }
             IEnumerable<Blog> blogList = _unitOfWork.BlogObj.GetAll(u => u.CreatorId == artistID, includeProperties:"ApplicationUser");
+
             return View(blogList);
         }
 
@@ -206,24 +213,35 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             _unitOfWork.Save();
             TempData["success"] = "Report artist successfully";
 
-
             return RedirectToAction(nameof(ArtistProfile), new { artistID = artistID });
         }
 
-        [Authorize(Roles = "Customer, Creator, Moderator")]
+       
+ 
         public IActionResult Blog()
         {
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                TempData["error"] = "Admin cannot view blogs";
+                return RedirectToAction(nameof(Index));
+            }
             IEnumerable<Blog> blogList = _unitOfWork.BlogObj.GetAll(includeProperties: "ApplicationUser");
             return View(blogList);
         }
 
-        [Authorize(Roles = "Customer, Creator, Moderator")]
+       
+
         public IActionResult Blog_Details(int blogID)
         {
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                TempData["error"] = "Admin cannot view the blog detail";
+                return RedirectToAction(nameof(Index));
+            }
             Blog blog = _unitOfWork.BlogObj.Get(u=>u.BlogId == blogID, includeProperties:"ApplicationUser");
-            return View(blog);
-        } 
 
+            return View(blog);
+        }
 
         public IActionResult Privacy()
         {

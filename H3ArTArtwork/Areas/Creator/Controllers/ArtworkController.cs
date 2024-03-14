@@ -48,6 +48,13 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 //create
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+
+                if (applicationUser.AvaiblePost <= 0 || applicationUser.AvaiblePost == null)
+                {
+                    TempData["error"] = "You do not have enough posting credits to place an order. Please purchase a package to continue.";
+                    return RedirectToAction("Index", "Artwork");
+                }
 
                 artworkVM.Artwork.ArtistId = userId;
                 artworkVM.Artwork.ApplicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
@@ -60,7 +67,6 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 artworkVM.Artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == id, includeProperties: "Category,ApplicationUser");
                 return View(artworkVM);
             }
-
         }
 
         [HttpPost]
@@ -100,7 +106,6 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                     }
                     if (artworkVM.Artwork.ArtworkId == 0)
                     {
-
                         // Add product
                         ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
                         
@@ -115,29 +120,24 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                         artworkVM.Artwork.ReportedConfirm = false;
                         _unitOfWork.ArtworkObj.Add(artworkVM.Artwork);
                         _unitOfWork.Save();
+
                         applicationUser.AvaiblePost -= 1;
                         _unitOfWork.ApplicationUserObj.Update(applicationUser);
                         _unitOfWork.Save();
 
                         artworkVM.Artwork.ArtistId = userId;
                         var unknownUser = artworkVM.Artwork.ApplicationUser;
-                        _unitOfWork.ArtworkObj.Update(artworkVM.Artwork);
-                     
-                    
+
+                        _unitOfWork.ArtworkObj.Update(artworkVM.Artwork);            
                         _unitOfWork.ApplicationUserObj.Remove(unknownUser);
-
                         _unitOfWork.Save();
-
-
                         TempData["success"] = "Artwork created successfully";
                     }
                     else
                     {
                         // Update product
                         _unitOfWork.ArtworkObj.Update(artworkVM.Artwork);
-
                         _unitOfWork.Save();
-
                         TempData["success"] = "Artwork updated successfully";
                     }
                     return RedirectToAction("Index", "Artwork");
@@ -149,7 +149,6 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                         Text = u.CategoryName,
                         Value = u.CategoryId.ToString(),
                     });
-
                     return View(artworkVM);
                 }
             }
@@ -161,12 +160,10 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             }
         }
 
-
         #region API CALLS
         [HttpGet]
         public IActionResult GetAll()
         {
-            
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
@@ -229,6 +226,5 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         }
 
         #endregion
-
     }
 }
