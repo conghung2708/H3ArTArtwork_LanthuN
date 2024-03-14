@@ -1,4 +1,4 @@
-﻿using H3ArT.DataAccess.Repository.IRepository;
+using H3ArT.DataAccess.Repository.IRepository;
 using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
