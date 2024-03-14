@@ -19,10 +19,14 @@
     <link rel="stylesheet" href="~/css/pricing-plan.css">
 </head>
 <body class="bg-dark">
-    @*     <form> *@
-    <main>
-        <div class="container">
 
+    <main>
+        <!-- Back to Home button -->
+        <a asp-area="Customer" asp-controller="Home" asp-action="Index" type="button" class="btn pricing-plan-home-btn btn-primary mt-3 text-dark">
+            <i class="bi bi-house"></i>
+            Home
+        </a>
+        <div class="container">
             <h5 class="text-center pricing-table-subtitle text-light">PRICING PLAN</h5>
             <h1 class="text-center pricing-table-title  text-light">Pricing Table</h1>
             <div class="row justify-content-center">
@@ -48,7 +52,7 @@
             </div>
         </div>
     </main>
-    @*     </form> *@
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>

@@ -1,4 +1,4 @@
-﻿using H3ArT.DataAccess.Repository.IRepository;
+using H3ArT.DataAccess.Repository.IRepository;
 using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +8,7 @@ using H3ArT.Utility;
 using Stripe.Checkout;
 using H3ArT.DataAccess.Repository;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace H3ArTArtwork.Areas.Creator.Controllers
 {
@@ -25,152 +26,91 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             _config = config;
         }
 
-        // trang nay hien ra 3 cai de chon --> chuyen qua Summary
         public IActionResult Index()
         {
             IEnumerable<Package> packageList = _unitOfWork.PackageObj.GetAll();
             return View(packageList);
         }
 
-        // trang view cua Summary
         public IActionResult SummaryPackage(int packageId)
         {
-            // nhan data tu trang Index de nap vao PackagePaymentVM
-            // ...
-            // xong chuyen qua ben Thanh toan
-
-            // lay tu database ra noi dung cua cac goi xong chuyen qua View
-            // ...
-            //get the id
+            // Retrieve the ApplicationUser using the user's ID
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
-
 
             PackagePaymentVM = new()
             {
                 PackageId = packageId,
-                // Package = _unitOfWork.PackageObj.Get(u => u.packageID == packageId),
-                // , includeProperties: "artwork"
                 OrderHeader = new()
+                // Package = _unitOfWork.PackageObj.Get(u => u.packageID == packageId), // , includeProperties: "artwork"
             };
-            //foreach (var cart in PackagePaymentVM.Package)
-            //{
-            //cart.price = cart.artwork.price;
+
             Package package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageId);
             PackagePaymentVM.OrderHeader.OrderTotal = package.Price;
             PackagePaymentVM.Package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageId);
             PackagePaymentVM.ApplicationUser = applicationUser;
-            //}
-            return View(PackagePaymentVM);
 
-            // View();
+            return View(PackagePaymentVM);
         }
 
-        // nay la khi nhan cai nut thanh toan trong trang Summary --> POST
         [HttpPost]
         [ActionName("SummaryPackage")]
         public IActionResult SummaryPackagePOST()
         {
-            //get the id
+            // Retrieve the ApplicationUser using the user's ID
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+
+            // Check to see if the user has RUN OUT OF POSTS or has NEVER SIGNED UP FOR A PACKAGE to post
             if (applicationUser.AvaiblePost <= 0 || applicationUser.AvaiblePost == null)
             {
-                //ShoppingCartVM will automatically be populated
+                // PackagePaymentVM will automatically be populated
+                // Retrieve the selected package
                 var packageId = PackagePaymentVM.PackageId;
                 PackagePaymentVM.Package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageId);
                 Package package = PackagePaymentVM.Package;
-                //Package package = _unitOfWork.PackageObj.Get(u => u.packageID == packageId);
 
+                // Set value for  order header 
                 PackagePaymentVM.OrderHeader.OrderDate = System.DateTime.Now;
                 PackagePaymentVM.OrderHeader.ApplicationUserId = userId;
                 PackagePaymentVM.OrderHeader.OrderTotal = package.Price;
                 PackagePaymentVM.OrderHeader.IsPackageOrder = true;
 
-
                 if (!ModelState.IsValid)
                 {
-                    // If model state is not valid, return the view with validation errors
+                    // If model state is NOT valid, return the view with validation errors
                     return View(PackagePaymentVM); // or any other suitable action result
                 }
-                var existingOrder = _unitOfWork.OrderHeaderObj.Get(o => o.ApplicationUserId == userId && o.PaymentStatus == SD.PaymentStatusPending);
-                /*
-                //if (existingOrder != null)
-                //{
-                //    PackagePaymentVM.orderHeader = existingOrder;
-                //    _unitOfWork.OrderHeaderObj.Remove(existingOrder);
-                //    _unitOfWork.Save();
-                //    // var newShoppingCartItems = PackagePaymentVM.ShoppingCartList.Where(cart => cart.isNew);
 
-                //    //foreach (var cart in newShoppingCartItems)
-                //    //{
-                //    OrderDetailPackage orderDetail = new OrderDetailPackage
-                //    {
-                //        //artworkId = cart.artworkID,
-                //        //orderHeaderId = existingOrder.Id,
-                //        //price = cart.price,
-                //        //count = cart.count
-
-
-                //        orderHeaderId = existingOrder.Id,
-                //        packageId = package.packageID,
-                //        price = package.price
-                //    };
-                //}
-                //    _unitOfWork.OrderDetailObj.Add(orderDetail);
-                //    cart.isNew = false; // Reset isNew flag
-                //    _unitOfWork.ShoppingCartObj.Update(cart);
-                //}
-                //}
-                //else
-                //{
-                //it is a regular customer account
-                PackagePaymentVM.orderHeader.paymentStatus = SD.PaymentStatusPending;
-                PackagePaymentVM.orderHeader.orderStatus = SD.StatusPending;
-
-                _unitOfWork.OrderHeaderObj.Add(PackagePaymentVM.orderHeader);
-                _unitOfWork.Save();
-                //foreach (var cart in ShoppingCartVM.ShoppingCartList)
-                //{
-                */
+                // Set payment status and order status
                 PackagePaymentVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
                 PackagePaymentVM.OrderHeader.OrderStatus = SD.StatusPending;
 
                 _unitOfWork.OrderHeaderObj.Add(PackagePaymentVM.OrderHeader);
                 _unitOfWork.Save();
+
+                // Add order detail package to the database
                 OrderDetailPackage orderDetailPackage = new OrderDetailPackage
                 {
-                    //artworkId = cart.artworkID,
-                    //orderHeaderId = existingOrder.Id,
-                    //price = cart.price,
-                    //count = cart.count
                     orderHeaderId = PackagePaymentVM.OrderHeader.Id,
                     packageId = package.PackageId,
                     price = package.Price
                 };
                 _unitOfWork.OrderDetailPackageObj.Add(orderDetailPackage);
                 _unitOfWork.Save();
-                // cart.isNew = false; // Reset isNew flag
-                // _unitOfWork.ShoppingCartObj.Update(cart);
-                //}
 
-                //}
-                //stripe logic
+                // Set up Stripe payment logic
                 var domain = _config.GetValue<string>("Stripe:Domain"); 
-
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = domain + $"creator/upgrade/PackageOrderConfirmation?id={PackagePaymentVM.OrderHeader.Id}&packageID={PackagePaymentVM.PackageId}",
-
                     CancelUrl = domain + "customer/cart/index",
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
                 };
-                //foreach (var item in ShoppingCartVM.ShoppingCartList)
-                //{
+
                 var packageItem = PackagePaymentVM.Package;
                 var sessionLineItem = new SessionLineItemOptions
                 {
@@ -186,19 +126,21 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                     Quantity = 1
                 };
                 options.LineItems.Add(sessionLineItem);
-                //}
+
+                // Create Stripe session
                 var service = new SessionService();
-                //create sessionId and paymentIntentId
                 Session session = service.Create(options);
+
+                // Update order header with Stripe payment ID
                 _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(PackagePaymentVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
                 _unitOfWork.Save();
-                //applicationUser.AvaiblePost = package.amountPost;
-                //_unitOfWork.ApplicationUserObj.Update(applicationUser);
-                //_unitOfWork.Save();
 
+                // Redirect to Stripe payment URL
                 Response.Headers.Add("Location", session.Url);
                 return new StatusCodeResult(303);
             }
+
+            // If the user has available posts, return the view
             return View(PackagePaymentVM);
         }
 
@@ -206,31 +148,30 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            // Retrieve the ApplicationUser using the user's ID
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+
+            // Retrieve the package details and order header
             Package package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
             OrderHeader orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id, includeProperties: "ApplicationUser");
 
-            //this is an order by customer
+            // Check the payment status of the session associated with the order
             var service = new SessionService();
             Session session = service.Get(orderHeader.SessionId);
 
+            // If the payment status is "paid", update the order status to approved
             if (session.PaymentStatus.ToLower() == "paid")
             {
                 _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
                 _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                 _unitOfWork.Save();
             }
-            // update amountPost
-            //applicationUser.AvaiblePost = package.amountPost;
-            //_unitOfWork.ApplicationUserObj.Update(applicationUser);
-            //_unitOfWork.Save();
 
-            //List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.buyerID == orderHeader.applicationUserId).ToList();
-            //_unitOfWork.ShoppingCartObj.RemoveRange(shoppingCarts);
-            //_unitOfWork.Save();
-            return View(id);
+            return View(package);
         }
 
+        // Test function
         public IActionResult Reset()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;

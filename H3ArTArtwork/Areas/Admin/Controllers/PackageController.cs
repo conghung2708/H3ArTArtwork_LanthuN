@@ -119,30 +119,8 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                     return Json(new { success = false, message = "Error: Package not found" });
                 }
 
-                // Check if there are any order details associated with this artwork
-                //bool hasOrderDetails = _unitOfWork.OrderDetailObj.GetAll(od => od.artworkId == id).Any();
-                //if (hasOrderDetails)
-                //{
-                //    // Set error message in TempData
-                //    TempData["error"] = "Cannot delete artwork with associated orders";
-                //    return Json(new { success = false, message = "Cannot delete artwork with associated orders" });
-                //}
-
-                //if (!string.IsNullOrEmpty(packageToBeDeleted.imageUrl))
-                //{
-                //    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, packageToBeDeleted.imageUrl.TrimStart('\\'));
-                //    if (System.IO.File.Exists(oldImagePath))
-                //    {
-                //        System.IO.File.Delete(oldImagePath);
-                //    }
-                //}
-
                 _unitOfWork.PackageObj.Remove(packageToBeDeleted);
                 _unitOfWork.Save();
-
-                //var claimsIdentity = (ClaimsIdentity)User.Identity;
-                //var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-                //List<Artwork> listArtwork = _unitOfWork.ArtworkObj.GetAll(u => u.artistID == userId, includeProperties: "category,applicationUser").ToList();
 
                 List<Package> listPackage = _unitOfWork.PackageObj.GetAll().ToList();
 

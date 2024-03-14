@@ -2,14 +2,34 @@
     font-family: 'Karla', sans-serif;
 }
 
+.pricing-plan-home-btn {
+    color: #5d78ff;
+    font-size: 16px;
+    font-weight: bold;
+    width: 145px;
+    height: 45px;
+    border-radius: 22.5px;
+    -webkit-transition: all 0.4s;
+    transition: all 0.4s;
+    position: relative;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
 .pricing-table-subtitle {
-    margin-top: 68px;
+    margin-top: 48px;
     font-weight: normal;
 }
 
 .pricing-table-title {
     font-weight: bold;
-    margin-bottom: 68px;
+    margin-bottom: 48px;
 }
 
 .pricing-card {
