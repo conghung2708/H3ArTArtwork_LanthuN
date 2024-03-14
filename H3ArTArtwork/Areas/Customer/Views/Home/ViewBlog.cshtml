@@ -21,44 +21,44 @@
             font-weight: 600;
             font-family: 'Open Sans', sans-serif;
             /**
-           * If you set it to a value higher than the 'font-size',
-           * you will have to take account of the difference
-           * between the 'line-height' and the 'font-size'
-           * to vertically centre the arrow
-           * and align it with the text.
-           **/
+                           * If you set it to a value higher than the 'font-size',
+                           * you will have to take account of the difference
+                           * between the 'line-height' and the 'font-size'
+                           * to vertically centre the arrow
+                           * and align it with the text.
+                           **/
             line-height: 1;
             /* Makes some place for the arrow */
-            padding-left: 15px;
+            padding-left: 30vh;
             /* The arrow will be absolutely positioned */
             position: relative;
         }
 
-        #footer{
-            display: none;
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <a href="#" class="go-back" onclick="goBack()"> <i class="bi bi-skip-backward-circle"></i> Go Back</a>
+    
 
-
-   
+    <section class="blog" id="blog">
+        <a href="#" class="go-back" onclick="goBack()"> <i class="bi bi-skip-backward-circle"></i> Go Back</a>
+        <div class="container">
             <div class="blog-content">
-                <!-- item -->
+
                 @foreach (var blog in Model)
                 {
-
-
                     <div class="blog-item">
-                        <div class="blog-img">
-                            <img src="@blog.ImageUrl" alt="" />
-                            <span><i class="far fa-heart"></i></span>
+                        <div class="blog-img" style="width: 382px; height: 200px;">
+                            <img src="@blog.ImageUrl" alt="" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="blog-text">
-                            <span>@blog.CreatedAt</span> @* date *@
-                            <h2>@blog.Title</h2> @* title *@
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis libero quas ipsum laudantium nihil! Quaerat.</p>
+                            <span>@blog.CreatedAt</span> <!-- date -->
+                            <h2>@blog.Title</h2> <!-- title -->
+                            <p>@Html.Raw(@blog.Description.Substring(0, 100))...</p>
                             <a asp-action="Blog_Details" asp-route-blogID="@blog.BlogId">More</a>
                         </div>
                     </div>
@@ -66,8 +66,10 @@
                 <!-- end of item -->
 
             </div>
-       
-    <footer>
+        </div>
+    </section>
+
+    <footer class="bg-dark">
         <div class="social-links">
             <a href="#"><i class="fab fa-facebook-f"></i></a>
             <a href="#"><i class="fab fa-twitter"></i></a>
