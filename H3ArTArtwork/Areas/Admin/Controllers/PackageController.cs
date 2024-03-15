@@ -22,8 +22,6 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            //Select *
-
             return View();
         }
 
@@ -45,8 +43,6 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                 //update
                 package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageID);
                 return View(package);
-                //}
-
             }
         }
 
@@ -62,7 +58,6 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                 {
                     if (package.PackageId == 0)
                     {
-
                         // Add product
                         _unitOfWork.PackageObj.Add(package);
                         _unitOfWork.Save();
@@ -74,6 +69,11 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                     }
                     else
                     {
+                        if (string.IsNullOrWhiteSpace(package.Description))
+                        {
+                            ModelState.AddModelError("Description", "Description is required.");
+                            return View(package); // Trả về view để hiển thị thông báo lỗi
+                        }
                         // Update product
                         _unitOfWork.PackageObj.Update(package);
 
