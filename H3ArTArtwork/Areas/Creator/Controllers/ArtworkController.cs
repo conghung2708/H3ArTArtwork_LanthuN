@@ -6,6 +6,7 @@ using H3ArT.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Reflection.Metadata;
 using System.Security.Claims;
 
 namespace H3ArTArtwork.Areas.Creator.Controllers
@@ -112,8 +113,14 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
                         artworkVM.Artwork.ImageUrl = @"\image\artwork\" + fileName;
                     }
+
                     if (artworkVM.Artwork.ArtworkId == 0)
                     {
+                        if (file == null)
+                        {
+                            TempData["error"] = "Image is required";
+                            return RedirectToAction("Upsert", new { id = artworkVM.Artwork.ArtworkId });
+                        }
                         // Add product
                         ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 

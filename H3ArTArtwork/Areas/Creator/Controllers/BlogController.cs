@@ -110,13 +110,16 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
                         blog.ImageUrl = @"\image\blog\" + fileName;
                     }
-                    else
-                    {
-                        TempData["error"] = "Image is required";
-                        return RedirectToAction("Upsert", new { id = blog.BlogId });
-                    }
+                   
+                       
+                    
                     if (blog.BlogId == 0)
                     {
+                        if(file == null)
+                        {
+                            TempData["error"] = "Image is required";
+                            return RedirectToAction("Upsert", new { id = blog.BlogId });
+                        }
                         // Assign current time to createdAt property
                         blog.CreatedAt = DateTime.Now;
 
