@@ -79,6 +79,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 {
                     string wwwRootPath = _webHostEnvironment.WebRootPath;
 
+
                     if (file != null)
                     {
                         // Check if the file is a JPG file
@@ -109,8 +110,16 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
                         blog.ImageUrl = @"\image\blog\" + fileName;
                     }
+                   
+                       
+                    
                     if (blog.BlogId == 0)
                     {
+                        if(file == null)
+                        {
+                            TempData["error"] = "Image is required";
+                            return RedirectToAction("Upsert", new { id = blog.BlogId });
+                        }
                         // Assign current time to createdAt property
                         blog.CreatedAt = DateTime.Now;
 

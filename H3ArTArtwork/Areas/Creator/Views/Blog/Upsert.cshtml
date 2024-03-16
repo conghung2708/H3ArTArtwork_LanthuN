@@ -41,12 +41,11 @@
                             <textarea asp-for="Description" class="form-control border-0 shadow"></textarea>
                             <label class="p-0 ms-2" asp-for="Description"></label>
                             <span asp-validation-for="Description" class="text-danger"></span>
-
                         </div>
 
                         <!-- Artist Name -->
                         <div class="form-floating py-2 col-12">
-                            <input asp-for="@Model.ApplicationUser.FullName" class="form-control border-0 shadow" />
+                            <input disabled asp-for="@Model.ApplicationUser.FullName" class="form-control border-0 shadow" />
                             <label class="p-0 ms-2" asp-for="@Model.ApplicationUser.FullName"></label>
                             <span asp-validation-for="@Model.ApplicationUser.FullName" class="text-danger"></span>
                         </div>
@@ -55,6 +54,7 @@
                         <div class="form-floating py-2 col-12">
                             <input type="file" name="file" class="form-control border-0 shadow" />
                             <label class="p-0 ms-2" asp-for="ImageUrl"></label>
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
                         </div>
 
                         <!-- Buttons -->
@@ -82,8 +82,8 @@
     <script>
         tinymce.init({
             selector: 'textarea',
-            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker',
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            plugins: 'anchor autolink charmap codesample emoticons searchreplace table visualblocks wordcount linkchecker',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
         });
     </script>
     @{
