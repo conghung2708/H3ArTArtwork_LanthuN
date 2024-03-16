@@ -45,7 +45,7 @@
 
                         <!-- Artist Name -->
                         <div class="form-floating py-2 col-12">
-                            <input asp-for="@Model.ApplicationUser.FullName" class="form-control border-0 shadow" />
+                            <input disabled asp-for="@Model.ApplicationUser.FullName" class="form-control border-0 shadow" />
                             <label class="p-0 ms-2" asp-for="@Model.ApplicationUser.FullName"></label>
                             <span asp-validation-for="@Model.ApplicationUser.FullName" class="text-danger"></span>
                         </div>
@@ -54,6 +54,7 @@
                         <div class="form-floating py-2 col-12">
                             <input type="file" name="file" class="form-control border-0 shadow" />
                             <label class="p-0 ms-2" asp-for="ImageUrl"></label>
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
                         </div>
 
                         <!-- Buttons -->
