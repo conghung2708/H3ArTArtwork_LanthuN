@@ -107,6 +107,7 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
 
             [Required(ErrorMessage = "Full Name is required")]
             [StringLength(50, ErrorMessage = "Full Name must be between {2} and {1} characters", MinimumLength = 2)]
+            [RegularExpression(@"^[^\d]+$", ErrorMessage = "Full Name cannot contain numbers")]
             public string FullName { get; set; }
             public Boolean Status { get; set; }
 

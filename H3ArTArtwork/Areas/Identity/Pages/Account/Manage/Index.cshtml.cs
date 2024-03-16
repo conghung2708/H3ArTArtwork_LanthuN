@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using H3ArT.Models;
+using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -80,7 +81,7 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account.Manage
             public string AvatarImage { get; set; }
 
             [Required]
-            public bool Gender {  get; set; }
+            public bool Gender { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -166,6 +167,12 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account.Manage
             string wwwRootPath = _webHostEnvironment.WebRootPath;
             if (file != null)
             {
+                // Check if the file is a JPG file
+                if (!file.FileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase))
+                {
+                    TempData["error"] = "Only JPG files are allowed.";
+                    return RedirectToPage();
+                }
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                 string imagePath = Path.Combine(wwwRootPath, @"image\avatar");
 

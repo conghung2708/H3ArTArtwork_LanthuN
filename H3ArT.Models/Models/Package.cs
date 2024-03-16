@@ -17,23 +17,14 @@ namespace H3ArT.Models.Models
         [Required]
         public string PackageName { get; set; }
 
-
+        [Range(double.Epsilon, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
         public double Price { get; set; }
 
+        [Range(double.Epsilon, double.MaxValue, ErrorMessage = "Amount artworks must be greater than 0.")]
         public int AmountPost { get; set; }
+
+        [Required]
         public string Description { get; set; }
         public string AdminID { get; set; }
-        //[ForeignKey("adminID")]
-        //public ApplicationUser ApplicationUser { get; set; }
-
-
-
-        //public string buyerID { get; set; }
-        //[ForeignKey("buyerID")]
-        //[ValidateNever]
-        //public ApplicationUser applicationUser { get; set; }
-
-
-
     }
 }
