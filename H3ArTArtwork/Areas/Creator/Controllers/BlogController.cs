@@ -81,6 +81,14 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
                     if (file != null)
                     {
+                        // Check if the file is a JPG file
+                        if (!file.FileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase))
+                        {
+                            TempData["error"] = "Only JPG files are allowed.";
+                            // Redirect to the Upsert(int? id) action
+                            return RedirectToAction("Upsert", new { id = blog.BlogId });
+                        }
+
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                         string productPath = Path.Combine(wwwRootPath, @"image\blog");
 

@@ -16,7 +16,7 @@ namespace H3ArT.Models.Models
         [Required(ErrorMessage = "Description is required.")]
         [MinLength(70, ErrorMessage = "Description must be at least 70 characters.")]
         [ValidateNever]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public string ArtistId { get; set; }
         [ForeignKey("ArtistId")]
@@ -27,6 +27,7 @@ namespace H3ArT.Models.Models
 
         [Required(ErrorMessage = "Price is required.")]
         [RegularExpression(@"^\d*\.?\d+$", ErrorMessage = "Price must be a valid number.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
         public double Price { get; set; }
 
         [Required(ErrorMessage = "Premium status is required.")]
