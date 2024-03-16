@@ -6,6 +6,7 @@ using H3ArT.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Reflection.Metadata;
 using System.Security.Claims;
 
 namespace H3ArTArtwork.Areas.Creator.Controllers
@@ -69,7 +70,6 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 return View(artworkVM);
             }
         }
-
         [HttpPost]
         [Authorize(Roles = SD.Role_Creator)]
         public IActionResult Upsert(ArtworkVM artworkVM, IFormFile? file)
@@ -85,7 +85,15 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
                     if (file != null)
                     {
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        // Check if the file is a JPG file
+                        if (!file.FileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase))
+                        {
+                            TempData["error"] = "Only JPG files are allowed.";
+                            // Redirect to the Upsert(int? id) action
+                            return RedirectToAction("Upsert", new { id = artworkVM.Artwork.ArtworkId });
+                        }
+
+                        string fileName = Guid.NewGuid().ToString() + ".jpg"; // Ensure the extension is always .jpg
                         string productPath = Path.Combine(wwwRootPath, @"image\artwork");
 
                         if (!string.IsNullOrEmpty(artworkVM.Artwork.ImageUrl))
@@ -105,8 +113,14 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
                         artworkVM.Artwork.ImageUrl = @"\image\artwork\" + fileName;
                     }
+
                     if (artworkVM.Artwork.ArtworkId == 0)
                     {
+                        if (file == null)
+                        {
+                            TempData["error"] = "Image is required";
+                            return RedirectToAction("Upsert", new { id = artworkVM.Artwork.ArtworkId });
+                        }
                         // Add product
                         ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 
@@ -160,7 +174,6 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 return RedirectToAction("Index", "Artwork");
             }
         }
-
         #region API CALLS
         [HttpGet]
         public IActionResult GetAll()

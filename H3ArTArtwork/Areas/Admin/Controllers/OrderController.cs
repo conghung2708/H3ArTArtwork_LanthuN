@@ -100,7 +100,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Creator + "," + SD.Role_Admin)]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Creator + "," + SD.Role_Customer)]
         public IActionResult CancelOrder()
         {
             var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.OrderHeader.Id);
