@@ -17,12 +17,13 @@ namespace H3ArT.Models.Models
 
         public string Title { get; set; }
 
-        [Required]    
+        [Required]
+        [MinLength(100, ErrorMessage = "Description must be at least 100 characters long.")]
         public string Description { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         [ValidateNever]
-        public string? ImageUrl { get; set; }
+        public string ImageUrl { get; set; }
     }
 }
