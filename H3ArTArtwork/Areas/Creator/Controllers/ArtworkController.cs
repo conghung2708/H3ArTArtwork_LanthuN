@@ -140,12 +140,12 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                         _unitOfWork.ApplicationUserObj.Update(applicationUser);
                         _unitOfWork.Save();
 
-                        artworkVM.Artwork.ArtistId = userId;
-                        var unknownUser = artworkVM.Artwork.ApplicationUser;
+                        //artworkVM.Artwork.ArtistId = userId;
+                        //var unknownUser = artworkVM.Artwork.ApplicationUser;
 
-                        _unitOfWork.ArtworkObj.Update(artworkVM.Artwork);
-                        _unitOfWork.ApplicationUserObj.Remove(unknownUser);
-                        _unitOfWork.Save();
+                        //_unitOfWork.ArtworkObj.Update(artworkVM.Artwork);
+                        //_unitOfWork.ApplicationUserObj.Remove(unknownUser);
+                        //_unitOfWork.Save();
                         TempData["success"] = "Artwork created successfully";
                     }
                     else
