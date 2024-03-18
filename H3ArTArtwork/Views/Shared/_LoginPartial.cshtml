@@ -11,8 +11,10 @@
             
 
         <li class="nav-item">
-       
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        @{
+                    var user = await UserManager.GetUserAsync(User) as ApplicationUser;
+        }
+        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @user.FullName!</a>
     </li>
         }
     <li class="nav-item">
