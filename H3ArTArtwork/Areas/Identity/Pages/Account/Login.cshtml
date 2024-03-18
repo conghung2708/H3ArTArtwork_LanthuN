@@ -87,46 +87,44 @@
     <div class="wrapper">
         <nav class="nav">
             <div class="nav-logo">
-                <a href="/" class=""><img src="~/image/login/whitelogo.png" alt="logo"/></a>               
+                <a href="/" class=""><img src="~/image/login/whitelogo.png" alt="logo" /></a>
             </div>
             <div class="nav-button">
                 <a id="register" asp-area="Identity" asp-page="/Account/Register"> <button class="btn white-btn" id="loginBtn" onclick="login()">Sign Up</button></a>
             </div>
-            
+
         </nav>
         <!----------------------------- Form box ----------------------------------->
-      
+
         <div class="form-box">
             <!------------------- login form -------------------------->
-           
+
             <div class="login-container" id="login">
                 <form id="account" method="post">
 
-                <div class="top">
-                    <a href="/" class="backHome"><i class="bx bx-chevron-left"></i>Back To Home</a>
-                    <span>Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Sign Up</a></span>
-                    <header>Login</header>    
-                </div>
-                
-                        
-                    
-                <div class="input-box">
-                    <input asp-for="Input.Email" autocomplete="username" type="text" aria-required="true" class="input-field" placeholder="Email" />
-                        <i class="bx bx-user"></i>
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                    
-                </div>
-                <div class="input-box">
-                    <input asp-for="Input.Password" autocomplete="current-password" aria-required="true" type="password" class="input-field" placeholder="Password" />
-                        <i class="bx bx-lock-alt"></i>
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>                  
-                </div>
-                <div class="input-box">
-                    <input type="submit" class="submit" value="Sign In" />
-                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                    <div class="top">
+                        <a href="/" class="backHome"><i class="bx bx-chevron-left"></i>Back To Home</a>
+                        <span>Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Sign Up</a></span>
+                        <header>Login</header>
+                    </div>
 
-                </div>
-        </form>
+                    <div class="input-box">
+                        <input asp-for="Input.Email" autocomplete="username" type="text" aria-required="true" class="input-field" placeholder="Email" />
+                        <i class="bx bx-user"></i>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+                    </div>
+                    <div class="input-box">
+                        <input asp-for="Input.Password" autocomplete="current-password" aria-required="true" type="password" class="input-field" placeholder="Password" />
+                        <i class="bx bx-lock-alt"></i>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="input-box">
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                        <input type="submit" class="submit" value="Sign In" />
+                    </div>
+                </form>
 
                 <div class="mid">
                     <p>or sign up with:</p>
@@ -164,20 +162,21 @@
                     <a asp-page="./ForgotPassword">Forgot password?</a>
                 </div>
                 @* <div class="two-col">
-                    <div class="one">
-                        <input type="checkbox" id="login-check" />
-                        <label for="login-check"> Remember Me</label>
-                    </div>
-                    <div class="two">
-                        <label><a href="#">Forgot password?</a></label>
-                    </div>
+                <div class="one">
+                <input type="checkbox" id="login-check" />
+                <label for="login-check"> Remember Me</label>
+                </div>
+                <div class="two">
+                <label><a href="#">Forgot password?</a></label>
+                </div>
                 </div> *@
                 <!-- <hr />
                 <a href="#" class="submit input-box-submit"><i class="bx bxl-google"></i>Sign in with Google</a>
                 <a href="#" class="submit input-box-submit"><i class="bx bxl-facebook"></i>Sign in with Facebook</a> -->
             </div>
             <!------------------- registration form -------------------------->
-            
+        </div>
+    </div>
 </body>
 </html>
 
