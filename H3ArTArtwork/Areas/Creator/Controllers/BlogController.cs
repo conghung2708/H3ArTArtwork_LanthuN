@@ -128,14 +128,14 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                         _unitOfWork.Save();
                  
 
-                        blog.CreatorId = userId;
-                        var unknownUser = blog.ApplicationUser;
-                        _unitOfWork.BlogObj.Update(blog);
+                        //blog.CreatorId = userId;
+                        //var unknownUser = blog.ApplicationUser;
+                        //_unitOfWork.BlogObj.Update(blog);
                      
                     
-                        _unitOfWork.ApplicationUserObj.Remove(unknownUser);
+                        //_unitOfWork.ApplicationUserObj.Remove(unknownUser);
 
-                        _unitOfWork.Save();
+                        //_unitOfWork.Save();
 
 
                         TempData["success"] = "Blog created successfully";
