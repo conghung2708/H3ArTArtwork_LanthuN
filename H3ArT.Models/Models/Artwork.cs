@@ -14,7 +14,7 @@ namespace H3ArT.Models.Models
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Description is required.")]
-        [MinLength(70, ErrorMessage = "Description must be at least 70 characters.")]
+        [StringLength(int.MaxValue, MinimumLength = 70, ErrorMessage = "Description must be at least 70 characters.")]
         public string Description { get; set; }
 
         public string ArtistId { get; set; }
