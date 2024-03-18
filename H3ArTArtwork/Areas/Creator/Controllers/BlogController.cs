@@ -153,7 +153,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 }
                 else
                 {
-                   
+                    blog.ApplicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
                     return View(blog);
                 }
             }
