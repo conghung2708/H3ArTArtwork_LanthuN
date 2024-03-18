@@ -164,7 +164,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                         Text = u.CategoryName,
                         Value = u.CategoryId.ToString(),
                     });
-                    artworkVM.Artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == artworkVM.Artwork.ArtworkId, includeProperties: "Category,ApplicationUser");
+                    //artworkVM.Artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == artworkVM.Artwork.ArtworkId, includeProperties: "Category,ApplicationUser");
                     return View(artworkVM);
                 }
             }
