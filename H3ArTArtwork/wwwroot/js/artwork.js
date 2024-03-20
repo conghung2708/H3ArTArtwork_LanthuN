@@ -22,12 +22,16 @@ function loadDataTable() {
             { data: 'category.categoryName', "width": "5%" }, // Accessing displayOrder within the category object //need to fix here
             // Corrected here
             {
-                data: 'artworkId',
-                "render": function (data) {
-                    return `<div class="w-100 btn-group" role="group">
-                     <a href="/creator/artwork/upsert?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                     <a onClick=Delete('/creator/artwork/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
-                    </div>`
+                data: 'isBought',
+                "render": function (data, type, row) {
+                    if (data) {
+                        return `<div class="text-center"><button class="btn btn-success mx-auto">Bought</button></div>`;
+                    } else {
+                        return `<div class="w-100 btn-group" role="group">
+                            <a href="/creator/artwork/upsert?id=${row.artworkId}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
+                            <a onClick="Delete('/creator/artwork/delete/${row.artworkId}')" class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                        </div>`;
+                    }
                 },
                 "width": "15%"
             }
