@@ -5,7 +5,7 @@ namespace H3ArT.Models.ViewModels
 {
     public class UserVM
     {
-        public ApplicationUser Artist { get; set; }
+        public ApplicationUser User { get; set; }
 
         public IEnumerable<Artwork> ArtworkList { get; set; }
     }

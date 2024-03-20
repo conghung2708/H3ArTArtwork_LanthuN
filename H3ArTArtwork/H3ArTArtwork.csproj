@@ -36,6 +36,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\lib\collection\counterup\counterup.min.js" />
+    <None Include="wwwroot\lib\collection\easing\easing.js" />
+    <None Include="wwwroot\lib\collection\easing\easing.min.js" />
+    <None Include="wwwroot\lib\collection\isotope\isotope.pkgd.js" />
+    <None Include="wwwroot\lib\collection\isotope\isotope.pkgd.min.js" />
+    <None Include="wwwroot\lib\collection\lightbox\js\lightbox.js" />
+    <None Include="wwwroot\lib\collection\lightbox\js\lightbox.min.js" />
+    <None Include="wwwroot\lib\collection\lightbox\links.php" />
+    <None Include="wwwroot\lib\collection\owlcarousel\LICENSE" />
+    <None Include="wwwroot\lib\collection\owlcarousel\owl.carousel.js" />
+    <None Include="wwwroot\lib\collection\owlcarousel\owl.carousel.min.js" />
+    <None Include="wwwroot\lib\collection\waypoints\links.php" />
+    <None Include="wwwroot\lib\collection\waypoints\waypoints.min.js" />
+    <None Include="wwwroot\lib\collection\wow\wow.js" />
+    <None Include="wwwroot\lib\collection\wow\wow.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="H3ArT.DataAccess">
       <HintPath>..\H3ArT.DataAccess\bin\Debug\net8.0\H3ArT.DataAccess.dll</HintPath>
     </Reference>
