@@ -12,7 +12,36 @@
 
     <link href="~/css/app.css" rel="stylesheet" />
     <link href="~/css/theme.css" rel="stylesheet" />
+    <script src="http://sibeeshpassion.com/content/scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript">
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+            console.log('Cannot download')
+        });
+    </script>
+    <script>
+        document.onkeypress = function (event) {
+            event = (event || window.event);
+            if (event.keyCode == 123) {
+                return false;
+            }
+        }
+        document.onmousedown = function (event) {
+            event = (event || window.event);
+            if (event.keyCode == 123) {
+                return false;
+            }
+        }
+        document.onkeydown = function (event) {
+            event = (event || window.event);
+            if (event.keyCode == 123) {
+                return false;
+            }
+        }
+    </script>
 </head>
+
 
 <body>
 
@@ -23,13 +52,13 @@
     </div>
     <div class="container mb-4 position-relative">
         @{
-            string avatarImageSrc = string.IsNullOrEmpty(Model.Artist.AvatarImage) ? "~/image/defaultava/default.jpg" : Model.Artist.AvatarImage;
+            string avatarImageSrc = string.IsNullOrEmpty(Model.User.AvatarImage) ? "~/image/defaultava/default.jpg" : Model.User.AvatarImage;
         }
 
         <img src="@Url.Content(avatarImageSrc)" class="mt-neg100 mb-4 rounded-circle" width="128" alt="avatar">
 
 
-        <h1 class="font-weight-bold title">@Model.Artist.FullName</h1>
+        <h1 class="font-weight-bold title">@Model.User.FullName</h1>
         <p>
             I love Art, Web Design, Photography, Design, Illustration
         </p>
@@ -113,14 +142,14 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button asp-action="ReportArtist" asp-route-artistID="@Model.Artist.Id" type="submit" class="btn btn-primary" form="centeredRadioForm">Submit</button>
+                                <button asp-action="ReportArtist" asp-route-artistID="@Model.User.Id" type="submit" class="btn btn-primary" form="centeredRadioForm">Submit</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
             <div>
-                <a asp-action="ViewBlog" asp-route-artistID="@Model.Artist.Id" style="color: #00a67d;">
+                <a asp-action="ViewBlog" asp-route-artistID="@Model.User.Id" style="color: #00a67d;">
                     <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> View my blog
                 </a>
             </div>
