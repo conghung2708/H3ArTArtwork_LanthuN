@@ -75,11 +75,23 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeaderFromDb.OrderStatus = SD.StatusDone;
 
-            if(orderHeaderFromDb.IsPackageOrder == true)
+            // get information of user buy the package
+            var userID = orderHeaderFromDb.ApplicationUserId;
+            var applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userID);
+
+            //assign buyerID for artwork
+            var orderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderHeaderFromDb.Id);
+            foreach(var orderDetail in orderDetails)
             {
-                // get information of user buy the package
-                var userID = orderHeaderFromDb.ApplicationUserId;
-                var applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userID);
+                var artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == orderDetail.ArtworkId);
+                artwork.buyerId = userID;
+                _unitOfWork.ArtworkObj.Update(artwork);
+                _unitOfWork.Save();
+            }
+
+            if (orderHeaderFromDb.IsPackageOrder == true)
+            {
+               
 
                 // get the package information
                 var orderDetailPackage = _unitOfWork.OrderDetailPackageObj.Get(u => u.orderHeaderId == orderHeaderFromDb.Id);
@@ -93,7 +105,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
             _unitOfWork.OrderHeaderObj.Update(orderHeaderFromDb);
             _unitOfWork.Save();
-            TempData["Success"] = "Order Shipped Sucessfully";
+            TempData["Success"] = "Order Completed Sucessfully";
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
 
         }
