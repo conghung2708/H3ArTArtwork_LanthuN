@@ -144,6 +144,12 @@
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
 
                     </div>
+                    <div class="input-box">
+                        <input asp-for="Input.Phone" autocomplete="phone" aria-required="true" type="text" class="input-field" placeholder="Phone Number" />
+                        <i class="bx bx-phone"></i>
+                        <span asp-validation-for="Input.Phone" class="text-danger"></span>
+
+                    </div>
                     <div class="input-box" style="">
                         <select asp-for="Input.Gender" id="genderSelect" class="input-field">
                             <option value="true" style="color: black;">Male</option>

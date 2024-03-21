@@ -1,5 +1,5 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
     {
         Layout = parentLayout.ToString();
     }
@@ -8,6 +8,12 @@
         Layout = "/Views/Shared/_Layout.cshtml";
     }
 }
+
+<style>
+    h1, h2 {
+        text-align: center;
+    }
+</style>
 
 <h1>Manage your account</h1>
 
@@ -26,4 +32,4 @@
 
 @section Scripts {
     @RenderSection("Scripts", required: false)
-}
+    }

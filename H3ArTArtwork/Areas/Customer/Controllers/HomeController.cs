@@ -1,4 +1,5 @@
 using H3ArT.DataAccess.Repository.IRepository;
+using H3ArT.Models;
 using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
 using H3ArT.Utility;
@@ -32,6 +33,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             IEnumerable<Artwork> artworkList;
             if (categoryId.HasValue)
             {
+
                 artworkList = _unitOfWork.ArtworkObj.
                     GetAll(a => a.CategoryId == categoryId && (search == null || a.Title.Contains(search)));
             }
@@ -40,13 +42,15 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 artworkList = _unitOfWork.ArtworkObj.
                     GetAll(a => search == null || a.Title.Contains(search), includeProperties: "Category");
             }
+            artworkList = _unitOfWork.ArtworkObj.GetAll(includeProperties: "ApplicationUser");
             return View(artworkList);
         }
 
       
         public IActionResult Details(int artworkId)
         {
-            if(User.IsInRole(SD.Role_Admin))
+            IEnumerable<Artwork> artworkList;
+            if (User.IsInRole(SD.Role_Admin))
             {
                 TempData["error"] = "Admin cannot see the artwork detail";
                 return RedirectToAction(nameof(Index));
@@ -58,12 +62,14 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 TempData["error"] = "This artwork is bought or reported";
                 return RedirectToAction(nameof(Index));
             }
+            artworkList = _unitOfWork.ArtworkObj.GetAll(includeProperties: "ApplicationUser");
+            artworkList = _unitOfWork.ArtworkObj.GetAll(includeProperties: "Category");
             ShoppingCart shoppingCart = new()
             {
                 Artwork = artworkFromDb,
                 Count = 1,
                 ArtworkId = artworkId,
-                RelatedArtworks = _unitOfWork.ArtworkObj.GetAll(includeProperties: "Category"),
+                RelatedArtworks = artworkList,
                 ArtistId = artworkFromDb.ArtistId
             };
 
@@ -125,7 +131,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             UserVM userVM = new()
             {
                 User = _unitOfWork.ApplicationUserObj.Get(u => u.Id == artistID),
-                ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.ArtistId == artistID)
+                ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.ArtistId == artistID, includeProperties: "ApplicationUser")
             };
             return View(userVM);
         }
