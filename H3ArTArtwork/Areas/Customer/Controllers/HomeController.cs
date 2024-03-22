@@ -38,7 +38,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             if (categoryId.HasValue)
             {
                 artworkList = _unitOfWork.ArtworkObj
-                    .GetAll(a => a.CategoryId == categoryId && (search == null || a.Title.Contains(search)), includeProperties: "ApplicationUser");
+                    .GetAll(a => a.CategoryId == categoryId && (search == null || a.Title.Contains(search)), includeProperties: "Category,ApplicationUser");
                 category = _unitOfWork.CategoryObj
                     .Get(a => a.CategoryId == categoryId);
             }
