@@ -79,6 +79,7 @@ a, .a:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+    color: white;
 }
 
 .below {
@@ -105,8 +106,9 @@ a, .a:hover {
     -webkit-transition: ease .2s;
     transition: ease .2s;
     background-color: #000000;
-    cursor: -webkit-zoom-in;
+    /*cursor: -webkit-zoom-in;*/
     cursor: zoom-in;
+    color: white;
 }
 
 /* line 55, src/assets/scss/theme.scss */
