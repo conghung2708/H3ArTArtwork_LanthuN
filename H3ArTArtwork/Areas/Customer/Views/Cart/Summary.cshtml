@@ -1,8 +1,10 @@
 @using H3ArT.Models.ViewModels
 @using System.Globalization
 @model ShoppingCartVM
+
 <form method="post">
     <br />
+    <input asp-for="OrderHeader.Id" hidden/>
     <div class="container">
         <div class="card shadow border-0">
 
@@ -32,7 +34,7 @@
                                     <label>Name</label>
                                 </div>
                                 <div class="col-9">
-                                    <input asp-for="OrderHeader.Name" disabled class="form-control" />
+                                    <input asp-for="OrderHeader.Name"  class="form-control" />
                                     <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
                                 </div>
                             </div>
@@ -41,19 +43,10 @@
                                     <label>Phone</label>
                                 </div>
                                 <div class="col-9">
-                                    <input asp-for="OrderHeader.PhoneNumber" disabled class="form-control" />
+                                    <input asp-for="OrderHeader.PhoneNumber"  class="form-control" />
                                     <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
                                 </div>
-                            </div>
-                            <div class="row my-1">
-                                <div class="col-3">
-                                    <label>Email</label>
-                                </div>
-                                <div class="col-9">
-                                    <input asp-for="OrderHeader.ApplicationUser.Email" disabled class="form-control" />
-                                    <span asp-validation-for="OrderHeader.ApplicationUser.Email" class="text-danger"></span>
-                                </div>
-                            </div>
+                            </div>            
                         </div>
                         <div class="col-12 col-lg-5 offset-lg-1">
                             <h4 class="d-flex justify-content-between align-items-center mb-3">
