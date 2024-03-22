@@ -104,7 +104,7 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
             public IEnumerable<SelectListItem> RoleList { get; set; }
 
             [Phone]
-            [Required]
+            [Required(ErrorMessage = "Phone Number is required")]
             [Display(Name = "Phone number")]
             [RegularExpression(@"^0\d{9}$", ErrorMessage = "Phone number must start with 0 and have 10 digits.")]
             [MaxLength(10, ErrorMessage = "Phone number cannot exceed 10 characters.")]
