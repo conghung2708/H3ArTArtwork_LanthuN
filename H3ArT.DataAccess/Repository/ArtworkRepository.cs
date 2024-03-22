@@ -29,6 +29,7 @@ namespace H3ArT.DataAccess.Repository
                 artworkFromDb.CategoryId = artwork.CategoryId;
                 artworkFromDb.IsBought = artwork.IsBought;
                 artworkFromDb.ReportedConfirm = artwork.ReportedConfirm;
+                artworkFromDb.buyerId = artwork.buyerId;
                 if (artwork.ImageUrl != null)
                 {
                     artworkFromDb.ImageUrl = artwork.ImageUrl;

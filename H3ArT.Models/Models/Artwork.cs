@@ -45,5 +45,7 @@ namespace H3ArT.Models.Models
         public bool ReportedConfirm { get; set; }
 
         public DateTime? CreateAt { get; set; }
+
+        public String? buyerId { get; set; }
     }
 }

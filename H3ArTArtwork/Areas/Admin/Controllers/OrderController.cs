@@ -79,7 +79,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
             _unitOfWork.OrderHeaderObj.Update(orderHeaderFromDb);
             _unitOfWork.Save();
-            TempData["Success"] = "Order Shipped Sucessfully";
+            TempData["Success"] = "Order Completed Sucessfully";
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
         }
 
