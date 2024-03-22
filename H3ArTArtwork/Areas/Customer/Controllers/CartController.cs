@@ -112,6 +112,12 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
           
             //ShoppingCartVM will automatically be populated
+            //ShoppingCartVM = new()
+            //{
+            //    ShoppingCartList = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == userId, includeProperties: "Artwork"),
+            //    OrderHeader = new()
+            //};
+            ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
             ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == userId, includeProperties: "Artwork");
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 
@@ -183,6 +189,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusPending;
 
                 _unitOfWork.OrderHeaderObj.Add(ShoppingCartVM.OrderHeader);
+                //_unitOfWork.ApplicationUserObj.Remove(ShoppingCartVM.OrderHeader.ApplicationUser);
                 _unitOfWork.Save();
                 foreach (var cart in ShoppingCartVM.ShoppingCartList)
                 {
@@ -230,6 +237,9 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             //create sessionId and paymentIntentId
             Session session = service.Create(options);
             _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+
+            //var testVar = ShoppingCartVM.ShoppingCartList.
+            //_unitOfWork.ApplicationUserObj.Remove(OrderHeader.);
             _unitOfWork.Save();
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);

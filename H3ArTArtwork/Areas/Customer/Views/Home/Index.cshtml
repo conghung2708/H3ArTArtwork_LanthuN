@@ -225,7 +225,7 @@
                                         </div>
                                         <div style="padding:0;margin-top:0.25rem;">
                                             @{
-                                                string avatarImageSrc = string.IsNullOrEmpty(artwork.ApplicationUser.AvatarImage) ? "~/image/defaultava/default.jpg" : artwork.ApplicationUser.AvatarImage;                                             
+                                                string avatarImageSrc = string.IsNullOrEmpty(artwork.ApplicationUser.AvatarImage) ? "~/image/defaultava/default.jpg" : artwork.ApplicationUser.AvatarImage;
                                             }
                                             <img src="@Url.Content(avatarImageSrc)" class="rounded-circle" width="30vh" alt="avatar">
                                             
