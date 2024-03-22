@@ -80,6 +80,16 @@
             <div class="section-title text-center">
                 <h1 class="display-5 mb-5">My collection</h1>
             </div>
+            <!-- Search Bar -->
+            @* <form method="get" class="position-absolute bottom-0 end-0"> *@
+            <form method="get" class="form-inline my-2 my-lg-0 ml-auto">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search by artwork...">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </form>
             <div class="row g-4">
                 @foreach (var artwork in Model.ArtworkList)
                 {
