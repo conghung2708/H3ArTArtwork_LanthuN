@@ -76,12 +76,23 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         {
             var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeaderFromDb.OrderStatus = SD.StatusDone;
+            var userID = orderHeaderFromDb.ApplicationUserId;
+            var applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userID);
 
-            _unitOfWork.OrderHeaderObj.Update(orderHeaderFromDb);
-            _unitOfWork.Save();
+            var orderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderHeaderFromDb.Id);
+            foreach (var orderDetail in orderDetails)
+            {
+                var artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == orderDetail.ArtworkId);
+                artwork.buyerId = userID;
+                _unitOfWork.ArtworkObj.Update(artwork);
+                _unitOfWork.Save();
+            }
+
             TempData["Success"] = "Order Completed Sucessfully";
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
         }
+
+
 
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Creator + "," + SD.Role_Customer)]
