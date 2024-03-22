@@ -4,6 +4,7 @@ using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
 using H3ArT.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
@@ -19,13 +20,17 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _config;
+        private readonly UserManager<IdentityUser> _userManager;
+
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
-        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender, IConfiguration config)
+
+        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender, IConfiguration config, UserManager<IdentityUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
             _config = config;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -86,8 +91,10 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             };
             ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 
+ 
             ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.FullName;
             ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
+
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
                 cart.Price = cart.Artwork.Price;
@@ -103,12 +110,12 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
+          
             //ShoppingCartVM will automatically be populated
             ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == userId, includeProperties: "Artwork");
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 
-            ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
+            ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
             ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
 
             List<string> purchasedArtworks = new List<string>();
@@ -130,11 +137,11 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 return View(ShoppingCartVM);
             }
 
-            if (!ModelState.IsValid)
-            {
-                // If model state is not valid, return the view with validation errors
-                return View(ShoppingCartVM); // or any other suitable action result
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    // If model state is not valid, return the view with validation errors
+            //    return View(ShoppingCartVM); // or any other suitable action result
+            //}
             // bam place order ma khong thanh toan => pending
             // lay ra nhung cai nay de tranh update 2 lan vao doan code o ben duoi
             var existingOrder = _unitOfWork.OrderHeaderObj.Get(o => o.ApplicationUserId == userId && o.PaymentStatus == SD.PaymentStatusPending);
