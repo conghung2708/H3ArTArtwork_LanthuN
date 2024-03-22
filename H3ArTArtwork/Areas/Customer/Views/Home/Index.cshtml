@@ -130,29 +130,58 @@
     <body>
         <section class="mt-4 mb-5">
             <!-- Navigation Bar for Artwork -->
-            <div class="container mb-4">
+            <div class="container-fluid mb-4">
                 <h1 class="font-weight-bold title">Explore</h1>
-                <div class="row">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-white pl-2 pr-2">
-                        <button class="navbar-light navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExplore" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse " id="navbarsExplore">
-                            <!-- Filter by Category -->
-                            @await Component.InvokeAsync("CategoryList")
 
-                            <!-- Search Bar -->
-                            <form method="get" class="position-absolute bottom-0 end-0">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search...">
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-primary">Search</button>
-                                    </div>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                        <!-- Filter by Category -->
+                        @await Component.InvokeAsync("CategoryList")
+
+                        <form asp-action="Index" method="get">
+                            <input type="hidden" name="clearFilters" value="true" />
+                            <a asp-action="Index" class="ml-2">Clear Filters</a>
+                        </form>
+
+                        <!-- Search Bar -->
+                        @* <form method="get" class="position-absolute bottom-0 end-0"> *@
+                        <form method="get" class="form-inline my-2 my-lg-0 ml-auto">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search by artwork...">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Search</button>
                                 </div>
-                            </form>
-                        </div>
-                    </nav>
-                </div>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
+                
+                <!-- Alert for the chosen filter -->
+                @if (!string.IsNullOrEmpty(ViewBag.ProductType) || ViewBag.Category != null || !string.IsNullOrEmpty(ViewBag.Search))
+                {
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        Results for <strong>
+                            @if (!string.IsNullOrEmpty(ViewBag.ProductType))
+                            {
+                                <span>@ViewBag.ProductType Artwork</span>
+                            }
+                            @if (ViewBag.Category != null)
+                            {
+                                <span>@ViewBag.Category Category</span>
+                            }
+                            @if (!string.IsNullOrEmpty(ViewBag.Search))
+                            {
+                                <span>Search: @ViewBag.Search</span>
+                            }
+                        </strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
             </div>
             <!-- End of Navigation Bar for Artwork -->
             <!-- Section for Product-->
@@ -165,7 +194,7 @@
                             {
                                 <div class="card card-pin">
                                     <div class="position-relative">
-                                        <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
+                                        <img loading="lazy" class="card-img" src="@artwork.ImageUrl" alt="Card image">
                                         @if (artwork.IsPremium == true)
                                         {
                                             <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>

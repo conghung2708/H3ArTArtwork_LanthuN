@@ -30,6 +30,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         {
             return View();
         }
+
         [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer + "," + SD.Role_Admin)]
         public IActionResult Details(int orderId)
         {
@@ -41,6 +42,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
             return View(OrderVM);
         }
+
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin)]
         public IActionResult UpdateOrderDetail()
@@ -75,41 +77,11 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeaderFromDb.OrderStatus = SD.StatusDone;
 
-            // get information of user buy the package
-            var userID = orderHeaderFromDb.ApplicationUserId;
-            var applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userID);
-
-            //assign buyerID for artwork
-            var orderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderHeaderFromDb.Id);
-            foreach(var orderDetail in orderDetails)
-            {
-                var artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == orderDetail.ArtworkId);
-                artwork.buyerId = userID;
-                _unitOfWork.ArtworkObj.Update(artwork);
-                _unitOfWork.Save();
-            }
-
-            if (orderHeaderFromDb.IsPackageOrder == true)
-            {
-               
-
-                // get the package information
-                var orderDetailPackage = _unitOfWork.OrderDetailPackageObj.Get(u => u.orderHeaderId == orderHeaderFromDb.Id);
-                var package = _unitOfWork.PackageObj.Get(u => u.PackageId == orderDetailPackage.packageId);
-
-                // update amountPost for user
-                applicationUser.AvaiblePost = package.AmountPost;
-                _unitOfWork.ApplicationUserObj.Update(applicationUser);
-                _unitOfWork.Save();
-            }
-
             _unitOfWork.OrderHeaderObj.Update(orderHeaderFromDb);
             _unitOfWork.Save();
             TempData["Success"] = "Order Completed Sucessfully";
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
-
         }
-
 
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Creator + "," + SD.Role_Customer)]
@@ -204,6 +176,4 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
         #endregion
     }
-
-
 }

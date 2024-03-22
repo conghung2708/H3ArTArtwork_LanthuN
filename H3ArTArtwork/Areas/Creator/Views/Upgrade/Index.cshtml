@@ -22,9 +22,9 @@
 
     <main>
         <!-- Back to Home button -->
-        <a asp-area="Customer" asp-controller="Home" asp-action="Index" type="button" class="btn pricing-plan-home-btn btn-primary mt-3 text-dark">
+        <a asp-area="Customer" asp-controller="Home" asp-action="Index" type="button" class="btn pricing-plan-home-btn btn-outline-primary mt-3 text-white">
             <i class="bi bi-house"></i>
-            Home
+            Back Home
         </a>
         <div class="container">
             <h5 class="text-center pricing-table-subtitle text-light">PRICING PLAN</h5>
@@ -39,6 +39,7 @@
                                 <p class="pricing-plan-title">@package.PackageName</p>
                                 <h3 class="pricing-plan-cost ml-auto">@package.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</h3>
                                 <ul class="pricing-plan-features">
+                                    <li>@package.AmountPost post artwork turn will available when you buy this package</li>
                                     <li>@Html.Raw(package.Description)</li>
                                 </ul>
                                 <form method="get" asp-action="SummaryPackage">
