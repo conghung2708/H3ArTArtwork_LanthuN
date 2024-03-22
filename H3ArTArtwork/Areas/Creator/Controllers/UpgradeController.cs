@@ -171,11 +171,18 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             // If the payment status is "paid", update the order status to approved
             if (session.PaymentStatus.ToLower() == "paid")
             {
+                //_unitOfWork.OrderHeaderObj.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
+                //_unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                //_unitOfWork.Save();
                 _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-                _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusDone, SD.PaymentStatusApproved);
+                _unitOfWork.Save();
+
+                // update amountPost for user
+                applicationUser.AvaiblePost = package.AmountPost;
+                _unitOfWork.ApplicationUserObj.Update(applicationUser);
                 _unitOfWork.Save();
             }
-
             return View(package);
         }
 
