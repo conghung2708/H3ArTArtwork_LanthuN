@@ -54,7 +54,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
 
                 if (applicationUser.AvaiblePost <= 0 || applicationUser.AvaiblePost == null)
                 {
-                    TempData["error"] = "You do not have enough posting credits to place an order. Please purchase a package to continue.";
+                    TempData["error"] = "Please purchase a package to upload your artwork.";
                     return RedirectToAction("Index", "Artwork");
                 }
 

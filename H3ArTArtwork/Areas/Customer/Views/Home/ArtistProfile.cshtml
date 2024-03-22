@@ -132,9 +132,19 @@
 
                 @foreach (var artwork in Model.ArtworkList)
                 {
-
                     <div class="card card-pin">
-                        <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
+                        <div class="position-relative">
+                            <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
+                            @if (artwork.IsPremium == true)
+                            {
+                                <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>
+                            }
+                            @if (artwork.IsBought == true)
+                            {
+                                <span class="badge badge-pill badge-danger position-absolute top-0 start-50 m-1">Bought</span>
+                            }
+                        </div>
+
                         <div class="overlay">
                             <h2 class="card-title title">@artwork.Title</h2>
                             <div class="more">
