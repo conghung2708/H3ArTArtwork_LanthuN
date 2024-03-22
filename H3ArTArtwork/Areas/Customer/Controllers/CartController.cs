@@ -240,6 +240,16 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             OrderHeader orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id, includeProperties: "ApplicationUser");
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == orderHeader.ApplicationUserId, includeProperties: "Artwork").ToList();
             List<OrderDetail> orderDetail = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderHeader.Id, includeProperties: "Artwork").ToList();
+
+            
+            foreach (var orderDetailItem in orderDetail)
+            {
+                var artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == orderDetailItem.ArtworkId);
+                artwork.buyerId = orderHeader.ApplicationUserId;
+                _unitOfWork.ArtworkObj.Update(artwork);
+                _unitOfWork.Save();
+            }
+
             //this is an order by customer
             var service = new SessionService();
             Session session = service.Get(orderHeader.SessionId);
@@ -247,7 +257,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             if (session.PaymentStatus.ToLower() == "paid")
             {
                 _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-                _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusDone, SD.PaymentStatusApproved);
                 _unitOfWork.Save();
                 // Xây dựng HTML cho bảng
                 StringBuilder tableHtml = new StringBuilder();
