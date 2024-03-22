@@ -19,9 +19,9 @@ namespace H3ArT.Models
 
         public bool Status { get; set; }
 
-        [RegularExpression(@"^0\d{9}$", ErrorMessage = "Phone number must start with 0 and have 10 digits.")]
-        [MaxLength(10, ErrorMessage = "Phone number cannot exceed 10 characters.")]
-        public string PhoneNumber { get; set; }
+        //[RegularExpression(@"^0\d{9}$", ErrorMessage = "Phone number must start with 0 and have 10 digits.")]
+        //[MaxLength(10, ErrorMessage = "Phone number cannot exceed 10 characters.")]
+        //public string PhoneNumber { get; set; }
 
         public string? AvatarImage { get; set; }
         [NotMapped]
