@@ -57,7 +57,17 @@
             <div class="row justify-content-center">
                 <div class="col-md-7">
                     <article class="card">
-                        <img class="card-img-top mb-2" src="@Model.Artwork.ImageUrl" alt="Card image">
+
+                        <div class="position-relative">
+                            <img class="card-img-top mb-2" src="@Model.Artwork.ImageUrl" alt="Card image">
+                            @if (@Model.Artwork.IsBought == false)
+                            {
+                                <span class="badge badge-pill position-absolute top-0 start-0 m-1">
+                                    <img src="~/image/login/WhiteLogo.png" alt="Cart image" style="width: 100px; height: auto;">
+                                </span>
+                            }
+                        </div>
+
 
                         <div class="card-body">
                             <h1 class="card-title display-4" style="text-align: center;">
@@ -172,11 +182,7 @@
                                 </div>
                                 <form method="post">
                                     <input asp-for="ArtworkId" hidden />
-                                    @{
-                                        var checkCreator = User.IsInRole(SD.Role_Creator);
-                                        var checkCustomer = User.IsInRole(SD.Role_Customer);
-                                        var a = 10;
-                                    }
+
                                     @if (!User.IsInRole(SD.Role_Admin) && !User.IsInRole(SD.Role_Moderator))
                                     {
                                         <button type="submit"
@@ -220,6 +226,7 @@
                     @{
                         var random = new Random();
                         var randomArtworks = Model.RelatedArtworks.OrderBy(x => random.Next()).Take(10);
+                        randomArtworks = Model.RelatedArtworks.OrderBy(x => random.Next()).Take(10);
                     }
 
                     @* @foreach (var Artwork in randomArtworks)

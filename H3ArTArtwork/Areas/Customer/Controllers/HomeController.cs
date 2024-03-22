@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Globalization;
 using System.Security.Claims;
 
 namespace H3ArTArtwork.Areas.Customer.Controllers
@@ -28,25 +29,67 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index(int? categoryId, string search)
+        //public IActionResult Index(int? categoryId, string search)
+        //{
+        //    IEnumerable<Artwork> artworkList;
+        //    if (categoryId.HasValue)
+        //    {
+        //        artworkList = _unitOfWork.ArtworkObj.
+        //            GetAll(a => a.CategoryId == categoryId && (search == null || a.Title.Contains(search)));
+        //    }
+        //    else
+        //    {
+        //        artworkList = _unitOfWork.ArtworkObj.
+        //            GetAll(a => search == null || a.Title.Contains(search), includeProperties: "Category");
+        //    }
+        //    return View(artworkList);
+        //}
+        public IActionResult Index(int? categoryId, string search, string? productType)
         {
             IEnumerable<Artwork> artworkList;
+            Category category = new();
+
+            // Filter by category if categoryId is provided
             if (categoryId.HasValue)
             {
-
-                artworkList = _unitOfWork.ArtworkObj.
-                    GetAll(a => a.CategoryId == categoryId && (search == null || a.Title.Contains(search)));
+                artworkList = _unitOfWork.ArtworkObj
+                    .GetAll(a => a.CategoryId == categoryId && (search == null || a.Title.Contains(search)));
+                category = _unitOfWork.CategoryObj
+                    .Get(a => a.CategoryId == categoryId);
             }
             else
             {
-                artworkList = _unitOfWork.ArtworkObj.
-                    GetAll(a => search == null || a.Title.Contains(search), includeProperties: "Category");
+                artworkList = _unitOfWork.ArtworkObj
+                    .GetAll(a => search == null || a.Title.Contains(search), includeProperties: "Category");
             }
-            artworkList = _unitOfWork.ArtworkObj.GetAll(includeProperties: "ApplicationUser");
+
+            // Filter by product type
+            if (!string.IsNullOrEmpty(productType))
+            {
+                switch (productType.ToLower())
+                {
+                    case "free":
+                        artworkList = artworkList.Where(a => !a.IsPremium);
+                        break;
+                    case "premium":
+                        artworkList = artworkList.Where(a => a.IsPremium);
+                        break;
+                    // If productType is not "free" or "premium", show all artworks
+                    default:
+                        break;
+                }
+            }
+            if (productType != null)
+            {
+                ViewBag.ProductType = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(productType);
+            }
+            ViewBag.Category = category.CategoryName;
+            ViewBag.Search = search;
+
             return View(artworkList);
         }
 
-      
+
         public IActionResult Details(int artworkId)
         {
             IEnumerable<Artwork> artworkList;
@@ -69,7 +112,8 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 Artwork = artworkFromDb,
                 Count = 1,
                 ArtworkId = artworkId,
-                RelatedArtworks = artworkList,
+                //RelatedArtworks = _unitOfWork.ArtworkObj.GetAll(includeProperties: "Category"),
+                RelatedArtworks = _unitOfWork.ArtworkObj.GetAll(a => a.CategoryId == artworkFromDb.CategoryId && !a.IsBought),
                 ArtistId = artworkFromDb.ArtistId
             };
 
