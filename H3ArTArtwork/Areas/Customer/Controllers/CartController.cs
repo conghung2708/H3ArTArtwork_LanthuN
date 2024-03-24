@@ -159,6 +159,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             if (existingOrder != null)
             {
                 // đây là cái đoạn cập nhật nè
+                existingOrder.OrderTotal = ShoppingCartVM.OrderHeader.OrderTotal;
                 ShoppingCartVM.OrderHeader = existingOrder;
                 _unitOfWork.OrderHeaderObj.Update(existingOrder);
                 _unitOfWork.Save();
