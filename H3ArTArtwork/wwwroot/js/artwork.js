@@ -8,7 +8,17 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/creator/artwork/getall' },
         "columns": [
-            { data: 'title', "width": "15%" },
+            {
+                data: 'title',
+                "render": function (data, type, row) {
+                    if (row.isPremium) {
+                        return `${data} <span class="badge rounded-pill bg-info text-dark">Premium</span>`;
+                    } else {
+                        return data;
+                    }
+                },
+                "width": "15%"
+            },
             {
                 data: 'imageUrl',
                 "render": function (data) {
