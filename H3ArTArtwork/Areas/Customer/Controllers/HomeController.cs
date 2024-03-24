@@ -136,12 +136,15 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             ShoppingCart cartFromDb = _unitOfWork.ShoppingCartObj.Get(u => u.BuyerId == userId && u.ArtworkId == shoppingCart.ArtworkId);
             if (cartFromDb != null)
             {
+                
                 //cartFromDb.Count += shoppingCart.Count;
 
                 // Update count to 1 if it's already in the cart
                 cartFromDb.Count = 1;
                 _unitOfWork.ShoppingCartObj.Update(cartFromDb);
                 _unitOfWork.Save();
+                TempData["error"] = "You added this artwork before!";
+                return RedirectToAction(nameof(Index));
             }
             else
             {
