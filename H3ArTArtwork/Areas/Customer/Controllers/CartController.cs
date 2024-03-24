@@ -20,17 +20,17 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _config;
-        private readonly UserManager<IdentityUser> _userManager;
+     
 
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
 
-        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender, IConfiguration config, UserManager<IdentityUser> userManager)
+        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
             _config = config;
-            _userManager = userManager;
+           
         }
         public IActionResult Index()
         {
@@ -94,6 +94,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
  
             ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.FullName;
             ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
+            ShoppingCartVM.OrderHeader.Email = ShoppingCartVM.OrderHeader.ApplicationUser.Email;
 
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
@@ -117,7 +118,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             //    ShoppingCartList = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == userId, includeProperties: "Artwork"),
             //    OrderHeader = new()
             //};
-            ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+            //ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
             ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == userId, includeProperties: "Artwork");
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 
@@ -250,6 +251,16 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             OrderHeader orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id, includeProperties: "ApplicationUser");
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == orderHeader.ApplicationUserId, includeProperties: "Artwork").ToList();
             List<OrderDetail> orderDetail = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderHeader.Id, includeProperties: "Artwork").ToList();
+
+            
+            foreach (var orderDetailItem in orderDetail)
+            {
+                var artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == orderDetailItem.ArtworkId);
+                artwork.buyerId = orderHeader.ApplicationUserId;
+                _unitOfWork.ArtworkObj.Update(artwork);
+                _unitOfWork.Save();
+            }
+
             //this is an order by customer
             var service = new SessionService();
             Session session = service.Get(orderHeader.SessionId);
@@ -257,7 +268,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             if (session.PaymentStatus.ToLower() == "paid")
             {
                 _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-                _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusDone, SD.PaymentStatusApproved);
                 _unitOfWork.Save();
                 // Xây dựng HTML cho bảng
                 StringBuilder tableHtml = new StringBuilder();

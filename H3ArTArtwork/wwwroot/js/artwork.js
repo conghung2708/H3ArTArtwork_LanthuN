@@ -35,7 +35,7 @@ function loadDataTable() {
                 data: 'isBought',
                 "render": function (data, type, row) {
                     if (data) {
-                        return `<div class="text-center"><button class="btn btn-success mx-auto">Bought</button></div>`;
+                        return `<div class="text-center"><a href="/Admin/Order/GetOrderDetail?artworkId=${row.artworkId}" class="btn btn-success mx-auto">View Order</a></div>`;
                     } else {
                         return `<div class="w-100 btn-group" role="group">
                             <a href="/creator/artwork/upsert?id=${row.artworkId}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>

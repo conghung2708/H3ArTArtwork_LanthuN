@@ -36,6 +36,8 @@ namespace H3ArT.Models.Models
         [MaxLength(10, ErrorMessage = "Phone number cannot exceed 10 characters.")]
         public string? PhoneNumber { get; set; }
 
+        public string? Email {  get; set; }
+
 
     }
 }
