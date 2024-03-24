@@ -26,4 +26,4 @@
 -   ### Main process report
     -   **Link:** [Main Process](Document/MAIN_PROCESS_REPORT.xlsx)
 -   ### Software requirements specification
-    -   **Link:** [The old repositories](Document/SRS/Team_4_Software_Requirment_Specification-Artworks_Sharing_Platform.docx)
+    -   **Link:** [Document/SRS/Team_4_Software_Requirment_Specification-Artworks_Sharing_Platform.docx](Document/SRS/Team_4_Software_Requirment_Specification-Artworks_Sharing_Platform.docx)
