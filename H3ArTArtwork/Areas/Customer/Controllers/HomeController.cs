@@ -292,7 +292,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
         }
 
         [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer)]
-        public IActionResult MyCollection()
+        public IActionResult MyCollection(string search)
         {
             if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Moderator))
             {
@@ -302,11 +302,25 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            UserVM userVM = new()
+
+            UserVM userVM = new();
+            if (!string.IsNullOrWhiteSpace(search))
             {
-                User = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId),
-                ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.buyerId == userId)
-            };
+                userVM = new()
+                {
+                    User = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId),
+                    ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.buyerId == userId && u.Title.Contains( search))
+                };
+            }
+            else
+            {
+                userVM = new()
+                {
+                    User = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId),
+                    ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.buyerId == userId)
+                };
+            }
+            
             return View(userVM);
         }
 
