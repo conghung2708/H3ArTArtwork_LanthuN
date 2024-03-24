@@ -26,7 +26,7 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
         [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Admin)]
         public IActionResult Index()
         {
-            //get the id
+            
 
             return View();
         }
@@ -67,13 +67,21 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             {
                 //update
                 artworkVM.Artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == id, includeProperties: "Category,ApplicationUser");
+                if (artworkVM.Artwork.IsBought)
+                {
+                    TempData["error"] = "Cannot update the purchased artwork";
+                    return RedirectToAction("Index", "Artwork");
+                }
                 return View(artworkVM);
             }
         }
+
         [HttpPost]
         [Authorize(Roles = SD.Role_Creator)]
         public IActionResult Upsert(ArtworkVM artworkVM, IFormFile? file)
         {
+        
+
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 

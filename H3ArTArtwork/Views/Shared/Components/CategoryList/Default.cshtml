@@ -73,7 +73,7 @@
     <li class="nav-item dropdown">
 
         <a class="dropdown-toggle dropdown-item" href="#" id="productTypeDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Filter by Product Category
+            Filter by Artworks Category
         </a>
         <div class="dropdown-menu" aria-labelledby="productTypeDropdown">
             @foreach (var category in Model)
@@ -85,12 +85,12 @@
     <!-- Add dropdown for selecting product type -->
     <li class="nav-item dropdown">
         <a class="dropdown-toggle dropdown-item" href="#" id="productTypeDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Filter by Product Type
+            Filter by Artworks Type
         </a>
         <div class="dropdown-menu" aria-labelledby="productTypeDropdown">
-            <a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-productType="all">All Products</a>
-            <a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-productType="free">Free Products</a>
-            <a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-productType="premium">Premium Products</a>
+            <a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-productType="all">All Artworks</a>
+            <a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-productType="free">Free Artworks</a>
+            <a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-productType="premium">Premium Artworks</a>
         </div>
     </li>
 </ul>
