@@ -19,9 +19,11 @@
   <ItemGroup>
     <Reference Include="H3ArT.DataAccess">
       <HintPath>bin\Debug\net8.0\H3ArT.DataAccess.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="H3ArT.Models">
       <HintPath>..\H3ArT.Models\bin\Debug\net8.0\H3ArT.Models.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
 

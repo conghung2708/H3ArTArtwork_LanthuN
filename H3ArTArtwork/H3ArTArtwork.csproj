@@ -56,12 +56,15 @@
   <ItemGroup>
     <Reference Include="H3ArT.DataAccess">
       <HintPath>..\H3ArT.DataAccess\bin\Debug\net8.0\H3ArT.DataAccess.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="H3ArT.Models">
       <HintPath>..\H3ArT.Models\bin\Debug\net8.0\H3ArT.Models.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="H3ArT.Utility">
       <HintPath>..\H3ArT.Utility\bin\Debug\net8.0\H3ArT.Utility.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
 
