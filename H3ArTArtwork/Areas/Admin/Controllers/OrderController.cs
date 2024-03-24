@@ -34,9 +34,20 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer + "," + SD.Role_Admin)]
         public IActionResult Details(int orderId)
         {
+            var orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == orderId, includeProperties: "ApplicationUser");
+
+            if (orderHeader == null )
+            {
+                // Redirect to the previous page
+                TempData["error"] = "Order does not exist!";
+
+
+                return RedirectToAction("Index", "Home", new { area = "Customer" });
+            }
+
             OrderVM = new()
             {
-                OrderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == orderId, includeProperties: "ApplicationUser"),
+                OrderHeader = orderHeader,
                 OrderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderId, includeProperties: "Artwork")
             };
 
@@ -146,6 +157,22 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
         }
 
+
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Creator)]
+        public IActionResult GetOrderDetail(int artworkId)
+        {
+            var orderDetail = _unitOfWork.OrderDetailObj.Get(o => o.ArtworkId == artworkId);
+
+            if (orderDetail != null)
+            {
+             
+                return RedirectToAction("Details", new { orderId = orderDetail.OrderHeaderId });
+            }
+
+            TempData["error"] = "Order does not exist";
+            return RedirectToAction("GetAll", "Artwork");
+        }
+
         #region API CALLS
         [HttpGet]
         public IActionResult GetAll(string status)
@@ -156,6 +183,8 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             {
                 orderHeaderList = _unitOfWork.OrderHeaderObj.GetAll(includeProperties: "ApplicationUser").ToList();
             }
+            
+
             else
             {
                 //get the id
