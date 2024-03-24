@@ -20,17 +20,17 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _config;
-        private readonly UserManager<IdentityUser> _userManager;
+     
 
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
 
-        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender, IConfiguration config, UserManager<IdentityUser> userManager)
+        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
             _config = config;
-            _userManager = userManager;
+           
         }
         public IActionResult Index()
         {
@@ -94,6 +94,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
  
             ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.FullName;
             ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
+            ShoppingCartVM.OrderHeader.Email = ShoppingCartVM.OrderHeader.ApplicationUser.Email;
 
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
@@ -117,7 +118,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             //    ShoppingCartList = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == userId, includeProperties: "Artwork"),
             //    OrderHeader = new()
             //};
-            ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
+            //ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
             ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == userId, includeProperties: "Artwork");
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 
