@@ -36,7 +36,7 @@
                                     <label>Name</label>
                                 </div>
                                 <div class="col-9">
-                                    <input asp-for="OrderHeader.Name" class="form-control" />
+                                    <input readonly asp-for="OrderHeader.Name" class="form-control" />
                                     <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
                                 </div>
                             </div>
@@ -45,8 +45,17 @@
                                     <label>Phone</label>
                                 </div>
                                 <div class="col-9">
-                                    <input asp-for="OrderHeader.PhoneNumber" class="form-control" />
+                                    <input readonly asp-for="OrderHeader.PhoneNumber" class="form-control" />
                                     <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>Email</label>
+                                </div>
+                                <div class="col-9">
+                                    <input readonly asp-for="OrderHeader.Email" class="form-control" />
+                                    <span asp-validation-for="OrderHeader.Email" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +78,6 @@
                                 </li>
                             </ul>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -83,7 +91,7 @@
                 {
                     <div class="col-5 col-md-5">
                         <button type="submit" method="post" value="Place Order" disabled class="btn btn-primary form-control">Place Order</button>
-                        <p class="fst-italic text-danger h6">You cannot purchase a new package while your current package is @Model.ApplicationUser.AvaiblePost still active. Please wait until your current package expires.</p>
+                        <p class="fst-italic text-danger h6">Sorry, you cannot purchase another package as your current one is still active.</p>
                     </div>
                 }
 

@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -16,8 +17,38 @@
     <link href="~/css/app.css" rel="stylesheet" />
     <link href="~/css/theme.css" rel="stylesheet" />
     <style>
+
     </style>
+    <script src="http://sibeeshpassion.com/content/scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript">
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+            console.log('Cannot download')
+        });
+    </script>
+    <script>
+        document.onkeypress = function (event) {
+            event = (event || window.event);
+            if (event.keyCode == 123) {
+                return false;
+            }
+        }
+        document.onmousedown = function (event) {
+            event = (event || window.event);
+            if (event.keyCode == 123) {
+                return false;
+            }
+        }
+        document.onkeydown = function (event) {
+            event = (event || window.event);
+            if (event.keyCode == 123) {
+                return false;
+            }
+        }
+    </script>
 </head>
+
 
 <body>
 
@@ -26,14 +57,24 @@
             <div class="row justify-content-center">
                 <div class="col-md-7">
                     <article class="card">
-                        <img class="card-img-top mb-2" src="@Model.Artwork.ImageUrl" alt="Card image">
+
+                        <div class="position-relative">
+                            <img class="card-img-top mb-2" src="@Model.Artwork.ImageUrl" alt="Card image">
+                            @if (@Model.Artwork.IsBought == false)
+                            {
+                                <span class="badge badge-pill position-absolute top-0 start-0 m-1">
+                                    <img src="~/image/login/WhiteLogo.png" alt="Cart image" style="width: 100px; height: auto;">
+                                </span>
+                            }
+                        </div>
+
 
                         <div class="card-body">
                             <h1 class="card-title display-4" style="text-align: center;">
                                 @Model.Artwork.Title
                             </h1>
                             <div style="text-align: center;">
-                                <a asp-action="ArtistProfile" asp-route-artistId="@Model.ArtistId" style="font-size: smaller; display: inline-block;">Artist: @Model.Artwork.ApplicationUser.FullName</a>
+                                <a asp-action="ArtistProfile" asp-route-artistId="@Model.ArtistId" style="font-size: smaller; display: inline-block;">Creator: @Model.Artwork.ApplicationUser.FullName</a>
                             </div>
 
                             @Html.Raw(@Model.Artwork.Description)
@@ -44,6 +85,15 @@
                                     <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Report
                                 </a>
                             </div>
+                            @if (!Model.Artwork.IsPremium)
+                            {
+                            <div class="position-absolute end-0 pe-2 pt-4">
+                                <a asp-action="DownloadArtworkImage" asp-route-artworkId="@Model.ArtworkId">
+                                    <i class="fa fa-download" aria-hidden="true"></i> Download
+                                </a>
+                            </div>
+                            }
+                           
                             <!-- Modal -->
                             <div class="modal fade" id="centeredModal" tabindex="-1" aria-labelledby="centeredModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
@@ -141,11 +191,7 @@
                                 </div>
                                 <form method="post">
                                     <input asp-for="ArtworkId" hidden />
-                                    @{
-                                        var checkCreator = User.IsInRole(SD.Role_Creator);
-                                        var checkCustomer = User.IsInRole(SD.Role_Customer);
-                                        var a = 10;
-                                    }
+
                                     @if (!User.IsInRole(SD.Role_Admin) && !User.IsInRole(SD.Role_Moderator))
                                     {
                                         <button type="submit"
@@ -159,7 +205,7 @@
                             @* <small class="d-block"><a class="btn btn-sm btn-gray200" href="#"><i class="fa fa-external-link"></i> Visit Website</a></small> *@
                             <!-- Begin Comments -replace demowebsite with your own id
                             ================================================== -->
-                            <div id="comments" class="mt-4">
+                            <div id="comments" class="mt-4 pt-3">
                                 <div id="disqus_thread">
                                 </div>
                                 <script type="text/javascript">
@@ -189,9 +235,10 @@
                     @{
                         var random = new Random();
                         var randomArtworks = Model.RelatedArtworks.OrderBy(x => random.Next()).Take(10);
+                        randomArtworks = Model.RelatedArtworks.OrderBy(x => random.Next()).Take(10);
                     }
 
-                    @foreach (var Artwork in randomArtworks)
+                    @* @foreach (var Artwork in randomArtworks)
                     {
                         <div class="card card-pin">
                             <div class="position-relative">
@@ -211,6 +258,54 @@
                                 </div>
                             </div>
                         </div>
+                    } *@
+                    @foreach (var artwork in randomArtworks)
+                    {
+                        @if (!artwork.ReportedConfirm && !artwork.IsBought)
+                        {
+                            <div class="card card-pin" style="border-radius: 10px">
+                                <div class="position-relative">
+                                    <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
+                                    @if (artwork.IsPremium == true)
+                                    {
+                                        <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>
+                                    }
+                                    <a asp-action="Details" asp-route-artworkId="@artwork.ArtworkId">
+                                        <div class="overlay">
+                                            <h5 style="margin:0;padding:0" class="detail">More</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="below" style="padding:10px">
+                                    <div style="margin-top:0.25rem;">
+                                        @{
+                                            if (artwork.Description.Length > 70)
+                                            {
+                                                int location = artwork.Description.IndexOf(' ', 70);
+                                                if (location != -1)
+                                                {
+                                                    artwork.Description = artwork.Description.Substring(3, location - 2) + "...";
+                                                }
+
+                                            }
+                                        }
+                                        <p style="margin:0;padding:0; width:100%">
+                                            <a asp-action="Details" asp-route-artworkId="@artwork.ArtworkId" class="text">@artwork.Title</a>
+                                        </p>
+                                        <p style="margin:0;padding:0; width:100%; font-size:smaller">@artwork.Description</p>
+                                    </div>
+                                    <div style="padding:0;margin-top:0.25rem;">
+                                        @{
+                                            string avatarImageSrc = string.IsNullOrEmpty(artwork.ApplicationUser.AvatarImage) ? "~/image/defaultava/default.jpg" : artwork.ApplicationUser.AvatarImage;
+                                        }
+                                        <img src="@Url.Content(avatarImageSrc)" class="rounded-circle" width="30vh" alt="avatar">
+
+                                        <a asp-action="ArtistProfile" asp-route-artistId="@artwork.ArtistId" style="font-size: 12px; font-weight: 500; display: inline-block; color:black"> @artwork.ApplicationUser.FullName</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
                     }
                 </div>
             </div>

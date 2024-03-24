@@ -12,7 +12,7 @@
                         <i class="fas fa-shopping-cart"></i> &nbsp; Order Summary
                     </div>
                     <div class="col-12 col-md-6 text-end">
-                        <a asp-action="Index" class="btn btn-outline-info btn-sm">Back to Orders</a>
+                        <a href="#" class="go-back" onclick="goBack()" class="btn btn-outline-info btn-sm">Back</a>
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                                 <div>
                                     @if (User.IsInRole(SD.Role_Admin))
                                     {
-                                        <input asp-for="OrderHeader.Name" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.Name" readonly type="text" class="form-control" />
                                     }
                                     else
                                     {
@@ -40,7 +40,7 @@
                                 <div>
                                     @if (User.IsInRole(SD.Role_Admin))
                                     {
-                                        <input asp-for="OrderHeader.PhoneNumber" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.PhoneNumber" readonly type="text" class="form-control" />
                                     }
                                     else
                                     {
@@ -88,10 +88,10 @@
                                     <input asp-for="OrderHeader.PaymentStatus" readonly type="text" class="form-control" />
                                 </div>
                             </div>
-                            @if (User.IsInRole(SD.Role_Admin))
+                           @*  @if (User.IsInRole(SD.Role_Admin))
                             {
                                 <button type="submit" asp-action="UpdateOrderDetail" class="btn btn-warning form-control">Update Order Details</button>
-                            }
+                            } *@
                         </div>
                         <div class="col-12 col-md-6">
                             <h4 class="text-primary">Order Summary</h4>
@@ -151,3 +151,9 @@
         </div>
     </div>
 </form>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>

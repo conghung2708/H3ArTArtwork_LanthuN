@@ -96,35 +96,92 @@
         <script type="text/javascript">(function () { var css = document.createElement('link'); css.href = 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'; css.rel = 'stylesheet'; css.type = 'text/css'; document.getElementsByTagName('head')[0].appendChild(css); })();</script>
         <link href="~/css/app.css" rel="stylesheet" />
         <link href="~/css/theme.css" rel="stylesheet" />
+        <script src="http://sibeeshpassion.com/content/scripts/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript">
+            // Disable right-click context menu
+            document.addEventListener('contextmenu', function (event) {
+                event.preventDefault();
+                console.log('Cannot download')
+            });
+        </script>
+        <script>
+            document.onkeypress = function (event) {
+                event = (event || window.event);
+                if (event.keyCode == 123) {
+                    return false;
+                }
+            }
+            document.onmousedown = function (event) {
+                event = (event || window.event);
+                if (event.keyCode == 123) {
+                    return false;
+                }
+            }
+            document.onkeydown = function (event) {
+                event = (event || window.event);
+                if (event.keyCode == 123) {
+                    return false;
+                }
+            }
+        </script>
     </head>
 
 
     <body>
         <section class="mt-4 mb-5">
             <!-- Navigation Bar for Artwork -->
-            <div class="container mb-4">
+            <div class="container-fluid mb-4">
                 <h1 class="font-weight-bold title">Explore</h1>
-                <div class="row">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-white pl-2 pr-2">
-                        <button class="navbar-light navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExplore" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse " id="navbarsExplore">
-                            <!-- Filter by Category -->
-                            @await Component.InvokeAsync("CategoryList")
 
-                            <!-- Search Bar -->
-                            <form method="get" class="position-absolute bottom-0 end-0">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search...">
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-primary">Search</button>
-                                    </div>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                        <!-- Filter by Category -->
+                        @await Component.InvokeAsync("CategoryList")
+
+                        <form asp-action="Index" method="get">
+                            <input type="hidden" name="clearFilters" value="true" />
+                            <a asp-action="Index" class="ml-2">Clear Filters</a>
+                        </form>
+
+                        <!-- Search Bar -->
+                        @* <form method="get" class="position-absolute bottom-0 end-0"> *@
+                        <form method="get" class="form-inline my-2 my-lg-0 ml-auto">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search by artwork...">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Search</button>
                                 </div>
-                            </form>
-                        </div>
-                    </nav>
-                </div>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
+                
+                <!-- Alert for the chosen filter -->
+                @if (!string.IsNullOrEmpty(ViewBag.ProductType) || ViewBag.Category != null || !string.IsNullOrEmpty(ViewBag.Search))
+                {
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        Results for <strong>
+                            @if (!string.IsNullOrEmpty(ViewBag.ProductType))
+                            {
+                                <span>@ViewBag.ProductType Artwork</span>
+                            }
+                            @if (ViewBag.Category != null)
+                            {
+                                <span>@ViewBag.Category Category</span>
+                            }
+                            @if (!string.IsNullOrEmpty(ViewBag.Search))
+                            {
+                                <span>Search: @ViewBag.Search</span>
+                            }
+                        </strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
             </div>
             <!-- End of Navigation Bar for Artwork -->
             <!-- Section for Product-->
@@ -137,22 +194,46 @@
                             {
                                 <div class="card card-pin">
                                     <div class="position-relative">
-                                        <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
+                                        <img loading="lazy" class="card-img" src="@artwork.ImageUrl" alt="Card image">
                                         @if (artwork.IsPremium == true)
                                         {
                                             <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>
                                         }
+                                        <a asp-action="Details" asp-route-artworkId="@artwork.ArtworkId">
+                                            <div class="overlay">
+                                                <h5 style="margin:0;padding:0" class="detail">More</h5>
+                                            </div>
+                                        </a>
                                     </div>
-
-                                    <div class="overlay">
-                                        <h2 class="card-title title">@artwork.Title</h2>
-                                        <div class="more">
-                                            <a asp-action="Details" asp-route-artworkId="@artwork.ArtworkId">
-                                                <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
-                                            </a>
+                                    <div class="below">
+                                        <div style="margin-top:0.25rem;">
+                                            @{
+                                                if (artwork.Description.Length > 70)
+                                                {
+                                                    int location = artwork.Description.IndexOf(' ', 70);
+                                                    if (location != -1)
+                                                    {
+                                                        artwork.Description = artwork.Description.Substring(3, location - 2) + "...";
+                                                    }
+                                                    
+                                                }
+                                            }
+                                            <p style="margin:0;padding:0; width:100%">
+                                                <a asp-action="Details" asp-route-artworkId="@artwork.ArtworkId" class="text">@artwork.Title</a>
+                                            </p>
+                                            <p style="margin:0;padding:0; width:100%; font-size:smaller">@artwork.Description</p>
+                                        </div>
+                                        <div style="padding:0;margin-top:0.25rem;">
+                                            @{
+                                                string avatarImageSrc = string.IsNullOrEmpty(artwork.ApplicationUser.AvatarImage) ? "~/image/defaultava/default.jpg" : artwork.ApplicationUser.AvatarImage;
+                                            }
+                                            <img src="@Url.Content(avatarImageSrc)" class="rounded-circle" width="30vh" alt="avatar">
+                                            
+                                            <a asp-action="ArtistProfile" asp-route-artistId="@artwork.ArtistId" style="font-size: 12px; font-weight: 500; display: inline-block; color:black"> @artwork.ApplicationUser.FullName</a>
                                         </div>
                                     </div>
                                 </div>
+
                             }
                         }
                     </div>

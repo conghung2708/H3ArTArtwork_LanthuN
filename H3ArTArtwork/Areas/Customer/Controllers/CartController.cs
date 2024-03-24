@@ -4,6 +4,7 @@ using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
 using H3ArT.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
@@ -19,13 +20,17 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _config;
+     
+
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
+
         public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
             _config = config;
+           
         }
         public IActionResult Index()
         {
@@ -86,8 +91,11 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             };
             ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 
+ 
             ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.FullName;
             ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
+            ShoppingCartVM.OrderHeader.Email = ShoppingCartVM.OrderHeader.ApplicationUser.Email;
+
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
                 cart.Price = cart.Artwork.Price;
@@ -103,12 +111,18 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             //get the id
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
+          
             //ShoppingCartVM will automatically be populated
+            //ShoppingCartVM = new()
+            //{
+            //    ShoppingCartList = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == userId, includeProperties: "Artwork"),
+            //    OrderHeader = new()
+            //};
+            //ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
             ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == userId, includeProperties: "Artwork");
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId);
 
-            ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
+            ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
             ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
 
             List<string> purchasedArtworks = new List<string>();
@@ -130,11 +144,11 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 return View(ShoppingCartVM);
             }
 
-            if (!ModelState.IsValid)
-            {
-                // If model state is not valid, return the view with validation errors
-                return View(ShoppingCartVM); // or any other suitable action result
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    // If model state is not valid, return the view with validation errors
+            //    return View(ShoppingCartVM); // or any other suitable action result
+            //}
             // bam place order ma khong thanh toan => pending
             // lay ra nhung cai nay de tranh update 2 lan vao doan code o ben duoi
             var existingOrder = _unitOfWork.OrderHeaderObj.Get(o => o.ApplicationUserId == userId && o.PaymentStatus == SD.PaymentStatusPending);
@@ -145,6 +159,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             if (existingOrder != null)
             {
                 // đây là cái đoạn cập nhật nè
+                existingOrder.OrderTotal = ShoppingCartVM.OrderHeader.OrderTotal;
                 ShoppingCartVM.OrderHeader = existingOrder;
                 _unitOfWork.OrderHeaderObj.Update(existingOrder);
                 _unitOfWork.Save();
@@ -176,6 +191,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusPending;
 
                 _unitOfWork.OrderHeaderObj.Add(ShoppingCartVM.OrderHeader);
+                //_unitOfWork.ApplicationUserObj.Remove(ShoppingCartVM.OrderHeader.ApplicationUser);
                 _unitOfWork.Save();
                 foreach (var cart in ShoppingCartVM.ShoppingCartList)
                 {
@@ -223,6 +239,9 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             //create sessionId and paymentIntentId
             Session session = service.Create(options);
             _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+
+            //var testVar = ShoppingCartVM.ShoppingCartList.
+            //_unitOfWork.ApplicationUserObj.Remove(OrderHeader.);
             _unitOfWork.Save();
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
@@ -233,6 +252,16 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             OrderHeader orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id, includeProperties: "ApplicationUser");
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCartObj.GetAll(u => u.BuyerId == orderHeader.ApplicationUserId, includeProperties: "Artwork").ToList();
             List<OrderDetail> orderDetail = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderHeader.Id, includeProperties: "Artwork").ToList();
+
+            
+            foreach (var orderDetailItem in orderDetail)
+            {
+                var artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == orderDetailItem.ArtworkId);
+                artwork.buyerId = orderHeader.ApplicationUserId;
+                _unitOfWork.ArtworkObj.Update(artwork);
+                _unitOfWork.Save();
+            }
+
             //this is an order by customer
             var service = new SessionService();
             Session session = service.Get(orderHeader.SessionId);
@@ -240,7 +269,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             if (session.PaymentStatus.ToLower() == "paid")
             {
                 _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-                _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusDone, SD.PaymentStatusApproved);
                 _unitOfWork.Save();
                 // Xây dựng HTML cho bảng
                 StringBuilder tableHtml = new StringBuilder();

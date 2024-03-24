@@ -30,17 +30,30 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         {
             return View();
         }
+
         [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer + "," + SD.Role_Admin)]
         public IActionResult Details(int orderId)
         {
+            var orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == orderId, includeProperties: "ApplicationUser");
+
+            if (orderHeader == null )
+            {
+                // Redirect to the previous page
+                TempData["error"] = "Order does not exist!";
+
+
+                return RedirectToAction("Index", "Home", new { area = "Customer" });
+            }
+
             OrderVM = new()
             {
-                OrderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == orderId, includeProperties: "ApplicationUser"),
+                OrderHeader = orderHeader,
                 OrderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderId, includeProperties: "Artwork")
             };
 
             return View(OrderVM);
         }
+
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin)]
         public IActionResult UpdateOrderDetail()
@@ -74,29 +87,22 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         {
             var orderHeaderFromDb = _unitOfWork.OrderHeaderObj.Get(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeaderFromDb.OrderStatus = SD.StatusDone;
+            var userID = orderHeaderFromDb.ApplicationUserId;
+            var applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userID);
 
-            if(orderHeaderFromDb.IsPackageOrder == true)
+            var orderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderHeaderFromDb.Id);
+            foreach (var orderDetail in orderDetails)
             {
-                // get information of user buy the package
-                var userID = orderHeaderFromDb.ApplicationUserId;
-                var applicationUser = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userID);
-
-                // get the package information
-                var orderDetailPackage = _unitOfWork.OrderDetailPackageObj.Get(u => u.orderHeaderId == orderHeaderFromDb.Id);
-                var package = _unitOfWork.PackageObj.Get(u => u.PackageId == orderDetailPackage.packageId);
-
-                // update amountPost for user
-                applicationUser.AvaiblePost = package.AmountPost;
-                _unitOfWork.ApplicationUserObj.Update(applicationUser);
+                var artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == orderDetail.ArtworkId);
+                artwork.buyerId = userID;
+                _unitOfWork.ArtworkObj.Update(artwork);
                 _unitOfWork.Save();
             }
 
-            _unitOfWork.OrderHeaderObj.Update(orderHeaderFromDb);
-            _unitOfWork.Save();
-            TempData["Success"] = "Order Shipped Sucessfully";
+            TempData["Success"] = "Order Completed Sucessfully";
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
-
         }
+
 
 
         [HttpPost]
@@ -151,6 +157,22 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
         }
 
+
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Creator)]
+        public IActionResult GetOrderDetail(int artworkId)
+        {
+            var orderDetail = _unitOfWork.OrderDetailObj.Get(o => o.ArtworkId == artworkId);
+
+            if (orderDetail != null)
+            {
+             
+                return RedirectToAction("Details", new { orderId = orderDetail.OrderHeaderId });
+            }
+
+            TempData["error"] = "Order does not exist";
+            return RedirectToAction("GetAll", "Artwork");
+        }
+
         #region API CALLS
         [HttpGet]
         public IActionResult GetAll(string status)
@@ -161,6 +183,8 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             {
                 orderHeaderList = _unitOfWork.OrderHeaderObj.GetAll(includeProperties: "ApplicationUser").ToList();
             }
+            
+
             else
             {
                 //get the id
@@ -192,6 +216,4 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
         #endregion
     }
-
-
 }

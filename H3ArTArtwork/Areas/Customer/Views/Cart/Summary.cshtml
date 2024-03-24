@@ -1,8 +1,10 @@
 @using H3ArT.Models.ViewModels
 @using System.Globalization
 @model ShoppingCartVM
+
 <form method="post">
     <br />
+    <input asp-for="OrderHeader.Id" hidden/>
     <div class="container">
         <div class="card shadow border-0">
 
@@ -32,7 +34,7 @@
                                     <label>Name</label>
                                 </div>
                                 <div class="col-9">
-                                    <input asp-for="OrderHeader.Name" class="form-control" />
+                                    <input readonly asp-for="OrderHeader.Name" class="form-control" />
                                     <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
                                 </div>
                             </div>
@@ -41,8 +43,17 @@
                                     <label>Phone</label>
                                 </div>
                                 <div class="col-9">
-                                    <input asp-for="OrderHeader.PhoneNumber" class="form-control" />
+                                    <input readonly asp-for="OrderHeader.PhoneNumber" class="form-control" />
                                     <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>Email</label>
+                                </div>
+                                <div class="col-9">
+                                    <input readonly asp-for="OrderHeader.Email" class="form-control" />
+                                    <span asp-validation-for="OrderHeader.Email" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +86,7 @@
                 <div class="col-7"></div>
                 
                 <div class="col-5 col-md-5">
-                    <button type="submit" value="Place Order" class="btn btn-primary form-control">Place Order</button>
+                    <button type="submit" value="Place Order" class="btn btn-primary form-control">Pay Now</button>
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 </div>
             </div>

@@ -12,7 +12,36 @@
 
     <link href="~/css/app.css" rel="stylesheet" />
     <link href="~/css/theme.css" rel="stylesheet" />
+    <script src="http://sibeeshpassion.com/content/scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript">
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+            console.log('Cannot download')
+        });
+    </script>
+    <script>
+        document.onkeypress = function (event) {
+            event = (event || window.event);
+            if (event.keyCode == 123) {
+                return false;
+            }
+        }
+        document.onmousedown = function (event) {
+            event = (event || window.event);
+            if (event.keyCode == 123) {
+                return false;
+            }
+        }
+        document.onkeydown = function (event) {
+            event = (event || window.event);
+            if (event.keyCode == 123) {
+                return false;
+            }
+        }
+    </script>
 </head>
+
 
 <body>
 
@@ -23,13 +52,13 @@
     </div>
     <div class="container mb-4 position-relative">
         @{
-            string avatarImageSrc = string.IsNullOrEmpty(Model.Artist.AvatarImage) ? "~/image/defaultava/default.jpg" : Model.Artist.AvatarImage;
+            string avatarImageSrc = string.IsNullOrEmpty(Model.User.AvatarImage) ? "~/image/defaultava/default.jpg" : Model.User.AvatarImage;
         }
 
         <img src="@Url.Content(avatarImageSrc)" class="mt-neg100 mb-4 rounded-circle" width="128" alt="avatar">
 
 
-        <h1 class="font-weight-bold title">@Model.Artist.FullName</h1>
+        <h1 class="font-weight-bold title">@Model.User.FullName</h1>
         <p>
             I love Art, Web Design, Photography, Design, Illustration
         </p>
@@ -113,14 +142,14 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button asp-action="ReportArtist" asp-route-artistID="@Model.Artist.Id" type="submit" class="btn btn-primary" form="centeredRadioForm">Submit</button>
+                                <button asp-action="ReportArtist" asp-route-artistID="@Model.User.Id" type="submit" class="btn btn-primary" form="centeredRadioForm">Submit</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
             <div>
-                <a asp-action="ViewBlog" asp-route-artistID="@Model.Artist.Id" style="color: #00a67d;">
+                <a asp-action="ViewBlog" asp-route-artistID="@Model.User.Id" style="color: #00a67d;">
                     <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> View my blog
                 </a>
             </div>
@@ -130,11 +159,21 @@
         <div class="row">
             <div class="card-columns">
 
-                @foreach (var artwork in Model.ArtworkList)
+                @* @foreach (var artwork in Model.ArtworkList)
                 {
-
                     <div class="card card-pin">
-                        <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
+                        <div class="position-relative">
+                            <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
+                            @if (artwork.IsPremium == true)
+                            {
+                                <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>
+                            }
+                            @if (artwork.IsBought == true)
+                            {
+                                <span class="badge badge-pill badge-danger position-absolute top-0 start-50 m-1">Bought</span>
+                            }
+                        </div>
+
                         <div class="overlay">
                             <h2 class="card-title title">@artwork.Title</h2>
                             <div class="more">
@@ -147,6 +186,54 @@
                             </div>
                         </div>
                     </div>
+                } *@
+                @foreach (var artwork in Model.ArtworkList)
+                {
+                    @if (!artwork.ReportedConfirm && !artwork.IsBought)
+                    {
+                        <div class="card card-pin">
+                            <div class="position-relative">
+                                <img class="card-img" src="@artwork.ImageUrl" alt="Card image">
+                                @if (artwork.IsPremium == true)
+                                {
+                                    <span class="badge badge-pill badge-info position-absolute top-0 start-0 m-1">Premium</span>
+                                }
+                                <a asp-action="Details" asp-route-artworkId="@artwork.ArtworkId">
+                                    <div class="overlay">
+                                        <h5 style="margin:0;padding:0" class="detail">More</h5>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="below">
+                                <div style="margin-top:0.25rem;">
+                                    @{
+                                        if (artwork.Description.Length > 70)
+                                        {
+                                            int location = artwork.Description.IndexOf(' ', 70);
+                                            if (location != -1)
+                                            {
+                                                artwork.Description = artwork.Description.Substring(3, location - 2) + "...";
+                                            }
+
+                                        }
+                                    }
+                                    <p style="margin:0;padding:0; width:100%">
+                                        <a asp-action="Details" asp-route-artworkId="@artwork.ArtworkId" class="text">@artwork.Title</a>
+                                    </p>
+                                    <p style="margin:0;padding:0; width:100%; font-size:smaller">@artwork.Description</p>
+                                </div>
+                                <div style="padding:0;margin-top:0.25rem;">
+                                    @{
+                                        artwork.ApplicationUser.AvatarImage = string.IsNullOrEmpty(artwork.ApplicationUser.AvatarImage) ? "~/image/defaultava/default.jpg" : artwork.ApplicationUser.AvatarImage;
+                                    }
+                                    <img src="@Url.Content(artwork.ApplicationUser.AvatarImage)" class="rounded-circle" width="30vh" alt="avatar">
+
+                                    <a asp-action="ArtistProfile" asp-route-artistId="@artwork.ArtistId" style="font-size: 12px; font-weight: 500; display: inline-block; color:black"> @artwork.ApplicationUser.FullName</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
                 }
             </div>
         </div>

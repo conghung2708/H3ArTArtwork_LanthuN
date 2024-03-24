@@ -29,11 +29,15 @@ namespace H3ArT.Models.Models
 
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters.")]
         [RegularExpression(@"^[^\d]+$", ErrorMessage = "Name cannot contain numbers.")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Required(ErrorMessage = "Phone number is required.")]
         [RegularExpression(@"^0\d{9}$", ErrorMessage = "Phone number must start with 0 and have exactly 10 digits.")]
         [MaxLength(10, ErrorMessage = "Phone number cannot exceed 10 characters.")]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
+
+        public string? Email {  get; set; }
+
+
     }
 }

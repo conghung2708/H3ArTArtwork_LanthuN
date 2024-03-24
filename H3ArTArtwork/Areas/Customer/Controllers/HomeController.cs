@@ -1,10 +1,13 @@
 using H3ArT.DataAccess.Repository.IRepository;
+using H3ArT.Models;
 using H3ArT.Models.Models;
 using H3ArT.Models.ViewModels;
 using H3ArT.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Globalization;
 using System.Security.Claims;
 
 namespace H3ArTArtwork.Areas.Customer.Controllers
@@ -14,53 +17,94 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         [BindProperty]
         public PackagePaymentVM PackagePaymentVM { get; set; }
         public ShoppingCartVM ShoppingCartVM { get; set; }
 
-        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index(int? categoryId, string search)
+        public IActionResult Index(int? categoryId, string search, string? productType)
         {
             IEnumerable<Artwork> artworkList;
+            Category category = new();
+
+            // Filter by category 
             if (categoryId.HasValue)
             {
-                artworkList = _unitOfWork.ArtworkObj.
-                    GetAll(a => a.CategoryId == categoryId && (search == null || a.Title.Contains(search)));
+                artworkList = _unitOfWork.ArtworkObj
+                    .GetAll(a => a.CategoryId == categoryId && (search == null || a.Title.Contains(search)), includeProperties: "Category,ApplicationUser");
+                category = _unitOfWork.CategoryObj
+                    .Get(a => a.CategoryId == categoryId);
             }
             else
             {
-                artworkList = _unitOfWork.ArtworkObj.
-                    GetAll(a => search == null || a.Title.Contains(search), includeProperties: "Category");
+                artworkList = _unitOfWork.ArtworkObj
+                    .GetAll(a => search == null || a.Title.Contains(search), includeProperties: "Category,ApplicationUser");
             }
+
+            // Filter by product type
+            if (!string.IsNullOrEmpty(productType))
+            {
+                switch (productType.ToLower())
+                {
+                    case "free":
+                        artworkList = artworkList.Where(a => !a.IsPremium);
+                        break;
+                    case "premium":
+                        artworkList = artworkList.Where(a => a.IsPremium);
+                        break;
+                    // If productType is not "free" or "premium", show all artworks
+                    default:
+                        break;
+                }
+            }
+            if (productType != null)
+            {
+                ViewBag.ProductType = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(productType);
+            }
+            ViewBag.Category = category.CategoryName;
+            ViewBag.Search = search;
+
             return View(artworkList);
         }
 
-      
+
         public IActionResult Details(int artworkId)
         {
-            if(User.IsInRole(SD.Role_Admin))
+            IEnumerable<Artwork> artworkList;
+            if (User.IsInRole(SD.Role_Admin))
             {
                 TempData["error"] = "Admin cannot see the artwork detail";
                 return RedirectToAction(nameof(Index));
             }
             Artwork artworkFromDb = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == artworkId, includeProperties: "ApplicationUser");
 
+            if(artworkFromDb == null)
+            {
+                TempData["error"] = "The artwork does not exist!";
+                return RedirectToAction(nameof(Index));
+            }
+
             if (artworkFromDb.ReportedConfirm == true || artworkFromDb.IsBought == true)
             {
                 TempData["error"] = "This artwork is bought or reported";
                 return RedirectToAction(nameof(Index));
             }
+            artworkList = _unitOfWork.ArtworkObj.GetAll(includeProperties: "ApplicationUser");
+            artworkList = _unitOfWork.ArtworkObj.GetAll(includeProperties: "Category");
             ShoppingCart shoppingCart = new()
             {
                 Artwork = artworkFromDb,
                 Count = 1,
                 ArtworkId = artworkId,
-                RelatedArtworks = _unitOfWork.ArtworkObj.GetAll(includeProperties: "Category"),
+                //RelatedArtworks = _unitOfWork.ArtworkObj.GetAll(includeProperties: "Category"),
+                RelatedArtworks = _unitOfWork.ArtworkObj.GetAll(a => a.CategoryId == artworkFromDb.CategoryId && !a.IsBought),
                 ArtistId = artworkFromDb.ArtistId
             };
 
@@ -121,9 +165,14 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             }
             UserVM userVM = new()
             {
-                Artist = _unitOfWork.ApplicationUserObj.Get(u => u.Id == artistID),
-                ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.ArtistId == artistID)
+                User = _unitOfWork.ApplicationUserObj.Get(u => u.Id == artistID),
+                ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.ArtistId == artistID, includeProperties: "ApplicationUser")
             };
+            if(userVM.User == null)
+            {
+                TempData["error"] = "The creator does not exist!";
+                return RedirectToAction(nameof(Index));
+            }
             return View(userVM);
         }
 
@@ -238,7 +287,11 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 return RedirectToAction(nameof(Index));
             }
             Blog blog = _unitOfWork.BlogObj.Get(u=>u.BlogId == blogID, includeProperties:"ApplicationUser");
-
+            if(blog == null)
+            {
+                TempData["error"] = "The blog does not exist";
+                return RedirectToAction(nameof(Index));
+            }
             return View(blog);
         }
 
@@ -251,6 +304,67 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer)]
+        public IActionResult MyCollection(string search)
+        {
+            if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Moderator))
+            {
+                TempData["error"] = "You cannot view blogs";
+                return RedirectToAction(nameof(Index));
+            }
+            //get the id
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            UserVM userVM = new();
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                userVM = new()
+                {
+                    User = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId),
+                    ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.buyerId == userId && u.Title.Contains( search))
+                };
+            }
+            else
+            {
+                userVM = new()
+                {
+                    User = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId),
+                    ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.buyerId == userId)
+                };
+            }
+            
+            return View(userVM);
+        }
+
+        [Authorize(Roles = SD.Role_Creator + "," + SD.Role_Customer)]
+        public async Task<IActionResult> DownloadArtworkImage(int artworkId)
+        {
+            var artwork =  _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == artworkId);
+
+            if (artwork == null || string.IsNullOrEmpty(artwork.ImageUrl))
+            {
+                return NotFound(); // Return 404 Not Found if the artwork or image URL is not found
+            }
+
+            string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, artwork.ImageUrl.TrimStart('\\'));
+
+            if (!System.IO.File.Exists(imagePath))
+            {
+                return NotFound(); // Return 404 Not Found if the image file is not found
+            }
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(imagePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            // Set the Content-Disposition header to prompt the user to save the file as a JPG
+            return File(memory, "image/jpeg", Path.GetFileName(imagePath), enableRangeProcessing: true);
         }
     }
 }

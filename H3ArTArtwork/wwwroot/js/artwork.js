@@ -8,7 +8,17 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/creator/artwork/getall' },
         "columns": [
-            { data: 'title', "width": "15%" },
+            {
+                data: 'title',
+                "render": function (data, type, row) {
+                    if (row.isPremium) {
+                        return `${data} <span class="badge rounded-pill bg-info text-dark">Premium</span>`;
+                    } else {
+                        return data;
+                    }
+                },
+                "width": "15%"
+            },
             {
                 data: 'imageUrl',
                 "render": function (data) {
@@ -22,12 +32,16 @@ function loadDataTable() {
             { data: 'category.categoryName', "width": "5%" }, // Accessing displayOrder within the category object //need to fix here
             // Corrected here
             {
-                data: 'artworkId',
-                "render": function (data) {
-                    return `<div class="w-100 btn-group" role="group">
-                     <a href="/creator/artwork/upsert?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                     <a onClick=Delete('/creator/artwork/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
-                    </div>`
+                data: 'isBought',
+                "render": function (data, type, row) {
+                    if (data) {
+                        return `<div class="text-center"><a href="/Admin/Order/GetOrderDetail?artworkId=${row.artworkId}" class="btn btn-success mx-auto">View Order</a></div>`;
+                    } else {
+                        return `<div class="w-100 btn-group" role="group">
+                            <a href="/creator/artwork/upsert?id=${row.artworkId}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
+                            <a onClick="Delete('/creator/artwork/delete/${row.artworkId}')" class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                        </div>`;
+                    }
                 },
                 "width": "15%"
             }

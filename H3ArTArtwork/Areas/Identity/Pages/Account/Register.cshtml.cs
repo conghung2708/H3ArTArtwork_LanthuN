@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
 
 namespace H3ArTArtwork.Areas.Identity.Pages.Account
 {
@@ -115,6 +116,13 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
             public string? Role { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
+            
+            [Phone]
+            [Required(ErrorMessage = "Phone Number is required")]
+            [Display(Name = "Phone number")]
+            [RegularExpression(@"^0\d{9}$", ErrorMessage = "Phone number must start with 0 and have 10 digits.")]
+            [MaxLength(10, ErrorMessage = "Phone number cannot exceed 10 characters.")]
+            public string Phone { get; set; }
         }
 
 
@@ -166,7 +174,7 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account
                 user.FullName = Input.FullName; // Assign FullName here
                 user.Status = true;
                 user.Gender = Input.Gender;
-
+                await _userManager.SetPhoneNumberAsync(user, Input.Phone);
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
