@@ -54,15 +54,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="H3ArT.DataAccess">
-      <HintPath>..\H3ArT.DataAccess\bin\Debug\net8.0\H3ArT.DataAccess.dll</HintPath>
-    </Reference>
-    <Reference Include="H3ArT.Models">
-      <HintPath>..\H3ArT.Models\bin\Debug\net8.0\H3ArT.Models.dll</HintPath>
-    </Reference>
-    <Reference Include="H3ArT.Utility">
-      <HintPath>..\H3ArT.Utility\bin\Debug\net8.0\H3ArT.Utility.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\H3ArT.DataAccess\H3ArT.DataAccess.csproj">
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\H3ArT.Models\H3ArT.Models.csproj">
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\H3ArT.Utility\H3ArT.Utility.csproj">
+      <CopyLocalSatelliteAssemblies>True</CopyLocalSatelliteAssemblies>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

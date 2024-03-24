@@ -48,7 +48,9 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             PackagePaymentVM.OrderHeader.OrderTotal = package.Price;
             PackagePaymentVM.Package = _unitOfWork.PackageObj.Get(u => u.PackageId == packageId);
             PackagePaymentVM.ApplicationUser = applicationUser;
-
+            PackagePaymentVM.OrderHeader.Email = applicationUser.Email;
+            PackagePaymentVM.OrderHeader.PhoneNumber = applicationUser.PhoneNumber;
+            PackagePaymentVM.OrderHeader.Name = applicationUser.FullName;
             return View(PackagePaymentVM);
         }
 
