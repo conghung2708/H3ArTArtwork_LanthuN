@@ -74,7 +74,7 @@
                                 @Model.Artwork.Title
                             </h1>
                             <div style="text-align: center;">
-                                <a asp-action="ArtistProfile" asp-route-artistId="@Model.ArtistId" style="font-size: smaller; display: inline-block;">Artist: @Model.Artwork.ApplicationUser.FullName</a>
+                                <a asp-action="ArtistProfile" asp-route-artistId="@Model.ArtistId" style="font-size: smaller; display: inline-block;">Creator: @Model.Artwork.ApplicationUser.FullName</a>
                             </div>
 
                             @Html.Raw(@Model.Artwork.Description)
