@@ -61,6 +61,11 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             {
                 //update
                 Blog blog = _unitOfWork.BlogObj.Get(u => u.BlogId == id, includeProperties: "ApplicationUser");
+                if(blog == null)
+                {
+                    TempData["error"] = "The blog does not exist!";
+                    return RedirectToAction(nameof(Index));
+                }
                 return View(blog);
             }
 
