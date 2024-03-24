@@ -85,6 +85,12 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             }
             Artwork artworkFromDb = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == artworkId, includeProperties: "ApplicationUser");
 
+            if(artworkFromDb == null)
+            {
+                TempData["error"] = "The artwork does not exist!";
+                return RedirectToAction(nameof(Index));
+            }
+
             if (artworkFromDb.ReportedConfirm == true || artworkFromDb.IsBought == true)
             {
                 TempData["error"] = "This artwork is bought or reported";
@@ -162,6 +168,11 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 User = _unitOfWork.ApplicationUserObj.Get(u => u.Id == artistID),
                 ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.ArtistId == artistID, includeProperties: "ApplicationUser")
             };
+            if(userVM.User == null)
+            {
+                TempData["error"] = "The creator does not exist!";
+                return RedirectToAction(nameof(Index));
+            }
             return View(userVM);
         }
 
@@ -276,7 +287,11 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 return RedirectToAction(nameof(Index));
             }
             Blog blog = _unitOfWork.BlogObj.Get(u=>u.BlogId == blogID, includeProperties:"ApplicationUser");
-
+            if(blog == null)
+            {
+                TempData["error"] = "The blog does not exist";
+                return RedirectToAction(nameof(Index));
+            }
             return View(blog);
         }
 
