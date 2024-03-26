@@ -205,6 +205,13 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                 }
             }
 
+            IEnumerable<ReportBlog> reportBlogs = _unitOfWork.ReportBlogObj.GetAll(u => u.BlogId == id);
+            foreach (var reportBlog in reportBlogs)
+            {
+                _unitOfWork.ReportBlogObj.Remove(reportBlog);
+                _unitOfWork.Save();
+            }
+
             _unitOfWork.BlogObj.Remove(blogToBeDeleted);
             _unitOfWork.Save();
 
