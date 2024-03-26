@@ -327,7 +327,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 userVM = new()
                 {
                     User = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId),
-                    ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.buyerId == userId && u.Title.Contains( search))
+                    ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.buyerId == userId && u.Title.Contains(search))
                 };
             }
             else
