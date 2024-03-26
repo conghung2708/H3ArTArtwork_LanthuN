@@ -80,19 +80,22 @@
                             @Html.Raw(@Model.Artwork.Description)
 
                             <!-- Button trigger modal -->
-                            <div class="position-absolute end-0 pe-2">
-                                <a data-bs-toggle="modal" data-bs-target="#centeredModal">
-                                    <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Report
+                            <div class="position-absolute end-0 pe-3 d-flex flex-column">
+                                <a data-bs-toggle="modal" class="text-end" data-bs-target="#centeredModal">
+                                    <i class="fa fa-arrow-circle-o-right" aria-hidden="true"> Report</i>
                                 </a>
+
+                                @if (!Model.Artwork.IsPremium)
+                                {
+                                    @* <div >
+                                        
+                                    </div> *@
+                                    <a asp-action="DownloadArtworkImage" asp-route-artworkId="@Model.ArtworkId">
+                                        <i class="fa fa-download" aria-hidden="true"> Download</i>
+                                    </a>
+                                }
                             </div>
-                            @if (!Model.Artwork.IsPremium)
-                            {
-                            <div class="position-absolute end-0 pe-2 pt-4">
-                                <a asp-action="DownloadArtworkImage" asp-route-artworkId="@Model.ArtworkId">
-                                    <i class="fa fa-download" aria-hidden="true"></i> Download
-                                </a>
-                            </div>
-                            }
+                            
                            
                             <!-- Modal -->
                             <div class="modal fade" id="centeredModal" tabindex="-1" aria-labelledby="centeredModalLabel" aria-hidden="true">
@@ -101,6 +104,7 @@
                                         <div class="modal-header">
                                             <h3 class="modal-title" id="centeredModalLabel">Report</h3>
                                             <button type="button" class="btn-close" style="margin-block:auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            
                                         </div>
                                         <form id="centeredRadioForm" meathod="post" asp-action="ReportArtwork">
                                             <div class="modal-body" style="margin: 0 10px 0 10px">
@@ -230,7 +234,7 @@
         </div>
         <div class="container-fluid mt-5">
             <div class="row">
-                <h5 class="font-weight-bold">More like this</h5>
+                <h5 class="font-weight-bold">More</h5>
                 <div class="card-columns">
                     @{
                         var random = new Random();

@@ -105,7 +105,12 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Admin user cannot be locked/unlocked." });
             }
 
+            
+
             var objFromDb = _db.ApplicationUsers.FirstOrDefault(u => u.Id == id);
+
+            IEnumerable<Artwork> listArtwork = _db.TblArtwork.Where(u => u.ArtistId == id).ToList();
+
             if (objFromDb == null)
             {
                 return Json(new { success = false, message = "Error while Locking/Unclocking" });
@@ -114,10 +119,18 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             if (objFromDb.LockoutEnd != null && objFromDb.LockoutEnd > DateTime.Now)
             {
                 objFromDb.LockoutEnd = DateTime.Now;
+                foreach(var artwork in listArtwork)
+                {
+                    artwork.ReportedConfirm = false;
+                }
             }
             else
             {
                 objFromDb.LockoutEnd = DateTime.Now.AddYears(1000);
+                foreach (var artwork in listArtwork)
+                {
+                    artwork.ReportedConfirm = true;
+                }
             }
             _db.SaveChanges();
             return Json(new { success = true, message = "Operation Successful" });

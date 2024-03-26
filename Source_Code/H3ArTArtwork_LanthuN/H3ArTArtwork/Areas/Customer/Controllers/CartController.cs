@@ -271,6 +271,8 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 _unitOfWork.OrderHeaderObj.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
                 _unitOfWork.OrderHeaderObj.UpdateStatus(id, SD.StatusDone, SD.PaymentStatusApproved);
                 _unitOfWork.Save();
+                orderHeader.PaymentDate = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id).PaymentDate;
+                orderHeader.OrderStatus = _unitOfWork.OrderHeaderObj.Get(u => u.Id == id).OrderStatus;
                 // Xây dựng HTML cho bảng
                 StringBuilder tableHtml = new StringBuilder();
                 tableHtml.Append("<table style=\"border-collapse: collapse; width: 100%;\">");
