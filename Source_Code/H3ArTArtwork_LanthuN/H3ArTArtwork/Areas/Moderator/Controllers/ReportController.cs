@@ -61,7 +61,6 @@ namespace H3ArTArtwork.Areas.Moderator.Controllers
                     System.IO.File.Delete(oldImagePath);
                 }
             }
-
             _unitOfWork.ArtworkObj.Remove(productToBeDeleted);
             _unitOfWork.Save();
 
@@ -96,6 +95,7 @@ namespace H3ArTArtwork.Areas.Moderator.Controllers
             {
                 
                 artwork.ReportedConfirm = !artwork.ReportedConfirm;
+
                 
                 try
                 {

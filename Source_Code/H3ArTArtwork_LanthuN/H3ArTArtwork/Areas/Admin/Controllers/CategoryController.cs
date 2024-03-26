@@ -48,7 +48,7 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
         public IActionResult Edit(int? id)
         {
-            if (id == null || id == null)
+            if (id == null)
             {
                 return NotFound();
             }
