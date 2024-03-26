@@ -38,14 +38,14 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             if (categoryId.HasValue)
             {
                 artworkList = _unitOfWork.ArtworkObj
-                    .GetAll(a => a.CategoryId == categoryId && (search == null || a.Title.Contains(search)), includeProperties: "Category,ApplicationUser");
+                    .GetAll(a => a.CategoryId == categoryId && (search == null || (a.Title.ToLower()).Contains(search.ToLower())), includeProperties: "Category,ApplicationUser");
                 category = _unitOfWork.CategoryObj
                     .Get(a => a.CategoryId == categoryId);
             }
             else
             {
                 artworkList = _unitOfWork.ArtworkObj
-                    .GetAll(a => search == null || a.Title.Contains(search), includeProperties: "Category,ApplicationUser");
+                    .GetAll(a => search == null || (a.Title.ToLower()).Contains(search.ToLower()), includeProperties: "Category,ApplicationUser");
             }
 
             // Filter by product type
