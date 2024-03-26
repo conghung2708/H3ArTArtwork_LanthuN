@@ -14,6 +14,7 @@
             <div class="border p-3 mt-4">
 
                 <div asp-validation-summary="ModelOnly"></div>
+                <input type="hidden" asp-for="CategoryId" />
                 <div class="form-floating py-2 col-12">
                     <input asp-for="CategoryName" class="form-control border-0 shadow" />
                     <label class="p-0" asp-for="CategoryName" class="ms-2"></label>
