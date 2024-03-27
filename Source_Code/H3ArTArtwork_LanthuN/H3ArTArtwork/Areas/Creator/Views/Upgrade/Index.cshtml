@@ -39,7 +39,7 @@
                                 <p class="pricing-plan-title">@package.PackageName</p>
                                 <h3 class="pricing-plan-cost ml-auto">@package.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"))</h3>
                                 <ul class="pricing-plan-features">
-                                    <li>@package.AmountPost post artwork turn will available when you buy this package</li>
+                                    <li><h5><span class="text-primary">For @package.AmountPost posting allowances!</span></h5></li>
                                     <li>@Html.Raw(package.Description)</li>
                                 </ul>
                                 <form method="get" asp-action="SummaryPackage">
