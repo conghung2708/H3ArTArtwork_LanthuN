@@ -17,6 +17,7 @@ namespace H3ArT.Models
 
         public bool Gender { get; set; }
 
+        [NotMapped]
         public bool Status { get; set; }
 
 
