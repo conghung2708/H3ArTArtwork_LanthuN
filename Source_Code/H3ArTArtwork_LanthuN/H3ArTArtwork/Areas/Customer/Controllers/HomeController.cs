@@ -38,14 +38,14 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             if (categoryId.HasValue)
             {
                 artworkList = _unitOfWork.ArtworkObj
-                    .GetAll(a => a.CategoryId == categoryId && (search == null || a.Title.Contains(search)), includeProperties: "Category,ApplicationUser");
+                    .GetAll(a => a.CategoryId == categoryId && (search == null || (a.Title.ToLower()).Contains(search.ToLower())), includeProperties: "Category,ApplicationUser");
                 category = _unitOfWork.CategoryObj
                     .Get(a => a.CategoryId == categoryId);
             }
             else
             {
                 artworkList = _unitOfWork.ArtworkObj
-                    .GetAll(a => search == null || a.Title.Contains(search), includeProperties: "Category,ApplicationUser");
+                    .GetAll(a => search == null || (a.Title.ToLower()).Contains(search.ToLower()), includeProperties: "Category,ApplicationUser");
             }
 
             // Filter by product type
@@ -327,7 +327,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
                 userVM = new()
                 {
                     User = _unitOfWork.ApplicationUserObj.Get(u => u.Id == userId),
-                    ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.buyerId == userId && u.Title.Contains( search))
+                    ArtworkList = _unitOfWork.ArtworkObj.GetAll(u => u.buyerId == userId && u.Title.Contains(search))
                 };
             }
             else

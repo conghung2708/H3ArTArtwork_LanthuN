@@ -234,6 +234,15 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
                     }
                 }
 
+                //var artworkReported = _unitOfWork.
+
+                IEnumerable<ReportArtwork> reportArtworks = _unitOfWork.ReportArtworkObj.GetAll(u => u.ArtworkId == id);
+                foreach (var reportArtwork in reportArtworks)
+                {
+                    _unitOfWork.ReportArtworkObj.Remove(reportArtwork);
+                    _unitOfWork.Save();                     
+                }
+
                 _unitOfWork.ArtworkObj.Remove(productToBeDeleted);
                 _unitOfWork.Save();
 

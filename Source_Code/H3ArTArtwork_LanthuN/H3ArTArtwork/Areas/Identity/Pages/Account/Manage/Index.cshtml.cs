@@ -67,7 +67,7 @@ namespace H3ArTArtwork.Areas.Identity.Pages.Account.Manage
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             /// 
-            //[Required]
+            [Required]
             [Phone]
             [Display(Name = "Phone number")]
             [RegularExpression(@"^0\d{9}$", ErrorMessage = "Phone number must start with 0 and have 10 digits.")]
