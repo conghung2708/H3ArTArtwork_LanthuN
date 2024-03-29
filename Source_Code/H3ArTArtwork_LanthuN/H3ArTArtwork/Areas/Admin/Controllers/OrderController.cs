@@ -36,6 +36,9 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
         {
             var orderHeader = _unitOfWork.OrderHeaderObj.Get(u => u.Id == orderId, includeProperties: "ApplicationUser");
 
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
             if (orderHeader == null )
             {
                 // Redirect to the previous page
@@ -45,12 +48,26 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Home", new { area = "Customer" });
             }
 
-            OrderVM = new()
+            if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Customer)) { 
+                OrderVM = new()
+                {
+                    OrderHeader = orderHeader,
+                    OrderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderId, includeProperties: "Artwork")
+                };
+            }
+            else
             {
-                OrderHeader = orderHeader,
-                OrderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderId, includeProperties: "Artwork")
-            };
-
+                OrderVM = new()
+                {
+                    OrderHeader = orderHeader,
+                    OrderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderId && u.Artwork.ArtistId == userId, includeProperties: "Artwork")
+                };
+                OrderVM.OrderHeader.OrderTotal = 0;
+                foreach (var obj in OrderVM.OrderDetails)
+                {
+                    OrderVM.OrderHeader.OrderTotal += obj.Price;
+                }
+            }
             return View(OrderVM);
         }
 
