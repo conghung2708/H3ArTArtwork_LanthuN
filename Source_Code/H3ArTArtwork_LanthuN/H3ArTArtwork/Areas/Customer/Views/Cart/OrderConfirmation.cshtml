@@ -19,7 +19,7 @@
                         <th>Order ID</th>
                         <th>Artwork Name</th>
                         <th>Image</th>
-                        <th>Quantity</th>
+                       @*  <th>Quantity</th> *@
                         <th>Price</th>
                         <!-- Thêm các cột khác tùy theo yêu cầu -->
                     </tr>
@@ -31,7 +31,7 @@
                             <td><p style="margin: auto">@item.Id</p></td>
                             <td><p style="margin: auto">@item.Artwork.Title</p></td>
                             <td style="height:10vh"><div><img style="margin: auto" src="@item.Artwork.ImageUrl" width="100vh" /></div> </td>
-                            <td><p style="margin: auto">@item.Count</p></td>
+                            @* <td><p style="margin: auto">@item.Count</p></td> *@
                             <td><p style="margin: auto">@item.Price$</p></td>
                             <!-- Thêm các cột khác tùy theo yêu cầu -->
                         </tr>
