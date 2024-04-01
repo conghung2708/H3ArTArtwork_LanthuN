@@ -1,0 +1,155 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "_Layout";
+}
+
+<style>
+    .card-title {
+        color: darkblue;
+    }
+
+    .card {
+        box-shadow: 5px 5px 20px lightgray;
+        border-radius: 10px
+    }
+
+    .margin {
+        margin-top:12px;
+        margin-bottom:12px;
+    }
+
+    .rounded-circle {
+        width: 70px;
+        height: 70px;
+    }
+
+    .bi {
+        font-size: 200%;
+    }
+
+    .users-card .rounded-circle, .bi-people {
+        background-color: bisque;
+        color: darkorange
+    }
+
+    .artworks-card .rounded-circle, .bi-images {
+        background-color: lightcyan;
+        color: darkblue
+    }
+
+    .orders-card .rounded-circle, .bi-cart {
+        background-color: #FFF0F5;
+        color: deeppink
+    }
+
+    .sales-card .rounded-circle, .bi-cash-coin {
+        background-color: honeydew;
+        color: darkgreen
+    }
+
+    h4 {
+        color:crimson;
+        font-weight:750;
+    }
+</style>
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Admin Dashboard</h2>
+            </div>
+        </div>
+    </div>
+
+    <section class="section dashboard card-body p-4">
+        <div class="row">
+            <!--Users card-->
+            <div class="col-xxl-3 col-md-6 margin">
+                <div class="card users-card">
+
+                    <div class="card-body">
+                        <h5 class="card-title"><b>Users</b> <span class="text-muted small pt-2 ps-1">| All times</span></h5>
+
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-people"></i>
+                            </div>
+
+                            <div class="ps-3">
+                                <h4>1244</h4>
+                                <span class="text-muted small pt-2 ps-1">people using H3Art</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--End Sales card-->
+    
+            <!--Artworks card-->
+            <div class="col-xxl-3 col-md-6 margin">
+
+                <div class="card artworks-card">
+
+                    <div class="card-body">
+                        <h5 class="card-title"><b>Artwork</b> <span class="text-muted small pt-2 ps-1">| All times</span></h5>
+
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-images"></i>
+                            </div>
+
+                            <div class="ps-3">
+                                <h4 class="font-weight-bold">1244</h4>
+                                <span class="text-muted small pt-2 ps-1">available artworks</span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--End Artwork card-->
+           
+            <!--Orders card-->
+            <div class="col-xxl-3 col-md-6 margin">
+                <div class="card orders-card">
+
+                    <div class="card-body">
+                        <h5 class="card-title"><b>Order</b> <span class="text-muted small pt-2 ps-1">| All times</span></h5>
+
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-cart"></i>
+                            </div>
+
+                            <div class="ps-3">
+                                <h4>1244</h4>
+                                <span class="text-muted small pt-2 ps-1">orders</span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--End Order card-->
+
+            <!--Sales card-->
+            <div class="col-xxl-3 col-md-6 margin">
+                <div class="card sales-card">
+
+                    <div class="card-body">
+                        <h5 class="card-title"><b>Sales</b> <span class="text-muted small pt-2 ps-1">| All times</span></h5>
+
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-cash-coin"></i>
+                            </div>
+
+                            <div class="ps-3">
+                                <h4>1244</h4>
+                                <span class="text-muted small pt-2 ps-1">dollars in sales</span>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div><!--End Sales card-->
+        </div>
+    </section>
+</div>

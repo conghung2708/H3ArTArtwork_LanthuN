@@ -178,9 +178,7 @@ namespace H3ArTArtwork.Areas.Customer.Controllers
             }
             return View(userVM);
         }
-
-      
-     
+ 
         public IActionResult ViewBlog(string artistID)
         {
             if (User.IsInRole(SD.Role_Admin))
