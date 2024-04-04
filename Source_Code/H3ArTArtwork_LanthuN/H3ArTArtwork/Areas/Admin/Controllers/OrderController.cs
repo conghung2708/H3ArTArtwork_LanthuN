@@ -72,14 +72,16 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                         OrderHeader = orderHeader,
                         OrderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderId && u.Artwork.ArtistId == userId, includeProperties: "Artwork")
                     };
+
                     OrderVM.OrderHeader.OrderTotal = 0;
+
                     foreach (var obj in OrderVM.OrderDetails)
                     {
                         OrderVM.OrderHeader.OrderTotal += obj.Price;
                     }
-                }
-              
+                }             
             }
+
             return View(OrderVM);
         }
 
@@ -131,8 +133,6 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             TempData["Success"] = "Order Completed Sucessfully";
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
         }
-
-
 
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Creator + "," + SD.Role_Customer)]

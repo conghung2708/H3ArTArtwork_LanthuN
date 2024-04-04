@@ -16,16 +16,19 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
 
         [BindProperty]
         public DashboardVM DashboardVM { get; set; }
+
         public DashboardController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
+
         public IActionResult Index()
         {
             IEnumerable<ApplicationUser> users = _unitOfWork.ApplicationUserObj.GetAll();
-            IEnumerable<Artwork> artworks = _unitOfWork.ArtworkObj.GetAll(u => u.IsBought == false && u.ReportedConfirm == falseb);
+            IEnumerable<Artwork> artworks = _unitOfWork.ArtworkObj.GetAll(u => u.IsBought == false && u.ReportedConfirm == false);
             IEnumerable<OrderHeader> orderHeaders = _unitOfWork.OrderHeaderObj.GetAll();
             double totalPrice = 0;
+
             foreach (var order in orderHeaders)
             {
                 totalPrice += order.OrderTotal;
@@ -36,8 +39,9 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
                 NumberOfUsers = users.Count(),
                 NumberOfArtworks = artworks.Count(),
                 NumberOfOrders = orderHeaders.Count(),
-                NumberOfSales = totalPrice,
+                TotalSales = totalPrice,
             };
+
             return View(DashboardVM);
         }
     }
