@@ -57,16 +57,28 @@ namespace H3ArTArtwork.Areas.Admin.Controllers
             }
             else
             {
-                OrderVM = new()
+                if(orderHeader.ApplicationUserId == userId)
                 {
-                    OrderHeader = orderHeader,
-                    OrderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderId && u.Artwork.ArtistId == userId, includeProperties: "Artwork")
-                };
-                OrderVM.OrderHeader.OrderTotal = 0;
-                foreach (var obj in OrderVM.OrderDetails)
-                {
-                    OrderVM.OrderHeader.OrderTotal += obj.Price;
+                    OrderVM = new()
+                    {
+                        OrderHeader = orderHeader,
+                        OrderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderId, includeProperties: "Artwork")
+                    };
                 }
+                else
+                {
+                    OrderVM = new()
+                    {
+                        OrderHeader = orderHeader,
+                        OrderDetails = _unitOfWork.OrderDetailObj.GetAll(u => u.OrderHeaderId == orderId && u.Artwork.ArtistId == userId, includeProperties: "Artwork")
+                    };
+                    OrderVM.OrderHeader.OrderTotal = 0;
+                    foreach (var obj in OrderVM.OrderDetails)
+                    {
+                        OrderVM.OrderHeader.OrderTotal += obj.Price;
+                    }
+                }
+              
             }
             return View(OrderVM);
         }
