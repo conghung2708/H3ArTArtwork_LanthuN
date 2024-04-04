@@ -11,7 +11,7 @@ namespace H3ArT.Models.ViewModels
         public int NumberOfUsers { get; set; }
         public int NumberOfArtworks { get; set; }
         public int NumberOfOrders { get; set; }
-        public double NumberOfSales { get; set; }
+        public double TotalSales { get; set; }
 
     }
 }

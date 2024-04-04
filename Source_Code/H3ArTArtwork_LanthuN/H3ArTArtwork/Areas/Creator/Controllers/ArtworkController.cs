@@ -67,16 +67,19 @@ namespace H3ArTArtwork.Areas.Creator.Controllers
             {
                 //update
                 artworkVM.Artwork = _unitOfWork.ArtworkObj.Get(u => u.ArtworkId == id, includeProperties: "Category,ApplicationUser");
+
                 if(artworkVM.Artwork == null)
                 {
                     TempData["error"] = "Artwork does not exist!";
                     return RedirectToAction("Index", "Artwork");
                 }
+
                 if (artworkVM.Artwork.IsBought)
                 {
                     TempData["error"] = "Cannot update the purchased artwork";
                     return RedirectToAction("Index", "Artwork");
                 }
+
                 return View(artworkVM);
             }
         }
